@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/04/26 15:36:52 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/04/26 16:52:01 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,10 @@ namespace ft
         typedef ft::pair<const key_type, mapped_type>                   value_type;
         typedef Compare                                                 key_compare;
         typedef Alloc                                                   allocator_type;
-        class value_compare : binary_function<value_type,value_type,bool>
+        class map::value_compare : binary_function<value_type,value_type,bool>
         {
-            friend map<key_type, mapped_type, key_compare, allocator_typec>
+            friend map<key_type, mapped_type, key_compare, allocator_type>
+            
             protected:
                 Compare comp;
                 value_compare (Compare c) : comp(c) {}
@@ -75,7 +76,7 @@ namespace ft
         // operator=
         map& operator= (const map& x);
 
-//ITERATORS
+    //ITERATORS
         
         // begin
         iterator begin();
@@ -110,21 +111,57 @@ namespace ft
         mapped_type& operator[] (const key_type& k);
     
     //MODIFIERS
-        //insert
-        //erase
-        //swap
-        //clear
+    
+        // insert
+        pair<iterator,bool> insert (const value_type& val);
+        iterator insert (iterator position, const value_type& val);
+        template <class InputIterator>
+        void insert (InputIterator first, InputIterator last);
+
+        // erase
+        void erase (iterator position);
+        size_type erase (const key_type& k);
+        void erase (iterator first, iterator last);
+        
+        // swap
+        void swap (map& x);
+        
+        // clear
+        void clear();
+        
     //OBSERVERS
-        //key_comp
-        //value_comp
+    
+        // key_comp
+        key_compare key_comp() const;
+        
+        // value_comp
+        value_compare value_comp() const;
+        
     //OPERATION
-        //find
-        //count
-        //lower_bound
-        //upper_bond
-        //equal_range
+    
+        // find
+        iterator find (const key_type& k);
+        const_iterator find (const key_type& k) const;
+        
+        // count
+        size_type count (const key_type& k) const;
+        
+        // lower_bound
+        iterator lower_bound (const key_type& k);
+        const_iterator lower_bound (const key_type& k) const;
+        
+        // upper_bond
+        iterator upper_bound (const key_type& k);
+        const_iterator upper_bound (const key_type& k) const;
+        
+        // equal_range
+        pair<const_iterator,const_iterator> equal_range (const key_type& k) const;
+        pair<iterator,iterator> equal_range (const key_type& k);
+        
     //ALLOCATOR
-        //get_allocator
+    
+        // get_allocator
+        allocator_type get_allocator() const;
         
     };
 }

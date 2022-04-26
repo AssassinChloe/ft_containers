@@ -1,43 +1,107 @@
-template <class Category, class T, class Distance = ptrdiff_t,
-      class Pointer = T*, class Reference = T&>
-class iterator
-{
-    typedef T         value_type;
-    typedef Distance  difference_type;
-    typedef Pointer   pointer;
-    typedef Reference reference;
-    typedef Category  iterator_category;
+#ifndef ITERATOR_HPP
+# define ITERATOR_HPP
 
-    ~iterator();
-    iterator(const iterator&);
-    iterator& operator=(const iterator&);
 
-    iterator& operator++();
-    iterator operator++(int);
 
-    bool operator==(const iterator&) const;
-    bool operator!=(const iterator&) const;
+    //                  FUNCTIONS
 
-    reference operator*() const;
-    pointer operator->() const;
 
-    iterator();
+//Iterator operations
 
-    iterator& operator--();
-    iterator operator--(int);
+    //advance
+        template <class InputIterator, class Distance>
+        void advance (InputIterator& it, Distance n);
 
-    iterator operator+(size_type) const;
-    iterator operator-(size_type) const;
-//    friend iterator operator+(size_type, const iterator&); //optional
-//    difference_type operator-(iterator) const;
+    //distance
+        template<class InputIterator>
+        typename iterator_traits<InputIterator>::difference_type 
+        distance (InputIterator first, InputIterator last);
 
-    bool operator<(const iterator&) const;
-    bool operator>(const iterator&) const;
-    bool operator<=(const iterator&) const;
-    bool operator>=(const iterator&) const;
+//Iterator generator
 
-    iterator& operator+=(size_type);
-    iterator& operator-=(size_type);
+    //back_inserter
+        template <class Container> class back_insert_iterator;
     
-    reference operator[](size_type) const;
-};
+    //front_inserter
+        template <class Container>
+        front_insert_iterator<Container> front_inserter (Container& x);
+
+    //inserter
+        template <class Container, class Iterator>
+        insert_iterator<Container> inserter (Container& x, Iterator it);
+    
+    
+    //                  CLASSES
+
+    //iterator
+    
+        template <class Category, class T, class Distance = ptrdiff_t,
+        class Pointer = T*, class Reference = T&>
+        class iterator
+        {
+            typedef T         value_type;
+            typedef Distance  difference_type;
+            typedef Pointer   pointer;
+            typedef Reference reference;
+            typedef Category  iterator_category;
+
+            ~iterator();
+            iterator(const iterator&);
+            iterator& operator=(const iterator&);
+
+            iterator& operator++();
+            iterator operator++(int);
+
+            bool operator==(const iterator&) const;
+            bool operator!=(const iterator&) const;
+
+            reference operator*() const;
+            pointer operator->() const;
+
+            iterator();
+
+            iterator& operator--();
+            iterator operator--(int);
+
+            iterator operator+(size_type) const;
+            iterator operator-(size_type) const;
+
+            bool operator<(const iterator&) const;
+            bool operator>(const iterator&) const;
+            bool operator<=(const iterator&) const;
+            bool operator>=(const iterator&) const;
+
+            iterator& operator+=(size_type);
+            iterator& operator-=(size_type);
+
+            reference operator[](size_type) const;
+        };
+
+    //iterator_trait
+
+        template <class Iterator>
+        class iterator_traits
+        {
+            typedef typename Iterator::difference_type difference_type;
+            typedef typename Iterator::value_type value_type;
+            typedef typename Iterator::reference reference;
+            typedef typename Iterator::pointer pointer;
+            typedef std::random_access_iterator_tag iterator_category;
+            typedef std::output_iterator_tag iterator_category;
+            typedef std::forward_iterator_tag iterator_category;
+            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef std::random_access_iterator_tag iterator_category;
+        };
+
+        template <class T> class iterator_traits<T*>;
+        template <class T> class iterator_traits<const T*>;
+
+    //reverse iterator
+
+    template <class Iterator>
+    class reverse_iterator
+    {
+
+    }
+
+#endif
