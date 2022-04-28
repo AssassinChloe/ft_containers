@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:39 by cassassi          #+#    #+#             */
-/*   Updated: 2022/04/28 14:56:51 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/04/28 17:16:14 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,21 @@ namespace ft
     //
         // Constructors
 
-        vector()
-         : arr(allocator_type.allocate(1)), _capacity(1), _current(0) {}
+        vector(): _alloc(allocator_type()), _arr(NULL), _capacity(0), _current(0) {}
         
         explicit vector(const allocator_type& alloc = allocator_type())
-         : arr(alloc), _capacity(alloc.capacity()), _current(size()) {}
+         : _alloc(alloc), _arr(NULL) _capacity(0), _current(0) {}
         
         explicit vector(size_type n, const value_type& val = value_type(),
                         const allocator_type& alloc = allocator_type())
-        : arr(allocator_type(n)), _capacity(n), _current(0) {}
+         : _alloc(alloc), _arr(_alloc.allocate(n + 10)), _capacity(n + 10) 
+        {
+            for (size_type i = 0; i < n; i++)
+            {
+                _alloc.construct(this->_arr[i], val);
+                this->_current++;
+            }
+        }
                         
         template <class InputIterator>
         vector (InputIterator first, InputIterator last,
@@ -62,7 +68,7 @@ namespace ft
         {
             if (&vector != this)
             {
-                this = vector;                    
+                *this = vector;                    
             }
             return (*this)
         }
@@ -72,7 +78,8 @@ namespace ft
         {
             if (this->_current > 0)
             {
-                
+                this->clear();
+                this->insert(x.begin(), x.end());
                 
             }
         }
@@ -80,8 +87,8 @@ namespace ft
         // Destructors
         ~vector()
         {
-            allocator_type.deallocate(this->arr, this->_capacity);
-            allocator_type.destroy(this->arr);
+            this->clear();
+            allocator_type.destroy(this->_arr);
         }
 
     //ITERATORS
@@ -107,91 +114,109 @@ namespace ft
         // size
         size_type size() const 
         {
-            return (_current);
+            return (this->_current);
         }
         
         // max_size
         size_type max_size() const
         {
             const size_t diffmax = PTRDIFF_MAX / sizeof(value_type);
-            const size_t allocmax = allocator_type::max_size();
+            const size_t allocmax = _alloc.max_size();
             return (std::min(diffmax, allocmax));
         }
 
         // resize
-        void resize (size_type n, value_type val = value_type());
+        void resize (size_type n, value_type val = value_type())
+        {
+            if (n < this->_current)
+                
+        }
         
         // capacity
-        size_type capacity() const { return (_capacity)}
+        size_type capacity() const { return (this->_capacity);}
 
         // empty
         bool empty() const
         {
-            if (_current == 0)
+            if (this->_current == 0)
                 return (true);
             return (false);
         }
 
         // reserve
-        void reserve (size_type n);
+        void reserve (size_type n)
+        {
+            T* tmp = allocator_type.allocate(n);
+            for (unsigned int i = 0; i < this->_capacity; i++) 
+            {
+                tmp[i] = this->_arr[i];
+            }
+            this->clear();
+            allocator_type.destroy(this->_arr);
+            this->_capacity = n;
+            this->_arr = tmp;
+        }
 
         //ELEMENT ACCESS
         
         // Operator[]
         reference operator[](size_type index)
         {
-            if (index < this->_current)
-            return (arr[index]);
+            if (index < this->_current && index >= 0)
+                return (this->_arr[index]);
+            throw std::out_of_range("");
         }
         const_reference operator[](size_type index) const
         {
-            if (index < this->_current)
-            return (arr[index]);
+            if (index < this->_current && index >= 0)
+                return (this->_arr[index]);
+            throw std::out_of_range("");
         }
         
         // At
-        reference at(size_type n);
-        const_reference at(size_type n) const;
-
+        reference at(size_type n) { return (this->_arr[n]); }
+        const_reference at(size_type n) const { return (this->_arr[n]); }
+        
         // Front
-        reference front() {return (arr[0]);}
-        const_reference front() const {return (arr[0]);}
+        reference front() {return (this->_arr[0]);}
+        const_reference front() const {return (this->_arr[0]);}
 
         // Back
-        reference back() {return (arr[_current - 1]);}
-        const_reference back() const {return (arr[_current - 1]);}
+        reference back() {return (this->_arr[this->_current - 1]);}
+        const_reference back() const {return (this->_arr[this->_current - 1]);}
         
     //MODIFIERS
         
         // assign
         template <class InputIterator>
         void assign (InputIterator first, InputIterator last);
-        void assign (size_type n, const value_type& val);
+        void assign (size_type n, const value_type& val)
+        {
+            this->clear();
+            _alloc.destroy(this->_arr);
+            this->_arr = _alloc.allocate(n + 10);
+            this->_capacity = n + 10;
+            for (size_type i = 0; i < n; i++)
+            {
+                arr[i] = val;
+                this->_current++;
+            }
+        }
         
         // push_back
         void push_back (const value_type& val) 
         {
-            if (_current == _capacity)
-            {
-                T* temp = allocator_type.allocate(2 * _capacity);
-                for (unsigned int i = 0; i < _capacity; i++) 
-                {
-                    temp[i] = arr[i];
-                }
-                allocator_type.deallocate(this->arr, _capacity);
-                allocator_type.destroy(this->arr);
-                _capacity *= 2;
-                this->arr = temp;
-            }
-            arr[_current] = val;
-            _current++;
+            if (this->_current == this->_capacity)
+                this->reserve(this->capacity + 10);
+            this->_arr[this->_current] = val;
+            this->_current++;
         }
         
         // pop_back
         void pop_back() 
         { 
-            if (_current > 0)
-                _current--; 
+            if (this->_current > 0)
+                this->_current--; 
         }
         
         // insert
@@ -208,18 +233,19 @@ namespace ft
         void swap (vector& x);
         
         // clear
-        void clear();
+        void clear() { allocator_type.deallocate(this->_arr, this->_capacity);}
         
     //ALLOCATOR
         
         // get_allocaor
-        allocator_type get_allocator() const { return (allocator_type) ;}
+        allocator_type get_allocator() const { return (this->_alloc);}
 
         private :
 
-            T* arr;
-            unsigned int _capacity;
-            unsigned int _current;
+            allocator_type  _alloc;
+            T*              _arr;
+            size_type       _capacity;
+            size_type       _current;
         
         
     };
@@ -228,17 +254,56 @@ namespace ft
         // relational operators
         
         template <class T, class Alloc>
-        bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+        bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+        {
+            if (lhs.capacity() != rhs.capacity() || lhs.size() != rhs.size())
+                return (false);
+            for (size_type i = 0; i < lhs.size(); i++)
+            {
+                if (lhs[i] != rhs[i])
+                    return (false);
+            }
+            return (true);
+        }
 
         template <class T, class Alloc>
-        bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+        bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+        {
+            if (lhs.capacity() != rhs.capacity() || lhs.size() != rhs.size())
+                return (true);
+            for (size_type i = 0; i < lhs.size(); i++)
+            {
+                if (lhs[i] != rhs[i])
+                    return (true);
+            }
+            return (false);
+        }
 
         template <class T, class Alloc>
-        bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-
+        bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+        {
+            if (lhs.capacity() < rhs.capacity() || lhs.size() < rhs.size())
+                return (true);
+            for (size_type i = 0; i < lhs.size(); i++)
+            {
+                if (lhs[i] < rhs[i])
+                    return (true);
+            }
+            return (false);
+        }
+        
         template <class T, class Alloc>
-        bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-
+        bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)        
+        {
+            if (lhs.capacity() > rhs.capacity() || lhs.size() > rhs.size())
+                return (true);
+            for (size_type i = 0; i < lhs.size(); i++)
+            {
+                if (lhs[i] > rhs[i])
+                    return (true);
+            }
+            return (false);
+        }
         template <class T, class Alloc>
         bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
 
