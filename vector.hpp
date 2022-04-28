@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:39 by cassassi          #+#    #+#             */
-/*   Updated: 2022/04/26 15:28:47 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/04/28 12:44:23 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define VECTOR_H
 
 # include <memory>
+#include <bits/stdc++.h>
 
 namespace ft
 {
@@ -40,7 +41,9 @@ namespace ft
     //
         // Constructors
 
-        vector();
+        vector() : arr(allocator_type.allocate(1)), _capacity(1), _current(0)
+        { }
+        
         explicit vector(const allocator_type& alloc = allocator_type());
         explicit vector(size_type n, const value_type& val = value_type(),
                         const allocator_type& alloc = allocator_type());
@@ -50,7 +53,11 @@ namespace ft
         vector(const vector&);
         
         // Destructors
-        ~vector();
+        ~vector()
+        {
+            allocator_type.deallocate(arr, _capacity);
+            allocator_type.destroy(arr)
+        }
 
         // Operator=
         vector& operator=(const vector&);
@@ -76,19 +83,33 @@ namespace ft
     //CAPACITY
         
         // size
-        size_type size() const;
+        size_type size() const {return (_current);}
         
         // max_size
         size_type max_size() const;
+             {
+            // std::distance(begin(), end()) cannot be greater than PTRDIFF_MAX,
+            // and realistically we can't store more than PTRDIFF_MAX/sizeof(T)
+            // (even if std::allocator_traits::max_size says we can).
+            const size_t __diffmax
+            = __gnu_cxx::__numeric_traits<ptrdiff_t>::__max / sizeof(_Tp);
+            const size_t __allocmax = _Alloc_traits::max_size(__a);
+            return (std::min)(__diffmax, __allocmax);
+      }
 
         // resize
         void resize (size_type n, value_type val = value_type());
         
         // capacity
-        size_type capacity() const;
+        size_type capacity() const { return (_capacity)}
 
         // empty
-        bool empty() const;
+        bool empty() const
+        {
+            if (_current == 0)
+                return (true);
+            return (false);
+        }
 
         // reserve
         void reserve (size_type n);
@@ -146,6 +167,10 @@ namespace ft
         allocator_type get_allocator() const;
 
         private :
+
+            T* arr;
+            unsigned int _capacity;
+            unsigned int _current;
         
         
     };

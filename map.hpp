@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/04/26 16:52:01 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/04/28 12:18:35 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ namespace ft
     template < class Key,                                 
            class T,                                       
            class Compare = std::less<Key>,            
-           class Alloc = std::allocator<pair<const Key,T> >
+           class Alloc = std::allocator<std::pair<const Key,T> >
            >
     class map
     {
