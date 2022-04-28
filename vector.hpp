@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:39 by cassassi          #+#    #+#             */
-/*   Updated: 2022/04/28 12:44:23 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/04/28 14:56:51 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,10 @@
 #define VECTOR_H
 
 # include <memory>
-#include <bits/stdc++.h>
+# include <bits/stdc++.h>
+# include <cstddef>
+# include <algorithm>
+# include <limits.h>
 
 namespace ft
 {
@@ -33,7 +36,7 @@ namespace ft
         typedef typename ft::random_access_iterator<const value_type>   const_iterator;
         typedef typename ft::reverse_iterator<iterator>                 reverse_iterator;
         typedef typename ft::reverse_iterator<const_iterator>           const_reverse_iterator;
-        typedef typename ft::iterator_traits<iterator>::difference_type difference_type;
+        typedef typename allocator_type::ptrdiff_t                      difference_type;
         typedef typename allocator_type::size_type                      size_type;
 
         //                  PUBLIC MEMBER FUNCTION
@@ -41,61 +44,79 @@ namespace ft
     //
         // Constructors
 
-        vector() : arr(allocator_type.allocate(1)), _capacity(1), _current(0)
-        { }
+        vector()
+         : arr(allocator_type.allocate(1)), _capacity(1), _current(0) {}
         
-        explicit vector(const allocator_type& alloc = allocator_type());
+        explicit vector(const allocator_type& alloc = allocator_type())
+         : arr(alloc), _capacity(alloc.capacity()), _current(size()) {}
+        
         explicit vector(size_type n, const value_type& val = value_type(),
-                        const allocator_type& alloc = allocator_type());
+                        const allocator_type& alloc = allocator_type())
+        : arr(allocator_type(n)), _capacity(n), _current(0) {}
+                        
         template <class InputIterator>
         vector (InputIterator first, InputIterator last,
                  const allocator_type& alloc = allocator_type());
+                 
         vector(const vector&);
+        {
+            if (&vector != this)
+            {
+                this = vector;                    
+            }
+            return (*this)
+        }
+        
+        // Operator=
+        vector& operator=(const vector& x)
+        {
+            if (this->_current > 0)
+            {
+                
+                
+            }
+        }
         
         // Destructors
         ~vector()
         {
-            allocator_type.deallocate(arr, _capacity);
-            allocator_type.destroy(arr)
+            allocator_type.deallocate(this->arr, this->_capacity);
+            allocator_type.destroy(this->arr);
         }
-
-        // Operator=
-        vector& operator=(const vector&);
 
     //ITERATORS
         
         // begin
-        iterator begin();
-        const_iterator begin() const;
+        iterator begin() {return (c.begin());}
+        const_iterator begin() const {return (c.begin());}
         
         // end
-        iterator end();
-        const_iterator end() const;
+        iterator end() {return (c.end());}
+        const_iterator end() const {return (c.end());}
         
         // rbegin     
-        reverse_iterator rbegin(); 
-        const_reverse_iterator rbegin() const;
+        reverse_iterator rbegin() {return (c.rbegin());}
+        const_reverse_iterator rbegin() const {return (c.rbegin());}
         
         // rend
-        reverse_iterator rend(); 
-        const_reverse_iterator rend() const; 
+        reverse_iterator rend() {return (c.rend());}
+        const_reverse_iterator rend() const {return (c.rend());}
 
     //CAPACITY
         
         // size
-        size_type size() const {return (_current);}
+        size_type size() const 
+        {
+            return (_current);
+        }
         
         // max_size
-        size_type max_size() const;
-             {
-            // std::distance(begin(), end()) cannot be greater than PTRDIFF_MAX,
-            // and realistically we can't store more than PTRDIFF_MAX/sizeof(T)
-            // (even if std::allocator_traits::max_size says we can).
-            const size_t __diffmax
-            = __gnu_cxx::__numeric_traits<ptrdiff_t>::__max / sizeof(_Tp);
-            const size_t __allocmax = _Alloc_traits::max_size(__a);
-            return (std::min)(__diffmax, __allocmax);
-      }
+        size_type max_size() const
+        {
+            const size_t diffmax = PTRDIFF_MAX / sizeof(value_type);
+            const size_t allocmax = allocator_type::max_size();
+            return (std::min(diffmax, allocmax));
+        }
 
         // resize
         void resize (size_type n, value_type val = value_type());
@@ -117,20 +138,28 @@ namespace ft
         //ELEMENT ACCESS
         
         // Operator[]
-        reference operator[](size_type);
-        const_reference operator[](size_type) const;
+        reference operator[](size_type index)
+        {
+            if (index < this->_current)
+            return (arr[index]);
+        }
+        const_reference operator[](size_type index) const
+        {
+            if (index < this->_current)
+            return (arr[index]);
+        }
         
         // At
-        reference at(size_type);
-        const_reference at(size_type) const;
+        reference at(size_type n);
+        const_reference at(size_type n) const;
 
         // Front
-        reference front();
-        const_reference front() const;
+        reference front() {return (arr[0]);}
+        const_reference front() const {return (arr[0]);}
 
         // Back
-        reference back();
-        const_reference back() const;
+        reference back() {return (arr[_current - 1]);}
+        const_reference back() const {return (arr[_current - 1]);}
         
     //MODIFIERS
         
@@ -140,10 +169,30 @@ namespace ft
         void assign (size_type n, const value_type& val);
         
         // push_back
-        void push_back (const value_type& val);
+        void push_back (const value_type& val) 
+        {
+            if (_current == _capacity)
+            {
+                T* temp = allocator_type.allocate(2 * _capacity);
+                for (unsigned int i = 0; i < _capacity; i++) 
+                {
+                    temp[i] = arr[i];
+                }
+                allocator_type.deallocate(this->arr, _capacity);
+                allocator_type.destroy(this->arr);
+                _capacity *= 2;
+                this->arr = temp;
+            }
+            arr[_current] = val;
+            _current++;
+        }
         
         // pop_back
-        void pop_back();
+        void pop_back() 
+        { 
+            if (_current > 0)
+                _current--; 
+        }
         
         // insert
         iterator insert (iterator position, const value_type& val);
@@ -164,7 +213,7 @@ namespace ft
     //ALLOCATOR
         
         // get_allocaor
-        allocator_type get_allocator() const;
+        allocator_type get_allocator() const { return (allocator_type) ;}
 
         private :
 
