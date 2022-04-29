@@ -14,7 +14,7 @@
 #define STACK_H
 
 # include <iostream>
-# include "vector.h"
+# include "vector.hpp"
 
 namespace ft
 {
@@ -61,7 +61,7 @@ namespace ft
         bool operator<  (const stack<T,Container>& lhs, const stack<T,Container>& rhs);
 
         template <class T, class Container>
-        bool operator<= (const stack<T,Container>& lhs, const stack<T,Container>& rhs);
+        bool operator<=(const stack<T,Container>& lhs, const stack<T,Container>& rhs);
 
         template <class T, class Container>
         bool operator>  (const stack<T,Container>& lhs, const stack<T,Container>& rhs);
