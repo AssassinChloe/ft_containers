@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:39 by cassassi          #+#    #+#             */
-/*   Updated: 2022/04/28 17:16:14 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/02 12:20:26 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <algorithm>
 #include <limits.h>
 #include "iterator.hpp"
-// #include "reverse_iterator.hpp"
+#include "reverse_iterator.hpp"
 
 namespace ft
 {
@@ -35,8 +35,8 @@ namespace ft
             typedef typename allocator_type::const_pointer          const_pointer;
             typedef typename ft::iterator<value_type>               iterator;
             typedef typename ft::iterator<const value_type>         const_iterator;
-            // typedef typename ft::reverse_iterator<iterator>         reverse_iterator;
-            // typedef typename ft::reverse_iterator<const_iterator>   const_reverse_iterator;
+            typedef typename ft::reverse_iterator<iterator>         reverse_iterator;
+            typedef typename ft::reverse_iterator<const_iterator>   const_reverse_iterator;
             typedef typename allocator_type::difference_type        difference_type;
             typedef typename allocator_type::size_type              size_type;
 
@@ -44,9 +44,6 @@ namespace ft
 
             //
             // Constructors
-
-            vector() : _alloc(allocator_type()), _capacity(10), _arr(_alloc.allocate(_capacity)), _current(0) {}
-
             vector(const vector & copy)
             {
                 if (&copy != this)
@@ -56,18 +53,15 @@ namespace ft
             // template <class InputIterator>
             // vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type()) {}
 
-            // explicit vector(const allocator_type &alloc = allocator_type()) 
-            // : _alloc(alloc), _capacity(10), _arr(_alloc.allocate(_capacity)), _current(0) {}
+            explicit vector(const allocator_type &alloc = allocator_type()) 
+            : _alloc(alloc), _capacity(10), _arr(_alloc.allocate(_capacity)), _current(0) {}
 
-            // explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()) 
-            // : _alloc(alloc), _capacity(10 + n * 2), _arr(_alloc.allocate(_capacity)), _current(0)
-            // {
-            //     for (size_type i = 0; i < n; i++)
-            //     {
-            //         _alloc.construct(this->_arr[i], val);
-            //         this->_current++;
-            //     }
-            // }
+            explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()) 
+            : _alloc(alloc), _capacity(10 + n * 2), _arr(_alloc.allocate(_capacity)), _current(n)
+            {
+                _alloc.construct(this->_arr, val);
+
+            }
             // Operator=
             vector &operator=(const vector &x)
             {
@@ -88,20 +82,20 @@ namespace ft
             // ITERATORS
 
             // begin
-            iterator begin() { /*return (c.begin());*/ }
-            const_iterator begin() const { /*return (c.begin());*/ }
+            iterator begin() { return (this->_arr); }
+            const_iterator begin() const { return (this->_arr); }
 
             // end
-            iterator end() {/* return (c.end()); */}
-            const_iterator end() const {/* return (c.end()); */}
+            iterator end() { return (this->_arr + this->_current);}
+            const_iterator end() const {return (this->_arr + this->_current);}
 
-            // // rbegin
-            // reverse_iterator rbegin() { return (c.rbegin()); }
-            // const_reverse_iterator rbegin() const { return (c.rbegin()); }
+            // rbegin
+            reverse_iterator rbegin() { return (this->end()); }
+            const_reverse_iterator rbegin() const { return (this->end()); }
 
-            // // rend
-            // reverse_iterator rend() { return (c.rend()); }
-            // const_reverse_iterator rend() const { return (c.rend()); }
+            // rend
+            reverse_iterator rend() { return (this->begin()); }
+            const_reverse_iterator rend() const { return (this->begin()); }
 
             // CAPACITY
 

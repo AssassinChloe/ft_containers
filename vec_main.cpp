@@ -3,8 +3,8 @@
 
 int main()
 {
-    ft::vector<int> test;
-    
+    ft::vector<int> test(10);
+    std::cout << " is empty "<< test.empty() << std::endl;
     test.push_back(45);
     std::cout << "size : " << test.size() << std::endl;
     std::cout << "capacity : " << test.capacity() << std::endl;
@@ -25,6 +25,7 @@ int main()
     std::cout << "capacity : " << test.capacity() << std::endl;
     std::cout << "front :" << test.front() << std::endl;
     std::cout << "back :" << test.back() << std::endl;
-    std::cout << "at :" << test.at(5) << std::endl;
-    std::cout << "[] :" << test[5] << std::endl;
+    std::cout << "at5 :" << test.at(5) << std::endl;
+    std::cout << "[5] :" << test[5] << std::endl;
+    std::cout << " is empty "<< test.empty() << std::endl;
 }

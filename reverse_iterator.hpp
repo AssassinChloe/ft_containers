@@ -2,6 +2,7 @@
 #define REVERSE_ITERATOR_HPP
 
 #include "iterator.hpp"
+
 namespace ft
 {
     class random_access_reverse_iterator_tag
@@ -9,11 +10,11 @@ namespace ft
     };
 
     template <typename T>
-    class reverse_iterator
+    class reverse_iterator 
     {
         public:
             typedef T value_type;
-            typedef basediff_t difference_type;
+            typedef ptrdiff_t difference_type;
             typedef T *pointer;
             typedef T &reference;
             typedef ft::random_access_reverse_iterator_tag reverse_iterator_category;
@@ -67,23 +68,23 @@ namespace ft
             {
                 return (this->base == rhs.base);
             }
-            bool operator!=(const reverse_iterator &rhs) const;
+            bool operator!=(const reverse_iterator &rhs) const
             {
                 return (this->base != rhs.base);
             }
-            bool operator<(const reverse_iterator &rhs) const;
+            bool operator<(const reverse_iterator &rhs) const
             {
                 return (this->base > rhs.base);
             }
-            bool operator>(const reverse_iterator &rhs) const;
+            bool operator>(const reverse_iterator &rhs) const
             {
                 return (this->base < rhs.base);
             }
-            bool operator<=(const reverse_iterator &rhs) const;
+            bool operator<=(const reverse_iterator &rhs) const
             {
                 return (this->base >= rhs.base);
             }
-            bool operator>=(const reverse_iterator &rhs) const;
+            bool operator>=(const reverse_iterator &rhs) const
             {
                 return (this->base <= rhs.base);
             }
@@ -111,13 +112,13 @@ namespace ft
                 return (*this);
             }
 
-            reference operator[](const size_type index) const
+            reference operator[](const size_t index) const
             {
-                return (this->base[i - 1]);
+                return (this->base[index - 1]);
             }
 
         private:
-            iterator base;
+            ft::iterator<T> base;
     };
 
 }
