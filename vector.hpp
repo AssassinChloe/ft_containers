@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:39 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/03 12:00:28 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/03 14:42:02 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ namespace ft
 
             //                  PUBLIC MEMBER FUNCTION
 
-            //
+
             // Constructors
 
 
@@ -75,7 +75,7 @@ namespace ft
                 this->insert(this->begin(), first, last);
             }
 
-            // Operator=
+        	// Operator=
             vector &operator=(const vector &x)
             {
                 this->clear();
@@ -89,13 +89,13 @@ namespace ft
                 return (*this);
             }
 
-            // Destructors
+        	// Destructors
             ~vector()
             {
                 this->clear();
             }
 
-            // ITERATORS
+        // ITERATORS
 
             // begin
             iterator begin() 
@@ -125,7 +125,7 @@ namespace ft
             const_reverse_iterator rend() const 
             { return (this->begin()); }
 
-            // CAPACITY
+        // CAPACITY
 
             // size
             size_type size() const
@@ -147,7 +147,7 @@ namespace ft
                 if (n > this->_current)
                 {
                     while (this->_current != n)
-                        _alloc.destroy(this->_arr + (--this->_current))
+                        _alloc.destroy(this->_arr + (--this->_current));
                     return ;
                 }
                 if (n >= this->_capacity)
@@ -186,7 +186,7 @@ namespace ft
                 }
             }
 
-            // ELEMENT ACCESS
+        // ELEMENT ACCESS
 
             // Operator[]
             reference operator[](size_type index)
@@ -233,7 +233,7 @@ namespace ft
                 size_type i;
                 for (i = 0; i < this->_curent; i++)
                 {    
-                    _alloc.destroy(this->_arr[i]);
+                    _alloc.destroy(this->_arr + i);
                 }    
                 i = 0;           
                 for (first; first != last; first++)
@@ -257,7 +257,7 @@ namespace ft
                 {
                     for (size_type i = 0; i < this->_curent; i++)
                     {    
-                        _alloc.destroy(this->_arr[i]);
+                        _alloc.destroy(this->_arr + i);
                     }  
                 }
                 for (size_type i = 0; i < n; i++)
@@ -341,41 +341,86 @@ namespace ft
             // erase
             iterator erase(iterator position) 
             {
-                if (position == this->end())
+                if (position == --this->end())
                 {
                     this->pop_back();
-                    return (this->end());
                 }
                 else 
                 {
-                    
+                    size_type i = 0;
+                    vector copy = *this;
+                    iterator it;
+                    for (it = this->begin(); it != position; it++)
+                    {
+                        i++;
+                    }
+                    this->_current--;
+                    for(it; it != this->end(); it++)
+                    {
+                        _alloc.destroy(_arr[i]);
+                        _alloc.construct(_arr[i], copy[i + 1]);
+                        i++;
+                    }
                 }
-                // A FAIRE
+                return (position);
             }
+            
             iterator erase(iterator first, iterator last) 
             {
-                // A FAIRE
+                if (first == last)
+                {
+                    return (erase(first));
+                }
+                else
+                {
+                    size_type i = 0;
+                    size_type j = 0;
+                    size_type k = 0;
+                    vector copy = *this;
+                    iterator it;
+                    for (it = this->begin(); it != first; it++)
+                    {
+                        i++;
+						j++;
+                    }
+                    for (it; it != last; it++)
+                    {
+                        _alloc.destroy(_arr + i++);
+						k++;
+                        
+                    }
+                    for(it; it != this->end(); it++)
+                    {
+						_alloc.destroy(_arr + i++);
+                        _alloc.construct(_arr[j], copy[j + k]);
+						j++;
+                    }
+                }
+                return (last);
             }
 
             // swap
             void swap(vector &x) 
             {
-                // A FAIRE
+				std::swap(this->_alloc, x.get_allocator());
+				std::swap(this->_capacity, x.capacity());
+				std::swap(this->_current, x.size());
+				std::swap(this->_arr, x.begin());
             }
 
             // clear
             void clear() 
             {
-                for (iterator it = this->begin(); it != this->end(); it++)
+                for (size_type i = 0; i < this->_current; i++)
                 {
-                    _alloc.destroy(*it);
+                    _alloc.destroy(_arr + i);
                 }
                 _alloc.deallocate(this->_arr, this->_capacity);
                 this->_capacity = 0;
                 this->_current = 0; 
             }
 
-            // ALLOCATOR
+        // ALLOCATOR
 
             // get_allocator
             allocator_type get_allocator() const 
@@ -387,6 +432,7 @@ namespace ft
             pointer         _arr;
             size_type       _current;
     };
+	
     //                  NON MEMBER FUNCTION OVERLOADS
 
     // relational operators
@@ -473,7 +519,7 @@ namespace ft
     template <class T, class Alloc>
     void swap(vector<T, Alloc> &x, vector<T, Alloc> &y)
     {
-        // A FAIRE
+		x.swap(y);
     }
 }
 #endif
