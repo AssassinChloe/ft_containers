@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:39 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/03 14:42:02 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/03 19:05:34 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,7 @@ namespace ft
                 if (&copy != this)
                     *this = copy;
             }
-
-            template <class InputIterator>
-            vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type()) 
+            vector (iterator first, iterator last, const allocator_type &alloc = allocator_type()) 
             : _alloc(alloc), _capacity(10), _arr(_alloc.allocate(_capacity)), _current(0)
             {
                 this->insert(this->begin(), first, last);
@@ -227,22 +225,21 @@ namespace ft
             // MODIFIERS
 
             // assign
-            template <class InputIterator>
-            void assign(InputIterator first, InputIterator last) 
+            void assign(iterator first, iterator last) 
             {
                 size_type i;
-                for (i = 0; i < this->_curent; i++)
+                for (i = 0; i < this->_current; i++)
                 {    
                     _alloc.destroy(this->_arr + i);
                 }    
                 i = 0;           
-                for (first; first != last; first++)
+                while (first != last)
                 {
                     if (i == this->_capacity)
                         reserve(this->_capacity * 2);
-                    _alloc.construct(this->_arr[i], *first);               
-                    i++;
-                }               
+                    _alloc.construct(this->_arr + i++, *first);               
+                    first++;
+                }
                 this->_current = i;
             }
             void assign(size_type n, const value_type &val)
@@ -255,14 +252,14 @@ namespace ft
                 }
                 else
                 {
-                    for (size_type i = 0; i < this->_curent; i++)
+                    for (size_type i = 0; i < this->_current; i++)
                     {    
                         _alloc.destroy(this->_arr + i);
                     }  
                 }
                 for (size_type i = 0; i < n; i++)
                 {
-                    _alloc.construct(_arr[i], val);
+                    _alloc.construct(this->_arr + i, val);
                 }
                 this->_current = n;
             }
@@ -320,21 +317,22 @@ namespace ft
                         *it = val;
                         i++;
                     }
-                    for(it; it != this->end(); it++)
+                    while(it != this->end())
                     {
-                        this->arr[i] = copy.at[i - n];
+                        this->_arr[i] = copy[i - n];
                         i++;
+                        it++;
                     }
                 }
             }
             
-            template <class InputIterator>
-            void insert(iterator position, InputIterator first, InputIterator last)
+            void insert(iterator position, iterator first, iterator last)
             {
-                for (first; first != last; first++)
+                while (first != last)
                 {
                     this->insert(position, *first);
                     position++; 
+                    first++;
                 }
             }
 
@@ -355,11 +353,13 @@ namespace ft
                         i++;
                     }
                     this->_current--;
-                    for(it; it != this->end(); it++)
+                    iterator ite = this->end();
+                    while (it != ite)
                     {
-                        _alloc.destroy(_arr[i]);
-                        _alloc.construct(_arr[i], copy[i + 1]);
+                        _alloc.destroy(_arr + i);
+                        _alloc.construct(_arr + i, copy[i + 1]);
                         i++;
+                        it++;
                     }
                 }
                 return (position);
@@ -383,17 +383,19 @@ namespace ft
                         i++;
 						j++;
                     }
-                    for (it; it != last; it++)
+                    while (it != last)
                     {
                         _alloc.destroy(_arr + i++);
 						k++;
+                        it++;
                         
                     }
-                    for(it; it != this->end(); it++)
+                    while (it != this->end())
                     {
 						_alloc.destroy(_arr + i++);
-                        _alloc.construct(_arr[j], copy[j + k]);
+                        _alloc.construct(_arr + j, copy[j + k]);
 						j++;
+                        it++;
                     }
                 }
                 return (last);

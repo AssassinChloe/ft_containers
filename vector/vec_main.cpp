@@ -1,11 +1,23 @@
-#include <vector>
-#include <iterator>
-#include <iostream>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vec_main.cpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/02 18:31:22 by cassassi          #+#    #+#             */
+/*   Updated: 2022/05/03 19:09:03 by cassassi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void affiche(std::vector<int> test1, std::string name)
+#include "vector.hpp"
+#include <iostream>
+#include "iterator.hpp"
+
+void affiche(ft::vector<int> test1, std::string name)
 {   
-    std::vector<int>::iterator it;
-    std::vector<int>::iterator ite = test1.end();
+    ft::vector<int>::iterator it;
+    ft::vector<int>::iterator ite = test1.end();
     std::cout << std::endl << name << std::endl;
     std::cout << "size : " << test1.size() << std::endl;
     std::cout << "capacity : " << test1.capacity() << std::endl;
@@ -20,8 +32,8 @@ int main()
 {
     try
     {
-        std::vector<int> test0;
-        std::vector<int> test1(4);
+        ft::vector<int> test0;
+        ft::vector<int> test1(4);
         test1.push_back(45);
         test1.push_back(46);
         test1.push_back(47);
@@ -29,35 +41,35 @@ int main()
         test1.push_back(49);
         test1.push_back(50);
         test1.push_back(51);
-        std::vector<int> const copy = test1;
-        std::vector<int> const test2(3, 42);
-        std::vector<int> test3(test1.begin(), test1.end());
+        ft::vector<int> const copy = test1;
+        ft::vector<int> const test2(3, 42);
+        ft::vector<int> test3(test1.begin(), test1.end());
         
         
         std::cout << std::endl << "iterators" << std::endl;
-        std::vector<int>::iterator it;
-        std::vector<int>::iterator ite = test1.end();
+        ft::vector<int>::iterator it;
+        ft::vector<int>::iterator ite = test1.end();
         for( it = test1.begin(); it != ite; it++)
         {
             std::cout << *it << " ";
         }
         // std::cout << std::endl;
-        // std::vector<int>::const_iterator cite = test1.end();
-        // for (std::vector<int>::const_iterator cit = test1.begin(); cit!= cite; cit++)
+        // ft::vector<int>::const_iterator cite = test1.end();
+        // for (ft::vector<int>::const_iterator cit = test1.begin(); cit!= cite; cit++)
         // {
         //     std::cout << *cit << " ";
 
         // }
         // std::cout << std::endl;
-        // std::vector<int>::reverse_iterator rite = test1.rend();
-        // for (std::vector<int>::reverse_iterator rit = test1.rbegin(); rit != rite; rit++)
+        // ft::vector<int>::reverse_iterator rite = test1.rend();
+        // for (ft::vector<int>::reverse_iterator rit = test1.rbegin(); rit != rite; rit++)
         // {
         //     std::cout << *rit << " ";
 
         // }
         // std::cout << std::endl;
-        // std::vector<int>::const_reverse_iterator crite = test1.rend();
-        // for (std::vector<int>::const_reverse_iterator crit = test1.rbegin(); crit != crite; crit++)
+        // ft::vector<int>::const_reverse_iterator crite = test1.rend();
+        // for (ft::vector<int>::const_reverse_iterator crit = test1.rbegin(); crit != crite; crit++)
         // {
         //     std::cout << *crit << " ";
         // }
@@ -151,10 +163,12 @@ int main()
         std::cout << std::endl << "clear" << std::endl;
         test1.clear();
         affiche(test1, "TEST 1");
-
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << std::endl;
+        std::cerr << e.what() << '\n';
+        std::cout << "Try again !" << std::endl;
     }
+    
+
 }
