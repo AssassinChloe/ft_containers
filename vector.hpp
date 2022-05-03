@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:39 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/02 19:48:52 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/03 12:00:28 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,12 +145,13 @@ namespace ft
             void resize(size_type n, value_type val = value_type())
             {
                 if (n > this->_current)
-                {   
-                    this->_current = n;
+                {
+                    while (this->_current != n)
+                        _alloc.destroy(this->_arr + (--this->_current))
                     return ;
                 }
                 if (n >= this->_capacity)
-                    this->reserve(n);
+                    this->reserve(n + 1);
                 insert(this->end(), n, val);
             }
 
@@ -229,15 +230,19 @@ namespace ft
             template <class InputIterator>
             void assign(InputIterator first, InputIterator last) 
             {
-                size_type i = 0;
-                while (first != last)
+                size_type i;
+                for (i = 0; i < this->_curent; i++)
+                {    
+                    _alloc.destroy(this->_arr[i]);
+                }    
+                i = 0;           
+                for (first; first != last; first++)
                 {
                     if (i == this->_capacity)
-                        reserve(this->_capacity * 2)
-                    _arr[i] = *first;
-                    first++;
+                        reserve(this->_capacity * 2);
+                    _alloc.construct(this->_arr[i], *first);               
                     i++;
-                }
+                }               
                 this->_current = i;
             }
             void assign(size_type n, const value_type &val)
@@ -248,11 +253,18 @@ namespace ft
                     this->_arr = _alloc.allocate(n * 2);
                     this->_capacity = n * 2;
                 }
+                else
+                {
+                    for (size_type i = 0; i < this->_curent; i++)
+                    {    
+                        _alloc.destroy(this->_arr[i]);
+                    }  
+                }
                 for (size_type i = 0; i < n; i++)
                 {
-                    _arr[i] = val;
-                    this->_current = n;
+                    _alloc.construct(_arr[i], val);
                 }
+                this->_current = n;
             }
 
             // push_back
@@ -276,34 +288,7 @@ namespace ft
             // insert
             iterator insert(iterator position, const value_type &val) 
             {
-                size_type i = 0;
-                if (this->_current == this->_capacity)
-                    this->reserve(this->_capacity * 2);
-                if (position == this->end)
-                    this->push_back(val);
-                else
-                {
-                    iterator it;
-                    pointer copy = _alloc.allocate(this->_capacity);
-                    for (it = this->begin(); it != this->end; it++)
-                    {
-                        copy[i++] = *it;
-                    }
-                    i = 0;
-                    for (it = this->begin(); it != position; it++)
-                    {
-                        i++;
-                    }
-                    *it = val;
-                    i++;
-                    for(it; it != this->end(); it++)
-                    {
-                        this->arr[i] = copy[i - 1];
-                        i++;
-                    }
-                    this->_current = i;
-                    _alloc.deallocate(copy, this->_capacity);
-                }
+                this->insert(position, 1, val);
                 return (position);
             }
             
@@ -312,23 +297,19 @@ namespace ft
                 size_type i = 0;
                 while ((this->_current + n) >= this->_capacity)
                         this->reserve(this->_capacity * 2);
-                if (position == this->end)
+                if (position == this->end())
                 {
                     while (i < n)
                     {
-                        this->_arr[this->_current] = val;
-                        this->_current++;
+                        this->push_back(val);
                         i++;
                     }
                 }
                 else
                 {
                     iterator it;
-                    pointer copy = _alloc.allocate(this->_capacity);
-                    for (it = this->begin(); it != this->end; it++)
-                    {
-                        copy[i++] = *it;
-                    }
+                    vector copy = *this;
+                    this->_current += n;
                     i = 0;
                     for (it = this->begin(); it != position; it++)
                     {
@@ -341,40 +322,33 @@ namespace ft
                     }
                     for(it; it != this->end(); it++)
                     {
-                        this->arr[i] = copy[i - n];
+                        this->arr[i] = copy.at[i - n];
                         i++;
                     }
-                    this->_current = i;
-                    _alloc.deallocate(copy, this->_capacity);
                 }
-                return (position);
             }
             
             template <class InputIterator>
             void insert(iterator position, InputIterator first, InputIterator last)
             {
-                if (position == (this->_current - 1))
+                for (first; first != last; first++)
                 {
-                    
-                }
-                while (first != last)
-                {
-                    if (this->_current == this->_capacity)
-                        this->reserve(this->_capacity * 2);
-                    *position = *first;
-                    position++;
-                    first++;
-                    this->_current++;
+                    this->insert(position, *first);
+                    position++; 
                 }
             }
 
             // erase
             iterator erase(iterator position) 
             {
-                if (position == (this->_current - 1))
+                if (position == this->end())
                 {
                     this->pop_back();
                     return (this->end());
+                }
+                else 
+                {
+                    
                 }
                 // A FAIRE
             }
