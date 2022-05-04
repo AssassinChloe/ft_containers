@@ -37,7 +37,7 @@ int main()
         std::cout << std::endl << "iterators" << std::endl;
         std::vector<int>::iterator it;
         std::vector<int>::iterator ite = test1.end();
-        for( it = test1.begin(); it != ite; it++)
+        for(it = test1.begin(); it != ite; it++)
         {
             std::cout << *it << " ";
         }
