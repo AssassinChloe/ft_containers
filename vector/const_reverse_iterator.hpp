@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   reverse_iterator.hpp                               :+:      :+:    :+:   */
+/*   const_reverse_iterator.hpp                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 18:31:31 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/04 17:50:02 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/04 17:50:09 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef REVERSE_ITERATOR_HPP
-#define REVERSE_ITERATOR_HPP
+#ifndef CONST_REVERSE_ITERATOR_HPP
+#define CONST_REVERSE_ITERATOR_HPP
 
 #include "iterator.hpp"
 #include "iterators_traits.hpp"
 
 namespace ft
 {
-    class random_access_reverse_iterator_tag
+    class random_access_iterator_tag
     {
     };
 
     template <typename T>
-    class reverse_iterator
+    class const_reverse_iterator
     {
         public:
             typedef T value_type;
@@ -32,18 +32,20 @@ namespace ft
             typedef T &reference;
             typedef ft::random_access_iterator_tag iterator_category;
 
-            reverse_iterator() : base(NULL) {}
-            reverse_iterator(const reverse_iterator &src)
+            const_reverse_iterator() : base(NULL) {}
+            
+            const_reverse_iterator(const const_reverse_iterator &src) 
             {
-                *this = src->base;
+                *this = src;
             }
-            reverse_iterator &operator=(const reverse_iterator &rhs)
+            
+            const_reverse_iterator &operator=(const const_reverse_iterator &rhs)
             {
                 if (this != &rhs)
                     this->base = rhs.base;
                 return (*this);
             }
-            ~reverse_iterator() {}
+            ~const_reverse_iterator() {}
 
             reference operator*() const
             {
@@ -54,72 +56,49 @@ namespace ft
                 return (this->base);
             }
 
-            reverse_iterator &operator++()
-            {
-                this->base--;
-                return (*this);
-            }
-            reverse_iterator operator++(int)
-            {
-                reverse_iterator tmp = *this;
-                this->base--;
-                return (tmp);
-            }
-            reverse_iterator &operator--()
-            {
-                this->base++;
-                return (*this);
-            }
-            reverse_iterator operator--(int)
-            {
-                reverse_iterator tmp = *this;
-                this->base++;
-                return (tmp);
-            }
-
-            bool operator==(const reverse_iterator &rhs) const
+            bool operator==(const const_reverse_iterator &rhs) const
             {
                 return (this->base == rhs.base);
             }
-            bool operator!=(const reverse_iterator &rhs) const
+            bool operator!=(const const_reverse_iterator &rhs) const
             {
                 return (this->base != rhs.base);
             }
-            bool operator<(const reverse_iterator &rhs) const
+            bool operator<(const const_reverse_iterator &rhs) const
             {
                 return (this->base > rhs.base);
             }
-            bool operator>(const reverse_iterator &rhs) const
+            bool operator>(const const_reverse_iterator &rhs) const
             {
                 return (this->base < rhs.base);
             }
-            bool operator<=(const reverse_iterator &rhs) const
+            bool operator<=(const const_reverse_iterator &rhs) const
             {
                 return (this->base >= rhs.base);
             }
-            bool operator>=(const reverse_iterator &rhs) const
+            bool operator>=(const const_reverse_iterator &rhs) const
             {
                 return (this->base <= rhs.base);
             }
 
-            reverse_iterator operator+(const difference_type rhs) const
+            const_reverse_iterator operator+(const difference_type rhs) const
             {
-                reverse_iterator tmp = *this;
+                const_reverse_iterator tmp = *this;
                 tmp.base -= rhs;
                 return (tmp);
             }
-            reverse_iterator operator-(const difference_type rhs) const
+            const_reverse_iterator operator-(const difference_type rhs) const
             {
-                reverse_iterator tmp = *this;
+                const_reverse_iterator tmp = *this;
                 tmp.base += rhs;
                 return (tmp);
             }
-            reverse_iterator &operator+=(const difference_type rhs)
+            const_reverse_iterator &operator+=(const difference_type rhs)
             {
                 this->base -= rhs;
                 return (*this);
             }
-            reverse_iterator &operator-=(const difference_type rhs)
+            const_reverse_iterator &operator-=(const difference_type rhs)
             {
                 this->base += rhs;
                 return (*this);
@@ -131,7 +110,7 @@ namespace ft
             }
 
         private:
-            ft::iterator<T> base;
+            ft::iterator<const T> base;
     };
 
 }

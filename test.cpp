@@ -30,8 +30,8 @@ int main()
         test1.push_back(49);
         test1.push_back(50);
         test1.push_back(51);
-        std::vector<int> const copy = test1;
-        std::vector<int> const test2(3, 42);
+        std::vector<int> copy = test1;
+        std::vector<const int> const test2(3, 42);
         std::vector<int> test3(test1.begin(), test1.end());
         
         std::cout << std::endl << "iterators" << std::endl;
@@ -42,26 +42,26 @@ int main()
             std::cout << *it << " ";
         }
         std::cout << std::endl;
-        // ft::vector<int>::const_iterator cite = test1.end();
-        // for (ft::vector<int>::const_iterator cit = test1.begin(); cit!= cite; cit++)
-        // {
-        //     std::cout << *cit << " ";
+        std::vector<int>::const_iterator cite = test1.end();
+        for (std::vector<int>::const_iterator cit = test1.begin(); cit!= cite; cit++)
+        {
+            std::cout << *cit << " ";
 
-        // }
-        // std::cout << std::endl;
-        // ft::vector<int>::reverse_iterator rite = test1.rend();
-        // for (ft::vector<int>::reverse_iterator rit = test1.rbegin(); rit != rite; rit++)
-        // {
-        //     std::cout << *rit << " ";
+        }
+        std::cout << std::endl;
+        std::vector<int>::reverse_iterator rite = test1.rend();
+        for (std::vector<int>::reverse_iterator rit = test1.rbegin(); rit != rite; rit++)
+        {
+            std::cout << *rit << " ";
 
-        // }
-        // std::cout << std::endl;
-        // ft::vector<int>::const_reverse_iterator crite = test1.rend();
-        // for (ft::vector<int>::const_reverse_iterator crit = test1.rbegin(); crit != crite; crit++)
-        // {
-        //     std::cout << *crit << " ";
-        // }
-        // std::cout << std::endl;
+        }
+        std::cout << std::endl;
+        std::vector<int>::const_reverse_iterator crite = test1.rend();
+        for (std::vector<int>::const_reverse_iterator crit = test1.rbegin(); crit != crite; crit++)
+        {
+            std::cout << *crit << " ";
+        }
+        std::cout << std::endl;
         affiche(test1, "TEST 1 ");
         std::cout << std::endl << "resize" << std::endl;
         test1.resize(10);

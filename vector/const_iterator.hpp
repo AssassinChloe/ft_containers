@@ -6,12 +6,14 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 18:59:00 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/03 18:59:29 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/04 17:29:47 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONST_ITERATOR_HPP
 #define CONST_ITERATOR_HPP
+
+#include "iterators_traits.hpp"
 
 namespace ft
 {
@@ -19,7 +21,7 @@ namespace ft
     {
     };
 
-    template <typename T>
+    template <typename T >
     class const_iterator
     {
         public:
@@ -33,7 +35,8 @@ namespace ft
             
             const_iterator(pointer src) : ptr(src) {}
 
-            const_iterator(const const_iterator &src) : ptr(src->ptr) {}
+            const_iterator(const const_iterator &src) : ptr(src->ptr) 
+            {}
             
             const_iterator &operator=(const const_iterator &rhs)
             {
@@ -41,7 +44,8 @@ namespace ft
                     this->ptr = rhs.ptr;
                 return (*this);
             }
-            ~const_iterator() {}
+            ~const_iterator() 
+            {}
 
             reference operator*() const
             {
@@ -104,7 +108,6 @@ namespace ft
             {
                 return (this->ptr[index]);
             }
-
         private:
             pointer ptr;
     };

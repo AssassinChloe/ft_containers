@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:39 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/04 15:40:21 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/04 17:30:09 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <stdint.h> 
 #include <limits.h>
 #include "iterator.hpp"
+#include "const_iterator.hpp"
 #include "reverse_iterator.hpp"
 
 namespace ft
@@ -67,7 +68,9 @@ namespace ft
                 if (&copy != this)
                     *this = copy;
             }
-            vector (iterator first, iterator last, const allocator_type &alloc = allocator_type()) 
+            
+            template <typename InputIterator>
+            vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
             : _alloc(alloc), _capacity(10), _arr(_alloc.allocate(_capacity)), _current(0)
             {
                 this->insert(this->begin(), first, last);
@@ -236,7 +239,8 @@ namespace ft
             // MODIFIERS
 
             // assign
-            void assign(iterator first, iterator last) 
+            template <class InputIterator>
+            void assign (InputIterator first, InputIterator last) 
             {
                 size_type i;
                 for (i = 0; i < this->_current; i++)
@@ -340,7 +344,8 @@ namespace ft
                 }
             }
             
-            void insert(iterator position, iterator first, iterator last)
+            template <class InputIterator>
+            void insert (iterator position, InputIterator first, InputIterator last)
             {
                 size_type i;
                 iterator it;

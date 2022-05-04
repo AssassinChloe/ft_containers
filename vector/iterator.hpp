@@ -6,12 +6,14 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 18:31:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/04 14:53:06 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/04 17:28:49 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ITERATOR_HPP
 #define ITERATOR_HPP
+
+#include "iterators_traits.hpp"
 
 namespace ft
 {
@@ -33,11 +35,8 @@ namespace ft
 
             iterator(pointer src) : ptr(src) {}
 
-            iterator(const iterator &src)
-            {
-                if (this != &src)
-                    *this = src;
-            }
+            iterator(const iterator &src) : ptr(src->ptr) 
+            {}
 
             iterator &operator=(const iterator &rhs)
             {
@@ -46,8 +45,7 @@ namespace ft
                 return (*this);
             }
             ~iterator() 
-            {
-            }
+            {}
 
             reference operator*() const
             {

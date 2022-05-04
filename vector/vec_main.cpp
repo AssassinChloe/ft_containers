@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 18:31:22 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/04 15:35:05 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/04 17:18:26 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ int main()
         test1.push_back(49);
         test1.push_back(50);
         test1.push_back(51);
-        ft::vector<int> const copy = test1;
-        ft::vector<int> const test2(3, 42);
+        ft::vector<int> copy = test1;
+        ft::vector<const int> test2(3, 42);
         ft::vector<int> test3(test1.begin(), test1.end());
         
         std::cout << std::endl << "iterators" << std::endl;
@@ -54,26 +54,26 @@ int main()
             std::cout << *it << " ";
         }
         std::cout << std::endl;
-        // ft::vector<int>::const_iterator cite = test1.end();
-        // for (ft::vector<int>::const_iterator cit = test1.begin(); cit!= cite; cit++)
-        // {
-        //     std::cout << *cit << " ";
+        ft::vector<const int>::const_iterator cite = test2.end();
+        for (ft::vector<const int>::const_iterator cit = test2.begin(); cit!= cite; cit++)
+        {
+            std::cout << *cit << " ";
 
-        // }
-        // std::cout << std::endl;
-        // ft::vector<int>::reverse_iterator rite = test1.rend();
-        // for (ft::vector<int>::reverse_iterator rit = test1.rbegin(); rit != rite; rit++)
-        // {
-        //     std::cout << *rit << " ";
+        }
+        std::cout << std::endl;
+        ft::vector<int>::reverse_iterator rite = test1.rend();
+        for (ft::vector<int>::reverse_iterator rit = test1.rbegin(); rit != rite; rit++)
+        {
+            std::cout << *rit << " ";
 
-        // }
-        // std::cout << std::endl;
-        // ft::vector<int>::const_reverse_iterator crite = test1.rend();
-        // for (ft::vector<int>::const_reverse_iterator crit = test1.rbegin(); crit != crite; crit++)
-        // {
-        //     std::cout << *crit << " ";
-        // }
-        // std::cout << std::endl;
+        }
+        std::cout << std::endl;
+        ft::vector<int>::const_reverse_iterator crite = test1.rend();
+        for (ft::vector<int>::const_reverse_iterator crit = test1.rbegin(); crit != crite; crit++)
+        {
+            std::cout << *crit << " ";
+        }
+        std::cout << std::endl;
         affiche(test1, "TEST 1 ");
         std::cout << std::endl << "resize" << std::endl;
         test1.resize(10);
