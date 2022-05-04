@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 18:31:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/03 18:59:53 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/04 14:53:06 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,9 @@ namespace ft
                     this->ptr = rhs.ptr;
                 return (*this);
             }
-            ~iterator() {}
+            ~iterator() 
+            {
+            }
 
             reference operator*() const
             {

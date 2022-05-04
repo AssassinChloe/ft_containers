@@ -1,0 +1,161 @@
+
+iterators
+0 0 0 0 45 46 47 48 49 50 51 
+
+TEST 1 
+size : 11
+capacity : 18
+0 0 0 0 45 46 47 48 49 50 51 
+
+resize
+
+TEST 1 after resize 10
+size : 10
+capacity : 18
+0 0 0 0 45 46 47 48 49 50 
+
+TEST 1 after resize 20, 55
+size : 20
+capacity : 21
+0 0 0 0 45 46 47 48 49 50 55 55 55 55 55 55 55 55 55 55 
+
+TEST 1 after resize 10
+size : 10
+capacity : 21
+0 0 0 0 45 46 47 48 49 50 
+
+TEST 1 after resize 15
+size : 15
+capacity : 21
+0 0 0 0 45 46 47 48 49 50 0 0 0 0 0 
+
+reserve
+
+TEST 1 after reserve 5
+size : 15
+capacity : 21
+0 0 0 0 45 46 47 48 49 50 0 0 0 0 0 
+
+TEST 1 after reserve 40
+size : 15
+capacity : 40
+0 0 0 0 45 46 47 48 49 50 0 0 0 0 0 
+
+at et [] operator
+at5 :46
+[5] :46
+
+empty
+
+TEST 1
+size : 15
+capacity : 40
+0 0 0 0 45 46 47 48 49 50 0 0 0 0 0 
+test 1 is empty ? : 0
+
+TEST 0
+size : 0
+capacity : 10
+
+test 0 is empty ? : 1
+
+max size, front et back
+
+TEST 1
+size : 15
+capacity : 40
+0 0 0 0 45 46 47 48 49 50 0 0 0 0 0 
+max size : 2305843009213693951
+front : 0
+back : 0
+
+TEST2 (const)
+test 2 is empty ? : 0
+size : 3
+max size : 2305843009213693951
+capacity : 16
+front : 42
+back : 42
+
+assign
+
+COPY
+size : 11
+capacity : 18
+0 0 0 0 45 46 47 48 49 50 51 
+
+TEST 1 assign test3.gebin, test3.end
+size : 15
+capacity : 40
+0 0 0 0 45 46 47 48 49 50 0 0 0 0 0 
+
+TEST 1 assign 6, 66
+size : 11
+capacity : 40
+0 0 0 0 45 46 47 48 49 50 51 
+
+push/pop back
+
+TEST 1 after push back 42
+size : 7
+capacity : 40
+66 66 66 66 66 66 42 
+
+
+TEST 1 after pop back
+size : 6
+capacity : 40
+66 66 66 66 66 66 
+
+insert
+
+TEST 3
+size : 11
+capacity : 20
+0 0 0 0 45 46 47 48 49 50 51 
+
+TEST 1 after insert test3.begin, test3.end
+size : 17
+capacity : 40
+0 0 0 0 45 46 47 48 49 50 51 66 66 66 66 66 66 
+
+TEST 1 after insert 1, 3, 86
+size : 20
+capacity : 40
+0 86 86 86 0 0 0 45 46 47 48 49 50 51 66 66 66 66 66 66 
+
+erase
+
+TEST 1 after erase test1.begin
+size : 19
+capacity : 40
+86 86 86 0 0 0 45 46 47 48 49 50 51 66 66 66 66 66 66 
+
+TEST 1 after erase t1.begin, t1.end
+size : 0
+capacity : 40
+
+
+swap
+
+TEST 3
+size : 11
+capacity : 20
+0 0 0 0 45 46 47 48 49 50 51 
+
+TEST 1 after swap with t3
+size : 11
+capacity : 20
+0 0 0 0 45 46 47 48 49 50 51 
+
+TEST 3, after swap t1
+size : 0
+capacity : 40
+
+
+clear
+
+TEST 1 after clear
+size : 0
+capacity : 0
+

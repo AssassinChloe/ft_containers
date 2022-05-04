@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:39 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/04 12:42:13 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/04 15:40:21 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,11 @@ namespace ft
 
             explicit vector(const allocator_type &alloc = allocator_type()) 
             : _alloc(alloc), _capacity(10), _arr(_alloc.allocate(_capacity)), _current(0) 
-            {
-                std::cout << "default constructor" << std::endl;
-                
-            }
+            {}
 
             explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()) 
             : _alloc(alloc), _capacity(10 + n * 2), _arr(_alloc.allocate(_capacity)), _current(n)
             {
-                std::cout << "fill constructor" << std::endl;
-                
                 unsigned int i;
                 for (i = 0; i < n; i++)
                 {
@@ -69,25 +64,20 @@ namespace ft
             vector(const vector & copy)
             : _alloc(allocator_type()), _capacity(10), _arr(_alloc.allocate(_capacity)), _current(0)
             {
-                std::cout << "copy constructor" << std::endl;
-                
                 if (&copy != this)
                     *this = copy;
             }
             vector (iterator first, iterator last, const allocator_type &alloc = allocator_type()) 
             : _alloc(alloc), _capacity(10), _arr(_alloc.allocate(_capacity)), _current(0)
             {
-                std::cout << "range constructor" << std::endl;
-                
                 this->insert(this->begin(), first, last);
             }
 
         	// Operator=
             vector &operator=(const vector &x)
             {
-                std::cout << "operator =" << std::endl;
-
                 this->clear();
+                _alloc.deallocate(this->_arr, this->_capacity);
                 this->_capacity = x.capacity();
                 this->_arr = _alloc.allocate(this->_capacity);
                 this->_current = x.size();
@@ -101,9 +91,8 @@ namespace ft
         	// Destructors
             ~vector()
             {
-                std::cout << "destructor" << std::endl;
-
                 this->clear();
+                _alloc.deallocate(this->_arr, this->_capacity);
             }
 
         // ITERATORS
@@ -189,17 +178,20 @@ namespace ft
             {
                 if (n > this->_capacity)
                 {
+                    size_type i = 0;
                     pointer tmp = _alloc.allocate(n);
-                    if (_current > 0)
+                    if (this->_current > 0)
                     {
-                        for (size_type i = 0; i < this->_current; i++)
+                        for (i = 0; i < this->_current; i++)
                         {
                             tmp[i] = this->_arr[i];
                         }
                         this->clear();
+                        _alloc.deallocate(this->_arr, this->_capacity);
                     }
                     this->_capacity = n;
                     this->_arr = tmp;
+                    this->_current = i;
                 }
             }
 
@@ -315,7 +307,6 @@ namespace ft
                         this->reserve(this->_capacity * 2);
                 if (position == this->end())
                 {
-                    std::cout << n << std::endl;
                     while (i < n)
                     {
                         this->push_back(val);
@@ -327,7 +318,6 @@ namespace ft
                     iterator it;
                     iterator ite;
                     vector copy = *this;
-                    ite = this->end();
                     i = 0;
                     for (it = this->begin(); it != position; it++)
                     {
@@ -337,8 +327,10 @@ namespace ft
                     {
                         *it = val;
                         i++;
+                        it++;
                         this->_current++;
                     }
+                    ite = this->end();
                     while(it != ite)
                     {
                         this->_arr[i] = copy[i - n];
@@ -374,7 +366,6 @@ namespace ft
                     if (this->_current == this->_capacity)
                         this->reserve(this->_capacity * 2);
                     this->_arr[i++] = *it_copy;
-                    this->_current++;
                     it_copy++;
                 }
             }
@@ -431,7 +422,6 @@ namespace ft
                         _alloc.destroy(_arr + i++);
 						k++;
                         it++;
-                        
                     }
                     while (it != this->end())
                     {
@@ -440,6 +430,7 @@ namespace ft
 						j++;
                         it++;
                     }
+                    this->_current = j;
                 }
                 return (last);
             }
@@ -447,10 +438,7 @@ namespace ft
             // swap
             void swap(vector &x) 
             {
-				std::swap(this->_alloc, x.get_allocator());
-				std::swap(this->_capacity, x.capacity());
-				std::swap(this->_current, x.size());
-				std::swap(this->_arr, x.begin());
+				std::swap(*this, x);
             }
 
             // clear
@@ -462,7 +450,8 @@ namespace ft
                 }
                 _alloc.deallocate(this->_arr, this->_capacity);
                 this->_capacity = 0;
-                this->_current = 0; 
+                this->_current = 0;
+                _arr = _alloc.allocate(0);
             }
 
         // ALLOCATOR

@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 18:31:22 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/04 12:22:29 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/04 15:35:05 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <iostream>
 #include "iterator.hpp"
 
-void affiche(ft::vector<int> test1, std::string name)
+void  affiche(ft::vector<int> test1, std::string name)
 {   
     ft::vector<int>::iterator it;
     ft::vector<int>::iterator ite = test1.end();
@@ -121,7 +121,7 @@ int main()
         
 
         std::cout << std::endl << "assign" << std::endl;
-        // affiche(copy, "COPY");
+        affiche(copy, "COPY");
         affiche(test1, "TEST 1 assign test3.gebin, test3.end");
         test1.assign(test3.begin(), test3.end());
 
@@ -140,6 +140,7 @@ int main()
 
         std::cout << std::endl << "insert" << std::endl;
 
+        affiche(test3, "TEST 3");
         test1.insert(test1.begin(), test3.begin(), test3.end());
         // affiche(test2, "TEST 2");
         affiche(test1, "TEST 1 after insert test3.begin, test3.end");
@@ -155,10 +156,12 @@ int main()
         affiche(test1, "TEST 1 after erase t1.begin, t1.end");
 
         std::cout << std::endl << "swap" << std::endl;
-        // affiche(test3, "TEST 3");
+        affiche(test3, "TEST 3");
 
-        // test1.swap(test3);
-        // affiche(test1, "TEST 1");
+        test1.swap(test3);
+        affiche(test1, "TEST 1 after swap with t3");
+        
+        affiche(test3, "TEST 3, after swap t1");
         
         std::cout << std::endl << "clear" << std::endl;
         test1.clear();
@@ -169,6 +172,4 @@ int main()
         std::cerr << e.what() << '\n';
         std::cout << "Try again !" << std::endl;
     }
-    
-
 }
