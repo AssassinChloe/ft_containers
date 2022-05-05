@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 18:31:22 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/04 17:18:26 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/05 17:26:55 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int main()
 {
     try
     {
-        
         ft::vector<int> test0;
         ft::vector<int> test1(4);
         test1.push_back(45);
@@ -43,9 +42,11 @@ int main()
         test1.push_back(50);
         test1.push_back(51);
         ft::vector<int> copy = test1;
-        ft::vector<const int> test2(3, 42);
-        ft::vector<int> test3(test1.begin(), test1.end());
-        
+        affiche(copy, "copy of test 1");
+        ft::vector<int> const test2(3, 42);
+        ft::vector<int> test3(test2.begin(), test2.end());
+        test3.push_back(30);
+        test3.push_back(30);
         std::cout << std::endl << "iterators" << std::endl;
         ft::vector<int>::iterator it;
         ft::vector<int>::iterator ite = test1.end();
@@ -54,8 +55,8 @@ int main()
             std::cout << *it << " ";
         }
         std::cout << std::endl;
-        ft::vector<const int>::const_iterator cite = test2.end();
-        for (ft::vector<const int>::const_iterator cit = test2.begin(); cit!= cite; cit++)
+        ft::vector<int>::iterator cite = test3.end();
+        for (ft::vector<int>::iterator cit = test3.begin(); cit!= cite; cit++)
         {
             std::cout << *cit << " ";
 
@@ -68,8 +69,8 @@ int main()
 
         }
         std::cout << std::endl;
-        ft::vector<int>::const_reverse_iterator crite = test1.rend();
-        for (ft::vector<int>::const_reverse_iterator crit = test1.rbegin(); crit != crite; crit++)
+        ft::vector<int>::reverse_iterator crite = test3.rend();
+        for (ft::vector<int>::reverse_iterator crit = test3.rbegin(); crit != crite; crit++)
         {
             std::cout << *crit << " ";
         }
@@ -142,7 +143,7 @@ int main()
 
         affiche(test3, "TEST 3");
         test1.insert(test1.begin(), test3.begin(), test3.end());
-        // affiche(test2, "TEST 2");
+        affiche(test2, "TEST 2");
         affiche(test1, "TEST 1 after insert test3.begin, test3.end");
 
         test1.insert(++test1.begin(), 3, 86);
@@ -166,6 +167,7 @@ int main()
         std::cout << std::endl << "clear" << std::endl;
         test1.clear();
         affiche(test1, "TEST 1 after clear");
+        affiche(copy, "copy of test 1 (same as in the beginning)");
     }
     catch(const std::exception& e)
     {

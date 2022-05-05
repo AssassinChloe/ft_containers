@@ -1,14 +1,14 @@
-template <class Iterator> class iterator_traits;
-template <class T> class iterator_traits<T*>;
-template <class T> class iterator_traits<const T*>;
-
-
-
     //iterator_trait
+#ifndef ITERATORS_TRAITS
+#define ITERATORS_TRAITS
+namespace ft
+{
+    class random_access_iterator_tag;
 
-        template <class Iterator>
-        class iterator_traits
-        {
+    template <class Iterator>
+    class iterator_traits
+    {
+        public :
             typedef typename Iterator::difference_type difference_type;
             typedef typename Iterator::value_type value_type;
             typedef typename Iterator::reference reference;
@@ -16,11 +16,11 @@ template <class T> class iterator_traits<const T*>;
             // typedef std::output_iterator_tag iterator_category;
             // typedef std::forward_iterator_tag iterator_category;
             // typedef std::bidirectional_iterator_tag iterator_category;
-            typedef std::random_access_iterator_tag iterator_category;
-        };
+            typedef ft::random_access_iterator_tag iterator_category;
+    };
 
 
-
+}
     //reverse iterator
 
     // template <class Iterator>
@@ -35,19 +35,19 @@ template <class T> class iterator_traits<const T*>;
 //Iterator operations
 
     //advance
-        template <class InputIterator, class Distance>
-        void advance (InputIterator& it, Distance n)
-        {
-            return (it + n);
-        }
+    //     template <class InputIterator, class Distance>
+    //     void advance (InputIterator& it, Distance n)
+    //     {
+    //         return (it + n);
+    //     }
 
-    //distance
-        template<class InputIterator>
-        typename iterator_traits<InputIterator>::difference_type 
-        distance (InputIterator first, InputIterator last)
-        {
-            return (last - first);
-        }
+    // //distance
+    //     template<class InputIterator>
+    //     typename iterator_traits<InputIterator>::difference_type 
+    //     distance (InputIterator first, InputIterator last)
+    //     {
+    //         return (last - first);
+    //     }
 
 //Iterator generator
 
@@ -61,3 +61,4 @@ template <class T> class iterator_traits<const T*>;
     // //inserter
     //     template <class Container, class Iterator>
     //     insert_iterator<Container> inserter (Container& x, Iterator it);
+    #endif

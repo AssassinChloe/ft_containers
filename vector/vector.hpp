@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:39 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/04 17:30:09 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/05 15:46:44 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,10 @@
 #include <stdint.h> 
 #include <limits.h>
 #include "iterator.hpp"
-#include "const_iterator.hpp"
 #include "reverse_iterator.hpp"
+
+//A FAIRE
+#include <type_traits>
 
 namespace ft
 {
@@ -36,7 +38,7 @@ namespace ft
             typedef typename allocator_type::pointer                pointer;
             typedef typename allocator_type::const_pointer          const_pointer;
             typedef typename ft::iterator<value_type>               iterator;
-            typedef typename ft::iterator<const value_type>         const_iterator;
+            typedef typename ft::iterator<value_type> const         const_iterator;
             typedef typename ft::reverse_iterator<iterator>         reverse_iterator;
             typedef typename ft::reverse_iterator<const_iterator>   const_reverse_iterator;
             typedef typename allocator_type::difference_type        difference_type;
@@ -116,17 +118,17 @@ namespace ft
 
             // rbegin
             reverse_iterator rbegin() 
-            { return (this->end()); }
+            { return (reverse_iterator(this->end())); }
             
             const_reverse_iterator rbegin() const 
-            { return (this->end()); }
+            { return (reverse_iterator(this->end())); }
 
             // rend
             reverse_iterator rend() 
-            { return (this->begin()); }
+            { return (reverse_iterator(this->begin())); }
 
             const_reverse_iterator rend() const 
-            { return (this->begin()); }
+            { return (reverse_iterator(this->begin())); }
 
         // CAPACITY
 
@@ -240,23 +242,27 @@ namespace ft
 
             // assign
             template <class InputIterator>
-            void assign (InputIterator first, InputIterator last) 
+            void assign (InputIterator first, typename std::enable_if<!std::is_integral<InputIterator>::value, 
+            InputIterator>::type last)
             {
                 size_type i;
+
                 for (i = 0; i < this->_current; i++)
                 {    
                     _alloc.destroy(this->_arr + i);
                 }    
-                i = 0;           
+                i = 0;        
                 while (first != last)
                 {
                     if (i == this->_capacity)
                         reserve(this->_capacity * 2);
-                    _alloc.construct(this->_arr + i++, *first);               
+                    _alloc.construct((this->_arr + i), *first);               
                     first++;
+                    i++;
                 }
                 this->_current = i;
             }
+            
             void assign(size_type n, const value_type &val)
             {
                 if (n > this->_capacity)
@@ -345,7 +351,8 @@ namespace ft
             }
             
             template <class InputIterator>
-            void insert (iterator position, InputIterator first, InputIterator last)
+            void insert (iterator position, InputIterator first, typename std::enable_if<!std::is_integral<InputIterator>::value, 
+            InputIterator>::type last)
             {
                 size_type i;
                 iterator it;
@@ -362,9 +369,10 @@ namespace ft
                 {
                     if (this->_current == this->_capacity)
                         this->reserve(this->_capacity * 2);
-                    this->_arr[i++] = *first;
+                    this->_arr[i] = *first;
                     this->_current++;
                     first++;
+                    i++;
                 }
                 while (it_copy != ite)
                 {

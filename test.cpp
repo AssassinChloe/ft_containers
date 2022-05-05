@@ -31,9 +31,11 @@ int main()
         test1.push_back(50);
         test1.push_back(51);
         std::vector<int> copy = test1;
-        std::vector<const int> const test2(3, 42);
-        std::vector<int> test3(test1.begin(), test1.end());
-        
+        affiche(copy, "copy of test 1");
+        std::vector<int> const test2(3, 42);
+        std::vector<int> test3(test2.begin(), test2.end());
+        test3.push_back(30);
+        test3.push_back(30);
         std::cout << std::endl << "iterators" << std::endl;
         std::vector<int>::iterator it;
         std::vector<int>::iterator ite = test1.end();
@@ -42,8 +44,8 @@ int main()
             std::cout << *it << " ";
         }
         std::cout << std::endl;
-        std::vector<int>::const_iterator cite = test1.end();
-        for (std::vector<int>::const_iterator cit = test1.begin(); cit!= cite; cit++)
+        std::vector<int>::const_iterator cite = test3.end();
+        for (std::vector<int>::const_iterator cit = test3.begin(); cit!= cite; cit++)
         {
             std::cout << *cit << " ";
 
@@ -56,8 +58,8 @@ int main()
 
         }
         std::cout << std::endl;
-        std::vector<int>::const_reverse_iterator crite = test1.rend();
-        for (std::vector<int>::const_reverse_iterator crit = test1.rbegin(); crit != crite; crit++)
+        std::vector<int>::const_reverse_iterator crite = test3.rend();
+        for (std::vector<int>::const_reverse_iterator crit = test3.rbegin(); crit != crite; crit++)
         {
             std::cout << *crit << " ";
         }
@@ -109,13 +111,12 @@ int main()
         
 
         std::cout << std::endl << "assign" << std::endl;
-        affiche(copy, "COPY");
-        affiche(test1, "TEST 1 assign test3.gebin, test3.end");
         test1.assign(test3.begin(), test3.end());
+        affiche(test1, "TEST 1 after assign test3.gebin, test3.end");
 
 
-        affiche(test1, "TEST 1 assign 6, 66");
         test1.assign(6, 66);
+        affiche(test1, "TEST 1 after assign 6, 66");
 
 
         std::cout << std::endl << "push/pop back" << std::endl;
@@ -130,7 +131,7 @@ int main()
 
         affiche(test3, "TEST 3");
         test1.insert(test1.begin(), test3.begin(), test3.end());
-        // affiche(test2, "TEST 2");
+        affiche(test2, "TEST 2");
         affiche(test1, "TEST 1 after insert test3.begin, test3.end");
 
         test1.insert(++test1.begin(), 3, 86);
@@ -154,7 +155,7 @@ int main()
         std::cout << std::endl << "clear" << std::endl;
         test1.clear();
         affiche(test1, "TEST 1 after clear");
-
+        affiche(copy, "copy of test 1 (same as in the beginning)");
     }
     catch(const std::exception& e)
     {
