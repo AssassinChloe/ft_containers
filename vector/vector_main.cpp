@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 18:31:22 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/06 15:37:30 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/06 16:54:40 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,34 @@ int main()
         test1.clear();
         affiche(test1, "TEST 1 after clear");
         affiche(copy, "copy of test 1 (same as in the beginning)");
+
+        std::cout << std::endl << "relationnal operator" << std::endl;
+
+                
+        if (test1 == test2)
+            std::cout << "==" << std::endl;
+        else
+            std::cout << "not ==" << std::endl;
+        if (test1 != test2)
+            std::cout << "!=" << std::endl;
+                    else
+            std::cout << "not !=" << std::endl;
+        if (test1 < test2)
+            std::cout << "<" << std::endl;
+                    else
+            std::cout << "not <" << std::endl;
+        if (test1 > test2)
+            std::cout << ">" << std::endl;
+                    else
+            std::cout << "not >" << std::endl;
+        if (test1 <= test2)
+            std::cout << "<=" << std::endl;
+                    else
+            std::cout << "not <=" << std::endl;       
+        if (test1 >= test2)
+            std::cout << ">=" << std::endl;
+                    else
+            std::cout << "not >=" << std::endl;
     }
     catch(const std::exception& e)
     {
