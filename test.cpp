@@ -1,7 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   test.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/06 14:01:28 by cassassi          #+#    #+#             */
+/*   Updated: 2022/05/06 15:37:09 by cassassi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <vector>
 #include <iterator>
 #include <iostream>
 #include <algorithm>
+
+#include <bits/stdc++.h>
 
 void affiche(std::vector<int> test1, std::string name)
 {   
@@ -19,6 +33,8 @@ void affiche(std::vector<int> test1, std::string name)
 
 int main()
 {
+    clock_t start, end;
+    start = clock();
     try
     {
         std::vector<int> test0;
@@ -161,4 +177,9 @@ int main()
     {
         std::cerr << e.what() << std::endl;
     }
+    end = clock();
+    double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+    std::cout << std::endl << "Time taken by program is : " << std::fixed 
+         << time_taken << std::setprecision(5);
+    std::cout << " sec " << std::endl;
 }

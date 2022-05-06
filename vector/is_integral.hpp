@@ -1,15 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   is_integral.hpp                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/06 13:09:38 by cassassi          #+#    #+#             */
+/*   Updated: 2022/05/06 13:59:38 by cassassi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef IS_INTEGRAL_HPP
 #define IS_INTEGRAL_HPP
+
 namespace ft
 {
     //integral_constant
     template <class T, T v>
     struct integral_constant
     {
-        static constexpr T value = v;
+        enum { value = v };
         typedef T value_type;
         typedef integral_constant<T,v> type;
-        constexpr operator T() { return v; }
+        operator T() { return v; }
     };
 
     //true_type
@@ -29,14 +42,6 @@ namespace ft
     
     template <>
     struct is_integral<char> : public true_type
-    {};    
-    
-    template <>
-    struct is_integral<char16_t> : public true_type
-    {};    
-    
-    template <>
-    struct is_integral<char32_t> : public true_type
     {};    
     
     template <>
@@ -84,7 +89,7 @@ namespace ft
     {};
     
     template <typename T>
-    struct is_integral<const T> : public struct is_integral<T>
+    struct is_integral<const T> : public is_integral<T>
     {};
     
         /*

@@ -6,13 +6,15 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 18:31:22 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/05 17:26:55 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/06 15:37:30 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vector.hpp"
 #include <iostream>
 #include "iterator.hpp"
+#include <bits/stdc++.h>
+
 
 void  affiche(ft::vector<int> test1, std::string name)
 {   
@@ -30,6 +32,8 @@ void  affiche(ft::vector<int> test1, std::string name)
 
 int main()
 {
+    clock_t start, end;
+    start = clock();
     try
     {
         ft::vector<int> test0;
@@ -122,13 +126,12 @@ int main()
         
 
         std::cout << std::endl << "assign" << std::endl;
-        affiche(copy, "COPY");
-        affiche(test1, "TEST 1 assign test3.gebin, test3.end");
         test1.assign(test3.begin(), test3.end());
+        affiche(test1, "TEST 1 after assign test3.gebin, test3.end");
 
 
-        affiche(test1, "TEST 1 assign 6, 66");
         test1.assign(6, 66);
+        affiche(test1, "TEST 1 after assign 6, 66");
 
 
         std::cout << std::endl << "push/pop back" << std::endl;
@@ -174,4 +177,12 @@ int main()
         std::cerr << e.what() << '\n';
         std::cout << "Try again !" << std::endl;
     }
+    
+    end = clock();
+    double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+    std::cout << std::endl << "Time taken by program is : " << std::fixed 
+         << time_taken << std::setprecision(5);
+    std::cout << " sec " << std::endl;
+    
+    return 0;
 }

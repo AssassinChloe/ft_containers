@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:39 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/05 15:46:44 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/06 13:55:14 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,8 @@
 #include <limits.h>
 #include "iterator.hpp"
 #include "reverse_iterator.hpp"
-
-//A FAIRE
-#include <type_traits>
+#include "is_integral.hpp"
+#include "enable_if.hpp"
 
 namespace ft
 {
@@ -242,7 +241,7 @@ namespace ft
 
             // assign
             template <class InputIterator>
-            void assign (InputIterator first, typename std::enable_if<!std::is_integral<InputIterator>::value, 
+            void assign (InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, 
             InputIterator>::type last)
             {
                 size_type i;
@@ -351,7 +350,7 @@ namespace ft
             }
             
             template <class InputIterator>
-            void insert (iterator position, InputIterator first, typename std::enable_if<!std::is_integral<InputIterator>::value, 
+            void insert (iterator position, InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, 
             InputIterator>::type last)
             {
                 size_type i;

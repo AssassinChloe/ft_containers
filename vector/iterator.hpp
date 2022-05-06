@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 18:31:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/05 17:01:13 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/06 14:55:05 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,8 @@
 
 namespace ft
 {
-    class random_access_iterator_tag
-    {
-    };
-
+    class random_access_iterator_tag;
+    
     template <typename T>
     class iterator
     {
@@ -29,7 +27,7 @@ namespace ft
             typedef ptrdiff_t difference_type;
             typedef T* pointer;
             typedef T& reference;
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef ft::random_access_iterator_tag iterator_category;
 
             iterator() : ptr(NULL) {}
 
@@ -80,29 +78,6 @@ namespace ft
                 this->ptr--;
                 return (tmp);
             }
-
-            // const_iterator &operator++() const
-            // {
-            //     this->ptr++;
-            //     return (*this);
-            // }
-            // const_iterator operator++(int) const
-            // {
-            //     iterator tmp = *this;
-            //     this->ptr++;
-            //     return (tmp);
-            // }
-            // const_iterator &operator--() const
-            // {
-            //     this->ptr--;
-            //     return (*this);
-            // }
-            // const_iterator operator--(int) const
-            // {
-            //     iterator tmp = *this;
-            //     this->ptr--;
-            //     return (tmp);
-            // }
 
             bool operator==(const iterator &rhs) const
             {
