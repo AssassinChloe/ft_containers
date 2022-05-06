@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vec_main.cpp                                       :+:      :+:    :+:   */
+/*   vector_main.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 18:31:22 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/06 16:54:40 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/06 17:24:40 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vector.hpp"
+#include "../vector.hpp"
 #include <iostream>
-#include "iterator.hpp"
+#include "../iterator.hpp"
 #include <bits/stdc++.h>
 
 

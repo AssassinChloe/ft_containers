@@ -1,17 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   stack_main.cpp                                     :+:      :+:    :+:   */
+/*   test_stack.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/06 16:11:20 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/06 16:50:10 by cassassi         ###   ########.fr       */
+/*   Created: 2022/05/06 17:22:12 by cassassi          #+#    #+#             */
+/*   Updated: 2022/05/06 17:22:13 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "stack.hpp"
+
+#include <stack>
+#include <vector>
 #include <iostream>
+#include <bits/stdc++.h>
+
 
 int main()
 {
@@ -19,14 +23,14 @@ int main()
     start = clock();
     try
     {
-        ft::stack<int, ft::vector<int> > test1;
-        ft::stack<int, ft::vector<int> > test2;
-        ft::stack<int> copy = test1;
-        std::cout << std::endl << "size, front et back" << std::endl;
-        std::cout << "t1 size : " << test1.size() << std::endl;
-        std::cout << "t1 top : " << test1.top() << std::endl;        
-        std::cout << "copy size : " << test1.size() << std::endl;
-        std::cout << "copy top : " << test1.top() << std::endl;
+        std::stack<int, std::vector<int> > test1;
+        std::stack<int, std::vector<int> > copy = test1;
+        std::stack<int, std::vector<int> > test2;
+        // std::cout << std::endl << "size, front et back" << std::endl;
+        // std::cout << "t1 size : " << test1.size() << std::endl;
+        // std::cout << "t1 top : " << test1.top() << std::endl;        
+        // std::cout << "copy size : " << test1.size() << std::endl;
+        // std::cout << "copy top : " << test1.top() << std::endl;
         test1.push(45);
         test1.push(46);
         test1.push(47);

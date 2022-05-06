@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   iterators_traits.hpp                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/06 17:21:47 by cassassi          #+#    #+#             */
+/*   Updated: 2022/05/06 17:21:48 by cassassi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
     //iterator_trait
 #ifndef ITERATORS_TRAITS
 #define ITERATORS_TRAITS
@@ -23,10 +35,7 @@ namespace ft
             typedef ft::random_access_iterator_tag iterator_category;
     };
 
-
-}
         //                 FUNCTIONS
-
 
 //Iterator operations
 
@@ -39,23 +48,10 @@ namespace ft
 
     //distance
         template<class InputIterator>
-        typename ft::iterator_traits<InputIterator>::difference_type 
+        typename iterator_traits<InputIterator>::difference_type 
         distance (InputIterator first, InputIterator last)
         {
             return (last - first);
         }
-
-//Iterator generator
-
-    // //back_inserter
-    //     template <class Container>
-    //     back_insert_iterator<Container> back_inserter (Container& x);
-    
-    // //front_inserter
-    //     template <class Container>
-    //     front_insert_iterator<Container> front_inserter (Container& x);
-
-    // //inserter
-    //     template <class Container, class Iterator>
-    //     insert_iterator<Container> inserter (Container& x, Iterator it);
+}
     #endif
