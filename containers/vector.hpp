@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:39 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/06 13:55:14 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/09 10:59:21 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,8 +241,8 @@ namespace ft
 
             // assign
             template <class InputIterator>
-            void assign (InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, 
-            InputIterator>::type last)
+            void assign (InputIterator first,
+            typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last)
             {
                 size_type i;
 

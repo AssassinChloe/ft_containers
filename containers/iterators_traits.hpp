@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 17:21:47 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/06 17:21:48 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/09 11:49:31 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@ namespace ft
     {
     };
 
+    class bidirectional_iterator_tag
+    {
+    };
+    
     template <class Iterator>
     class iterator_traits
     {
@@ -31,7 +35,7 @@ namespace ft
             // typedef std::input_iterator_tag iterator_category;
             // typedef std::output_iterator_tag iterator_category;
             // typedef std::forward_iterator_tag iterator_category;
-            // typedef std::bidirectional_iterator_tag iterator_category;
+            typedef ft::bidirectional_iterator_tag iterator_category;
             typedef ft::random_access_iterator_tag iterator_category;
     };
 

@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 18:31:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/06 14:55:05 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/09 11:50:24 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 namespace ft
 {
     class random_access_iterator_tag;
+    class bidirectional_iterator_tag;
     
     template <typename T>
     class iterator

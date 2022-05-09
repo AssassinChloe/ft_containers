@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/02 11:46:26 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/09 14:23:14 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,31 @@
 # include <iostream>
 # include <functional>
 # include <memory>
+# include "pair.hpp"
+# include "iterator.hpp"
+# include "reverse_iterator.hpp"
+# include "binary_search_tree.hpp"
 
 namespace ft
 {
-    template < class Key,                                 
-           class T,                                       
-           class Compare = std::less<Key>,            
-           class Alloc = std::allocator<std::pair<const Key,T> >
+    template < class Key,
+           class T,
+           class Compare = std::less<Key>,
+           class Alloc = std::allocator<ft::pair<const Key,T> >
            >
     class map
     {
+        public :
+        
         typedef Key                                                     key_type;
         typedef T                                                       mapped_type;
         typedef ft::pair<const key_type, mapped_type>                   value_type;
         typedef Compare                                                 key_compare;
         typedef Alloc                                                   allocator_type;
+        
         class map::value_compare : binary_function<value_type,value_type,bool>
         {
-            friend map<key_type, mapped_type, key_compare, allocator_type>
+            friend class map<key_type, mapped_type, key_compare, allocator_type>
             
             protected:
                 Compare comp;
@@ -46,7 +53,8 @@ namespace ft
                 {
                     return comp(x.first, y.first);
                 }
-        };        
+        };
+                
         typedef typename allocator_type::reference                      reference;
         typedef typename allocator_type::const_reference                const_reference;
         typedef typename allocator_type::pointer                        pointer;
@@ -162,7 +170,13 @@ namespace ft
     
         // get_allocator
         allocator_type get_allocator() const;
+    
+
+     private:
+
+        Node root;
         
+      
     };
 }
 
