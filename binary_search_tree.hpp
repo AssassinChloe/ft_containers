@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 14:18:58 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/09 17:27:22 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/10 17:30:23 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,13 @@ namespace ft
 
 
         public :
-        Node() : _key(NULL), _left(NULL), _right(NULL), _height(0)
+        Node() :_left(nullptr), _right(nullptr), _height(0)
         {}
         
-        Node(T key) : _key(key), _left(NULL), _right(NULL), _height(1)
+        Node(T key) : _key(key), _left(nullptr), _right(nullptr), _height(1)
+        {}
+
+        virtual ~Node()
         {}
         
         Node *newNode(T key)
@@ -39,53 +42,25 @@ namespace ft
             return (node);
         }
 
-        Node* search(Node* root, T key)
+        Node* search(T key)
         {
-            if (root == NULL || root->getKey() == key)
-                return (root);
-            if (root->getKey() < key)
-                return (search(root->getRight(), key));
-            return (search(root->getLeft(), key));
+            if (this->_key == key)
+                return (this);
+            if (this->_key < key)
+                return (this->_right->search(key));
+            return (this->_left->search(key));
         }
 
         Node *insert(Node *node, T key)
         {
-            std::cout << "plop insert" <<std::endl;
             int balanceFactor;
-            if (node == NULL)
+            if (node == nullptr)
                 return (newNode(key));
             if (key < node->getKey())
                 node->setLeft(insert(node->getLeft(), key));
-            else if (key > node->getKey())
-                node->setRight(insert(node->getRight(), key));
             else
-                return (node);
-            node->setHeight(1 + max(node->getLeft()->getHeight(), node->getRight()->getHeight()));
-            balanceFactor = getBalanceFactor(node);
-            if (balanceFactor > 1)
-            {
-                if (key < node->getLeft()->getKey())
-                {
-                    return rightRotate(node);
-                } 
-                else if (key > node->getLeft()->getKey()) 
-                {
-                    node->setLeft(leftRotate(node->getLeft()));
-                    return rightRotate(node);
-                }
-            }
-            if (balanceFactor < -1) 
-            {
-                if (key > node->getRight()->getKey()) 
-                {
-                    return leftRotate(node);
-                } 
-                else if (key < node->getRight()->getKey()) 
-                {
-                    node->setRight(rightRotate(node->getRight()));
-                    return leftRotate(node);
-                }
-            }
+                node->setRight(insert(node->getRight(), key));
+            balanceTreeInsert(node, key);
             return node;
         }
 
@@ -100,92 +75,37 @@ namespace ft
 
         Node *deleteNode(Node *root, T key) 
         {
-            int balanceFactor;
-
             if (root == NULL)
                 return (root);
             if (key < root->getKey())
                 root->setLeft(deleteNode(root->getLeft(), key));
             else if (key > root->getKey())
                 root->setRight(deleteNode(root->getRight(), key));
-            else 
+            else
             {
-                if (root->getLeft() == NULL) 
+                if ((root->getLeft() == NULL) || (root->getRight() == NULL))
                 {
-                    Node *temp = root->getRight();
-                    delete(root);
-                    return (temp);
-                }
-                else if (root->getRight() == NULL) 
-                {
-                    Node *temp = root->getLeft();
-                    delete(root);
-                    return (temp);
-                }
-                Node *temp = minValueNode(root->getRight());
-                root->setKey(temp->getKey());
-                root->setRight(deleteNode(root->getRight(), temp->getKey()));
-            }
-            if (root == NULL)
-                return root;
-            root->setHeight(1 + max(root->getLeft()->getHeight(), root->getRight()->getHeight()));
-            balanceFactor = getBalanceFactor(root);
-            if (balanceFactor > 1)
-            {
-                if (key < root->getLeft()->getKey())
-                {
-                    return rightRotate(root);
+                    Node *temp = root->getLeft() ? root->getLeft() : root->getRight();
+                    if (temp == NULL)
+                    {
+                        temp = root;
+                        root = NULL;
+                    }
+                    else
+                        *root = *temp;
+                    delete (temp);
                 } 
-                else if (key > root->getLeft()->getKey()) 
+                else
                 {
-                    root->setLeft(leftRotate(root->getLeft()));
-                    return rightRotate(root);
+                    Node *temp = minValueNode(root->getRight());
+                    root->setKey(temp->getKey());
+                    root->setRight(deleteNode(root->getRight(), temp->getKey()));
                 }
             }
-            if (balanceFactor < -1) 
-            {
-                if (key > root->getRight()->getKey()) 
-                {
-                    return leftRotate(root);
-                } 
-                else if (key < root->getRight()->getKey()) 
-                {
-                    root->setRight(rightRotate(root->getRight()));
-                    return leftRotate(root);
-                }
-            }
+            root = balanceTreeDelete(root, key);
             return (root);
         }
 
-        Node *rightRotate(Node *y) 
-        {
-            Node *x = y->getLeft();
-            Node *T2 = x->getRight();
-            x->setRight(y);
-            y->setLeft(T2);
-            y->setHeight(max(y->getLeft()->getHeight(), y->getRight()->getHeight()) + 1);
-            x->setHeight(max(x->getLeft()->getHeight(), x->getRight()->getHeight()) + 1);
-            return x;
-        }
-
-        // Rotate left
-        Node *leftRotate(Node *x)
-        {
-        Node *y = x->getRight();
-        Node *T2 = y->getLeft();
-        y->setLeft(x);
-        x->setRight(T2);
-        x->setHeight(max(x->getLeft()->getHeight(), x->getRight()->getHeight()) + 1);
-        y->setHeight(max(y->getLeft()->getHeight(), y->getRight()->getHeight()) + 1);
-        return y;
-        }
-
-        int getBalanceFactor(Node *N) 
-        {
-            if (N == NULL)
-                return 0;
-            return (N->getLeft()->getHeight() - N->getRight()->getHeight());
-        }
         int getHeight() const 
         {
             return (this->_height);
@@ -213,13 +133,11 @@ namespace ft
         
         void setLeft(Node *newleft)
         {
-            delete (this->_left);
             this->_left = newleft;
         }
 
         void setRight(Node *newright)
         {
-            delete (this->_right);
             this->_right = newright;
         }
 
@@ -235,7 +153,116 @@ namespace ft
             return (b);
         }
 
-        // Print the tree
+        Node *rightRotate(Node *y) 
+        {
+            Node *x = y->getLeft();
+            Node *T2 = x->getRight();
+            x->setRight(y);
+            y->setLeft(T2);
+            modifHeight(y);
+            modifHeight(x);
+            return x;
+        }
+
+        Node *leftRotate(Node *x)
+        {
+            Node *y = x->getRight();
+            Node *T2 = y->getLeft();
+            y->setLeft(x);
+            x->setRight(T2);
+            modifHeight(y);
+            modifHeight(x);
+            return y;
+        }
+
+        int getBalanceFactor(Node *N) 
+        {
+            if (N == NULL)
+                return 0;
+            if (N->getLeft() == nullptr)
+            {
+                if (N->getRight() == nullptr)
+                    return (0);
+                else
+                    return (0 - N->getRight()->getHeight());
+            }
+            else
+            {
+                if (N->getRight() == nullptr)
+                    return (N->getLeft()->getHeight());
+            }
+            return (N->getLeft()->getHeight() - N->getRight()->getHeight());
+        }
+
+        void modifHeight(Node *node)
+        {
+            if (node->getLeft() == nullptr || node->getRight() == nullptr)
+            {
+                if (node->getLeft() == nullptr && node->getRight() == nullptr)
+                    node->setHeight(0);
+                else if (node->getLeft() == nullptr)
+                    node->setHeight(1 + node->getRight()->getHeight());
+                else if (node->getRight() == nullptr)
+                    node->setHeight(1 + node->getLeft()->getHeight());
+            }
+            else
+                node->setHeight(1 + max(node->getLeft()->getHeight(), node->getRight()->getHeight()));   
+        }
+        
+        Node *balanceTreeInsert(Node *node, T key)
+        {
+            modifHeight(node);
+            int balanceFactor = getBalanceFactor(node);
+            if (balanceFactor > 1)
+            {
+                if (key < node->getLeft()->getKey())
+                {
+                    return rightRotate(node);
+                } 
+                else if (key > node->getLeft()->getKey()) 
+                {
+                    node->setLeft(leftRotate(node->getLeft()));
+                    return rightRotate(node);
+                }
+            }
+            if (balanceFactor < -1) 
+            {
+                if (key > node->getRight()->getKey()) 
+                {
+                    return leftRotate(node);
+                } 
+                else if (key < node->getRight()->getKey()) 
+                {
+                    node->setRight(rightRotate(node->getRight()));
+                    return leftRotate(node);
+                }
+            }
+            return (node);
+        }
+        
+        Node *balanceTreeDelete(Node *root, T key)
+        {
+            if (root == NULL)
+                return root;
+            modifHeight(root);
+            int balanceFactor = getBalanceFactor(root);
+            if (balanceFactor > 1)
+            {
+                if (getBalanceFactor(root->getLeft()) >= 0) 
+                    return rightRotate(root);
+                root->setLeft(leftRotate(root->getLeft()));
+                return rightRotate(root);
+            }
+            if (balanceFactor < -1) 
+            {
+                if (getBalanceFactor(root->getRight()) <= 0)
+                    return leftRotate(root);
+                root->setRight(rightRotate(root->getRight()));
+                return leftRotate(root);
+            }
+            return (root);
+        }
+
         void printTree(Node *root, std::string indent, bool last)
         {
             if (root != nullptr) 
@@ -251,7 +278,7 @@ namespace ft
                     std::cout << "L----";
                     indent += "|  ";
                 }
-                std::cout << root->getKey() << std::endl;
+                std::cout << "key : " << root->getKey() << " " << std::endl;
                 printTree(root->getLeft(), indent, false);
                 printTree(root->getRight(), indent, true);
             }

@@ -2,31 +2,20 @@
 using namespace ft;
 int main()
 {
-  Node<int> *root;
+  Node<int> *root = new Node<int>(33);
 
-  root = (*root).insert(root, 33);
+  root = root->insert(root, 13);
+  root = root->insert(root, 53);
+  root = root->insert(root, 9);
+  root = root->insert(root, 21);
+  root = root->insert(root, 61);
+  root = root->insert(root, 8);
+  root = root->insert(root, 11);
+  std::cout << "search " << root->search(61)->getKey() << std::endl;
+  root->printTree(root, "", true);
 
-(*root).printTree(root, "", true);
-
-  root = (*root).insert(root, 13);
-
-(*root).printTree(root, "", true);
-
-root = (*root).insert(root, 53);
-
-(*root).printTree(root, "", true);
-  root = (*root).insert(root, 9);
-(*root).printTree(root, "", true);
-  root = (*root).insert(root, 21);
-(*root).printTree(root, "", true);
-  root = (*root).insert(root, 61);
-(*root).printTree(root, "", true);
-  root = (*root).insert(root, 8);
-(*root).printTree(root, "", true);
-  root = (*root).insert(root, 11);
-
-  (*root).printTree(root, "", true);
-  root = (*root).deleteNode(root, 13);
+  root = root->deleteNode(root, 13);
   std::cout << "After deleting " << std::endl;
-(*root).printTree(root, "", true);
+ (*root).printTree(root, "", true);
+  delete (root);
 }
