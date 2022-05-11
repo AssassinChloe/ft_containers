@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 14:18:58 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/10 17:30:23 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/11 17:56:27 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,27 @@ namespace ft
             int     _height;
 
 
-        public :
-        Node() :_left(nullptr), _right(nullptr), _height(0)
+        Node() :_left(NULL), _right(NULL), _height(0)
         {}
+        public :
         
-        Node(T key) : _key(key), _left(nullptr), _right(nullptr), _height(1)
+        Node(T key) : _key(key), _left(NULL), _right(NULL), _height(1)
         {}
 
         virtual ~Node()
-        {}
+        {
+            if (this->_left != NULL)
+            {
+                delete (this->_left);
+                this->_left = NULL;
+            }
+            if (this->_right != NULL)
+            {
+                delete(this->_right);
+                this->_right = NULL;
+            }
+
+        }
         
         Node *newNode(T key)
         {
@@ -42,25 +54,31 @@ namespace ft
             return (node);
         }
 
-        Node* search(T key)
+        Node* search(Node *node, T key)
         {
-            if (this->_key == key)
-                return (this);
-            if (this->_key < key)
-                return (this->_right->search(key));
-            return (this->_left->search(key));
+            if (node)
+            {
+                if (node->getKey() == key)
+                    return (node);
+                if (node->getKey() < key)
+                    return (search(node->getRight(), key));
+                return (search(node->getLeft(), key));
+            }
+            return NULL;
         }
 
         Node *insert(Node *node, T key)
         {
-            int balanceFactor;
-            if (node == nullptr)
+            if (node == NULL)
                 return (newNode(key));
+                
             if (key < node->getKey())
                 node->setLeft(insert(node->getLeft(), key));
-            else
+            else if (key > node->getKey())
                 node->setRight(insert(node->getRight(), key));
-            balanceTreeInsert(node, key);
+            else
+                return (node);
+            node = balanceTreeInsert(node, key);
             return node;
         }
 
@@ -75,6 +93,7 @@ namespace ft
 
         Node *deleteNode(Node *root, T key) 
         {
+            Node *temp;
             if (root == NULL)
                 return (root);
             if (key < root->getKey())
@@ -85,7 +104,11 @@ namespace ft
             {
                 if ((root->getLeft() == NULL) || (root->getRight() == NULL))
                 {
-                    Node *temp = root->getLeft() ? root->getLeft() : root->getRight();
+                    
+                    if (root->getLeft())
+                        temp = root->getLeft();
+                    else
+                        temp = root->getRight();
                     if (temp == NULL)
                     {
                         temp = root;
@@ -97,12 +120,12 @@ namespace ft
                 } 
                 else
                 {
-                    Node *temp = minValueNode(root->getRight());
+                    temp = minValueNode(root->getRight());
                     root->setKey(temp->getKey());
                     root->setRight(deleteNode(root->getRight(), temp->getKey()));
                 }
             }
-            root = balanceTreeDelete(root, key);
+            root = balanceTreeDelete(root);
             return (root);
         }
 
@@ -179,16 +202,16 @@ namespace ft
         {
             if (N == NULL)
                 return 0;
-            if (N->getLeft() == nullptr)
+            if (N->getLeft() == NULL)
             {
-                if (N->getRight() == nullptr)
+                if (N->getRight() == NULL)
                     return (0);
                 else
                     return (0 - N->getRight()->getHeight());
             }
             else
             {
-                if (N->getRight() == nullptr)
+                if (N->getRight() == NULL)
                     return (N->getLeft()->getHeight());
             }
             return (N->getLeft()->getHeight() - N->getRight()->getHeight());
@@ -196,14 +219,14 @@ namespace ft
 
         void modifHeight(Node *node)
         {
-            if (node->getLeft() == nullptr || node->getRight() == nullptr)
+            if (node->getLeft() == NULL || node->getRight() == NULL)
             {
-                if (node->getLeft() == nullptr && node->getRight() == nullptr)
+                if (node->getLeft() == NULL && node->getRight() == NULL)
                     node->setHeight(0);
-                else if (node->getLeft() == nullptr)
-                    node->setHeight(1 + node->getRight()->getHeight());
-                else if (node->getRight() == nullptr)
-                    node->setHeight(1 + node->getLeft()->getHeight());
+                else if (node->getLeft() == NULL)
+                    node->setHeight(1 + max(0, node->getRight()->getHeight()));
+                else if (node->getRight() == NULL)
+                    node->setHeight(1 + max(node->getLeft()->getHeight(), 0));
             }
             else
                 node->setHeight(1 + max(node->getLeft()->getHeight(), node->getRight()->getHeight()));   
@@ -215,32 +238,20 @@ namespace ft
             int balanceFactor = getBalanceFactor(node);
             if (balanceFactor > 1)
             {
-                if (key < node->getLeft()->getKey())
-                {
-                    return rightRotate(node);
-                } 
-                else if (key > node->getLeft()->getKey()) 
-                {
+                if (key > node->getLeft()->getKey())
                     node->setLeft(leftRotate(node->getLeft()));
-                    return rightRotate(node);
-                }
+                return rightRotate(node);
             }
-            if (balanceFactor < -1) 
+            if (balanceFactor < -1 && key > node->getRight()->getKey())
             {
-                if (key > node->getRight()->getKey()) 
-                {
-                    return leftRotate(node);
-                } 
-                else if (key < node->getRight()->getKey()) 
-                {
+                if (key < node->getRight()->getKey())
                     node->setRight(rightRotate(node->getRight()));
-                    return leftRotate(node);
-                }
+                return leftRotate(node);
             }
             return (node);
         }
         
-        Node *balanceTreeDelete(Node *root, T key)
+        Node *balanceTreeDelete(Node *root)
         {
             if (root == NULL)
                 return root;
@@ -265,7 +276,7 @@ namespace ft
 
         void printTree(Node *root, std::string indent, bool last)
         {
-            if (root != nullptr) 
+            if (root != NULL) 
             {
                 std::cout << indent;
                 if (last) 
