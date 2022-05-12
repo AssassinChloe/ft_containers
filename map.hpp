@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/09 14:23:14 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/12 10:22:44 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ namespace ft
 
      private:
 
-        Node root;
+        Node<T> root;
         
       
     };
