@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 13:09:38 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/06 13:59:38 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/12 14:22:45 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,44 +91,5 @@ namespace ft
     template <typename T>
     struct is_integral<const T> : public is_integral<T>
     {};
-    
-        /*
-        fundamental integral types
-    bool
-    char
-    char16_t
-    char32_t
-    wchar_t
-    signed char
-    short int
-    int
-    long int
-    long long int
-    unsigned char
-    unsigned short int
-    unsigned int
-    unsigned long int
-    unsigned long long int
-
-        Template parameters
-    T
-    A type.
-        */
-
 }
-/*
-Template parameters
-T
-Type of the integral constant.
-Aliased as member type integral_constant::value_type.
-v
-Value of the integral constant.
-Accessible as member integral_constant::value, or through type casting.
-
-
-member type	definition
-value_type	The type of the constant (template parameter T)
-type	The integral_constant type itself
-*/
-
 #endif

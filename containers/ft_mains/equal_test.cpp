@@ -1,7 +1,7 @@
 #include <iostream>     // std::cout, std::boolalpha
 #include "equal.hpp"
 #include <cctype> 
-#include "containers/vector.hpp"
+#include "../vector.hpp"
 
 bool mypredicate (int i, int j) {
   return (i==j);}

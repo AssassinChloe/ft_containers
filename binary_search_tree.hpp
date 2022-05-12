@@ -6,34 +6,42 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 14:18:58 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/11 17:56:27 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/12 16:57:59 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BINARY_SEARCH_TREE_HPP
 #define BINARY_SEARCH_TREE_HPP
+#include "pair.hpp"
 
 #include <iostream>
 namespace ft
 {
-    template <class T> 
+    template <class Key, class T> 
     class Node
     {
         private:
-            T       _key;
-            Node    *_left;
-            Node    *_right;
-            int     _height;
+            ft::pair<Key, T>    _key;
+            Node                *_left;
+            Node                *_right;
+            int                 _height;
+            Node                *_parent;
 
 
-        Node() :_left(NULL), _right(NULL), _height(0)
+        Node() :_left(NULL), _right(NULL), _height(0), _parent(NULL)
         {}
+        
         public :
         
-        Node(T key) : _key(key), _left(NULL), _right(NULL), _height(1)
+        Node(ft::pair<Key, T> key) : _key(key), _left(NULL), _right(NULL), _height(1), _parent(NULL)
         {}
 
         virtual ~Node()
+        {
+            clear();
+        }
+
+        void clear()
         {
             if (this->_left != NULL)
             {
@@ -45,40 +53,59 @@ namespace ft
                 delete(this->_right);
                 this->_right = NULL;
             }
-
         }
         
-        Node *newNode(T key)
+        void setParent(Node *node)
+        {
+            this->_parent = node;
+        }
+        
+        void setAllParents(Node *node)
+        {
+            if (node->getRight())
+            {
+                node->getRight()->setParent(node);
+                node->setAllParents(node->getRight());
+            }
+            if (node->getLeft())
+            {
+                node->getLeft()->setParent(node);
+                node->setAllParents(node->getLeft());
+            }
+        }
+        
+        Node *newNode(ft::pair<Key, T> key)
         {
             Node *node = new Node(key);
             return (node);
         }
 
-        Node* search(Node *node, T key)
+        Node* search(Node *node, ft::pair<Key, T> key)
         {
             if (node)
             {
-                if (node->getKey() == key)
+                if (node->getKey().first == key.first)
                     return (node);
-                if (node->getKey() < key)
+                if (node->getKey().first < key.first)
                     return (search(node->getRight(), key));
                 return (search(node->getLeft(), key));
             }
             return NULL;
         }
 
-        Node *insert(Node *node, T key)
+        Node *insert(Node *node, ft::pair<Key, T> key)
         {
             if (node == NULL)
                 return (newNode(key));
                 
-            if (key < node->getKey())
+            if (key.first < node->getKey().first)
                 node->setLeft(insert(node->getLeft(), key));
-            else if (key > node->getKey())
+            else if (key.first > node->getKey().first)
                 node->setRight(insert(node->getRight(), key));
             else
                 return (node);
             node = balanceTreeInsert(node, key);
+            setAllParents(node);
             return node;
         }
 
@@ -91,14 +118,23 @@ namespace ft
             return current;
         }
 
-        Node *deleteNode(Node *root, T key) 
+        Node *maxValueNode(Node *node) 
+        {
+            Node *current = node;
+
+            while (current && current->getRight() != NULL)
+                current = current->getRight();
+            return current;
+        }
+
+        Node *deleteNode(Node *root, ft::pair<Key, T> key) 
         {
             Node *temp;
             if (root == NULL)
                 return (root);
-            if (key < root->getKey())
+            if (key.first < root->getKey().first)
                 root->setLeft(deleteNode(root->getLeft(), key));
-            else if (key > root->getKey())
+            else if (key.first > root->getKey().first)
                 root->setRight(deleteNode(root->getRight(), key));
             else
             {
@@ -126,6 +162,7 @@ namespace ft
                 }
             }
             root = balanceTreeDelete(root);
+            setAllParents(root);
             return (root);
         }
 
@@ -144,7 +181,7 @@ namespace ft
             return (this->_right);
         }
 
-        T getKey() const
+        ft::pair<Key, T> getKey() const
         {
             return (this->_key);
         }        
@@ -164,7 +201,7 @@ namespace ft
             this->_right = newright;
         }
 
-        void setKey(T newkey)
+        void setKey(ft::pair<Key, T> newkey)
         {
             this->_key = newkey;
         }
@@ -232,17 +269,17 @@ namespace ft
                 node->setHeight(1 + max(node->getLeft()->getHeight(), node->getRight()->getHeight()));   
         }
         
-        Node *balanceTreeInsert(Node *node, T key)
+        Node *balanceTreeInsert(Node *node, ft::pair<Key, T> key)
         {
             modifHeight(node);
             int balanceFactor = getBalanceFactor(node);
             if (balanceFactor > 1)
             {
-                if (key > node->getLeft()->getKey())
+                if (key.first > node->getLeft()->getKey().first)
                     node->setLeft(leftRotate(node->getLeft()));
                 return rightRotate(node);
             }
-            if (balanceFactor < -1 && key > node->getRight()->getKey())
+            if (balanceFactor < -1 && key.first > node->getRight()->getKey().first)
             {
                 if (key < node->getRight()->getKey())
                     node->setRight(rightRotate(node->getRight()));
@@ -274,26 +311,16 @@ namespace ft
             return (root);
         }
 
-        void printTree(Node *root, std::string indent, bool last)
+        void inorder_traversal(Node* root)
         {
-            if (root != NULL) 
+            if(root != NULL) 
             {
-                std::cout << indent;
-                if (last) 
-                {
-                    std::cout << "R----";
-                    indent += "   ";
-                }
-                else
-                {
-                    std::cout << "L----";
-                    indent += "|  ";
-                }
-                std::cout << "key : " << root->getKey() << " " << std::endl;
-                printTree(root->getLeft(), indent, false);
-                printTree(root->getRight(), indent, true);
+                inorder_traversal(root->getLeft());
+                std::cout << root->getKey().first << std::endl;          
+                inorder_traversal(root->getRight());
             }
-        }        
+        }
+
     };
 
 }

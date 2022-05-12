@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 17:21:47 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/12 12:08:21 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/12 14:23:12 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,6 @@ namespace ft
             typedef typename Iterator::value_type value_type;
             typedef typename Iterator::reference reference;
             typedef typename Iterator::pointer pointer;
-            // typedef std::input_iterator_tag iterator_category;
-            // typedef std::output_iterator_tag iterator_category;
-            // typedef std::forward_iterator_tag iterator_category;
-            // typedef ft::bidirectional_iterator_tag iterator_category;
-            // typedef ft::random_access_iterator_tag iterator_category;
     };
 
         //                 FUNCTIONS
