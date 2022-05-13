@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 14:18:58 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/12 16:57:59 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/13 12:08:04 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,13 +80,13 @@ namespace ft
             return (node);
         }
 
-        Node* search(Node *node, ft::pair<Key, T> key)
+        Node* search(Node *node, Key key)
         {
             if (node)
             {
-                if (node->getKey().first == key.first)
+                if (node->getKey().first == key)
                     return (node);
-                if (node->getKey().first < key.first)
+                if (node->getKey().first < key)
                     return (search(node->getRight(), key));
                 return (search(node->getLeft(), key));
             }
@@ -127,43 +127,43 @@ namespace ft
             return current;
         }
 
-        Node *deleteNode(Node *root, ft::pair<Key, T> key) 
+        Node *deleteNode(Node *node, ft::pair<Key, T> key) 
         {
             Node *temp;
-            if (root == NULL)
-                return (root);
-            if (key.first < root->getKey().first)
-                root->setLeft(deleteNode(root->getLeft(), key));
-            else if (key.first > root->getKey().first)
-                root->setRight(deleteNode(root->getRight(), key));
+            if (node == NULL)
+                return (node);
+            if (key.first < node->getKey().first)
+                node->setLeft(deleteNode(node->getLeft(), key));
+            else if (key.first > node->getKey().first)
+                node->setRight(deleteNode(node->getRight(), key));
             else
             {
-                if ((root->getLeft() == NULL) || (root->getRight() == NULL))
+                if ((node->getLeft() == NULL) || (node->getRight() == NULL))
                 {
                     
-                    if (root->getLeft())
-                        temp = root->getLeft();
+                    if (node->getLeft())
+                        temp = node->getLeft();
                     else
-                        temp = root->getRight();
+                        temp = node->getRight();
                     if (temp == NULL)
                     {
-                        temp = root;
-                        root = NULL;
+                        temp = node;
+                        node = NULL;
                     }
                     else
-                        *root = *temp;
+                        *node = *temp;
                     delete (temp);
                 } 
                 else
                 {
-                    temp = minValueNode(root->getRight());
-                    root->setKey(temp->getKey());
-                    root->setRight(deleteNode(root->getRight(), temp->getKey()));
+                    temp = minValueNode(node->getRight());
+                    node->setKey(temp->getKey());
+                    node->setRight(deleteNode(node->getRight(), temp->getKey()));
                 }
             }
-            root = balanceTreeDelete(root);
-            setAllParents(root);
-            return (root);
+            node = balanceTreeDelete(node);
+            setAllParents(node);
+            return (node);
         }
 
         int getHeight() const 
@@ -179,6 +179,11 @@ namespace ft
         Node *getRight() const
         {
             return (this->_right);
+        }        
+        
+        Node *getParent() const
+        {
+            return (this->_parent);
         }
 
         ft::pair<Key, T> getKey() const
@@ -288,37 +293,80 @@ namespace ft
             return (node);
         }
         
-        Node *balanceTreeDelete(Node *root)
+        Node *balanceTreeDelete(Node *node)
         {
-            if (root == NULL)
-                return root;
-            modifHeight(root);
-            int balanceFactor = getBalanceFactor(root);
+            if (node == NULL)
+                return node;
+            modifHeight(node);
+            int balanceFactor = getBalanceFactor(node);
             if (balanceFactor > 1)
             {
-                if (getBalanceFactor(root->getLeft()) >= 0) 
-                    return rightRotate(root);
-                root->setLeft(leftRotate(root->getLeft()));
-                return rightRotate(root);
+                if (getBalanceFactor(node->getLeft()) >= 0) 
+                    return rightRotate(node);
+                node->setLeft(leftRotate(node->getLeft()));
+                return rightRotate(node);
             }
             if (balanceFactor < -1) 
             {
-                if (getBalanceFactor(root->getRight()) <= 0)
-                    return leftRotate(root);
-                root->setRight(rightRotate(root->getRight()));
-                return leftRotate(root);
+                if (getBalanceFactor(node->getRight()) <= 0)
+                    return leftRotate(node);
+                node->setRight(rightRotate(node->getRight()));
+                return leftRotate(node);
             }
-            return (root);
+            return (node);
         }
 
-        void inorder_traversal(Node* root)
+        void inorder_traversal(Node* node)
         {
-            if(root != NULL) 
+            if(node != NULL) 
             {
-                inorder_traversal(root->getLeft());
-                std::cout << root->getKey().first << std::endl;          
-                inorder_traversal(root->getRight());
+                inorder_traversal(node->getLeft());
+                std::cout << node->getKey().first << std::endl;          
+                inorder_traversal(node->getRight());
             }
+        }
+        
+        Node *increase(Node *node) 
+        {
+		    if (node->getRight())
+            {
+			    node = node->getRight();
+                while (node->getLeft())
+                    node = node->getLeft();
+            }
+            else 
+            {
+                Node *temp = node;
+                node = node->getParent();
+                while (node->getLeft() != temp)
+                {
+                    temp = node;
+                    node = node->getParent();
+                }
+            }
+
+            return (node);
+	    }
+
+        Node *decrease(Node *node) 
+        {
+            if (node->getLeft()) 
+            {
+                node = node->getLeft();
+                while (node->getRight())
+                    node = node->getRight();
+            }
+            else 
+            {
+                Node *temp = node;
+                node = node->getParent();
+                while (node->getRight() != temp) 
+                {
+                    temp = node;
+                    node = node->getParent();
+                }
+            }
+            return (node);
         }
 
     };

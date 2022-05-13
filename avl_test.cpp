@@ -4,45 +4,45 @@
 // {
 //   std::cout << std::endl;
 
-//   Node<int> *root = new Node<int>(45);
+//   Node<int> *node = new Node<int>(45);
 //   Node<int> plop(42);
-//   root = root->insert(root, 9);
-//   root = root->insert(root, 11); 
-//   root = root->insert(root, 13);
-//   root = root->insert(root, 21);
-//   root = root->insert(root, 33);
-//   root = root->insert(root, 53);
-//   root = root->insert(root, 61);
-//   root = root->insert(root, 12);
-//   root = root->insert(root, 14);
-//   root = root->insert(root, 15);
-//   root = root->insert(root, 16);
+//   node = node->insert(node, 9);
+//   node = node->insert(node, 11); 
+//   node = node->insert(node, 13);
+//   node = node->insert(node, 21);
+//   node = node->insert(node, 33);
+//   node = node->insert(node, 53);
+//   node = node->insert(node, 61);
+//   node = node->insert(node, 12);
+//   node = node->insert(node, 14);
+//   node = node->insert(node, 15);
+//   node = node->insert(node, 16);
 
 //   //doublon
-//   root = root->insert(root, 16);
-//   root = root->insert(root, 61);
+//   node = node->insert(node, 16);
+//   node = node->insert(node, 61);
 
 
-//   Node<int> *tmp = root->search(root, 8);
+//   Node<int> *tmp = node->search(node, 8);
 //   if (tmp)
 //     std::cout << "search " << tmp->getKey() << std::endl;
 //   else
 //     std::cout << "search fails " << std::endl;
   
-//   tmp = root->search(root, 61);
+//   tmp = node->search(node, 61);
 //   if (tmp)
 //     std::cout << "search " << tmp->getKey() << std::endl;
 //   else
 //     std::cout << "search fails " << std::endl;
 //   std::cout << std::endl;
 
-//   root->printTree(root , "", true );
+//   node->printTree(node , "", true );
 //   std::cout << std::endl;
-//   root = root->deleteNode(root, 16);
-//   root = root->deleteNode(root, 61);
-//   root = root->deleteNode(root, 8);
+//   node = node->deleteNode(node, 16);
+//   node = node->deleteNode(node, 61);
+//   node = node->deleteNode(node, 8);
 //   std::cout << "After deleting 16" << std::endl;
 //   std::cout << std::endl;
-//   root->printTree(root , "", true );
-//   delete (root);
+//   node->printTree(node , "", true );
+//   delete (node);
 // }

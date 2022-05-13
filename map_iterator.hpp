@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map_iterator.hpp                        :+:      :+:    :+:   */
+/*   map_iterator.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/12 16:00:05 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/12 16:00:16 by cassassi         ###   ########.fr       */
+/*   Created: 2022/05/13 12:05:23 by cassassi          #+#    #+#             */
+/*   Updated: 2022/05/13 12:09:46 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define MAP_ITERATOR_HPP
 
 #include "iterators_traits.hpp"
+#include "map.hpp"
 
 namespace ft
 {
@@ -28,9 +29,11 @@ namespace ft
             typedef T& reference;
             typedef ft::bidirectional_iterator_tag iterator_category;
 
-            map_iterator() : ptr(NULL) {}
+            map_iterator() : ptr(NULL)
+            {}
 
-            map_iterator(pointer src) : ptr(src) {}
+            map_iterator(pointer src) : ptr(src)
+            {}
 
             map_iterator(const map_iterator &src) 
             {
@@ -40,7 +43,10 @@ namespace ft
             map_iterator &operator=(const map_iterator &rhs)
             {
                 if (this != &rhs)
+                {
                     this->ptr = rhs.ptr;
+                    this->prev = rhs.prev;
+                }
                 return (*this);
             }
             ~map_iterator() 
@@ -57,24 +63,24 @@ namespace ft
 
             map_iterator &operator++()
             {
-                Pointer tmp = this;
+                this->ptr = *(this->ptr)->increase(this->ptr);
                 return (*this);
             }
             map_iterator operator++(int)
             {
-                pointer old_it = this;
-                iterator tmp = *this;
+                map_iterator tmp = this;
+                this->ptr = *(this->ptr)->increase(this->ptr);
                 return (tmp);
             }
             map_iterator &operator--()
             {
-                this->ptr--;
+                this->ptr = *(this->ptr)->decrease(this->ptr);
                 return (*this);
             }
             map_iterator operator--(int)
             {
-                iterator tmp = *this;
-                this->ptr--;
+                map_iterator tmp = this;
+                this->ptr = *(this->ptr)->decrease(this->ptr);
                 return (tmp);
             }
 
@@ -87,9 +93,9 @@ namespace ft
                 return (this->ptr != rhs.ptr);
             }
 
-            private
+            private:
 
-            pointer _ptr;
+                pointer ptr;
     };
 }
 #endif;

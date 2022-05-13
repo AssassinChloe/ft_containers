@@ -5,7 +5,7 @@
 int main ()
 {
     ft::pair<int,char> bar1 (10,'c');
-    ft::Node<int, char> *root = new ft::Node<int, char>(bar1);
+    ft::Node<int, char> *node = new ft::Node<int, char>(bar1);
 
     ft::pair<int,char> bar2 (90,'g');
     ft::pair<int,char> bar3 (45,'f');
@@ -19,19 +19,18 @@ int main ()
     ft::pair<int,char> bar11(24,'e');
     ft::pair<int,char> bar12(25,'e');
     
-    root = root->insert(root, bar2);
-    root = root->insert(root, bar3);
-    root = root->insert(root, bar4);
-    root = root->insert(root, bar5);
-    root = root->insert(root, bar6);
-    root = root->insert(root, bar7);
-    root = root->insert(root, bar8);
-    root = root->insert(root, bar9);
-    root = root->insert(root, bar10);
-    root = root->insert(root, bar11);
-    root = root->insert(root, bar12);
+    node = node->insert(node, bar2);
+    node = node->insert(node, bar3);
+    node = node->insert(node, bar4);
+    node = node->insert(node, bar5);
+    node = node->insert(node, bar6);
+    node = node->insert(node, bar7);
+    node = node->insert(node, bar8);
+    node = node->insert(node, bar9);
+    node = node->insert(node, bar10);
+    node = node->insert(node, bar11);
+    node = node->insert(node, bar12);
 
-    root->inorder_traversal(root);
     std::cout << std::endl;
 
     return 0;

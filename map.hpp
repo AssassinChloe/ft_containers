@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/12 17:21:13 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/13 12:15:21 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include "pair.hpp"
 # include "is_integral.hpp"
 # include "enable_if.hpp"
-# include "bidirectional_iterator.hpp"
+# include "map_iterator.hpp"
 # include "reverse_iterator.hpp"
 # include "binary_search_tree.hpp"
 
@@ -58,8 +58,8 @@ namespace ft
         typedef typename allocator_type::const_reference                const_reference;
         typedef typename allocator_type::pointer                        pointer;
         typedef typename allocator_type::const_pointer                  const_pointer;
-        typedef typename ft::bidirectional_iterator<value_type>         iterator;
-        typedef typename ft::bidirectional_iterator<const value_type>   const_iterator;
+        typedef typename ft::map_iterator<value_type>                   iterator;
+        typedef typename ft::map_iterator<const value_type>             const_iterator;
         typedef typename ft::reverse_iterator<iterator>                 reverse_iterator;
         typedef typename ft::reverse_iterator<const_iterator>           const_reverse_iterator;
         typedef typename ft::iterator_traits<iterator>::difference_type difference_type;
@@ -95,21 +95,21 @@ namespace ft
         // begin
         iterator begin()
         {
-            return (this->_root.minValueNode(_root));
+            return (this->_node.minValueNode(_node));
         }
         const_iterator begin() const
         {
-            return (this->_root.minValueNode(_root));
+            return (this->_node.minValueNode(_node));
         }
         
         // end
         iterator end()
         {
-            return (this->_root.maxValueNode(_root));
+            return (this->_node.maxValueNode(_node));
         }
         const_iterator end() const
         {
-            return (this->_root.maxValueNode(_root));
+            return (this->_node.maxValueNode(_node));
         }
         
         // rbegin     
@@ -145,7 +145,7 @@ namespace ft
         // size
         size_type size() const
         {
-            retunr (this->_size);
+            return (this->_size);
         }
         
         // max_size
@@ -161,8 +161,8 @@ namespace ft
         //operator[]
         mapped_type& operator[] (const key_type& k)
         {
-            Node<value_type> tmp = this->root.search(k.first);
-            return (k.getKey().second)
+            Node<value_type> tmp = tmp.search(k);
+            return (tmp.getKey().second)
         }
     
     //MODIFIERS
@@ -175,8 +175,8 @@ namespace ft
         {}
         
         template <class InputIterator>
-        void insert (iterator position, InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, 
-        InputIterator>::type last)
+        void insert (iterator position, InputIterator first, 
+        typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last)
         {
             
         }
@@ -184,10 +184,12 @@ namespace ft
         // erase
         void erase (iterator position)
         {
-            this->_root.deleteNode()
+            this->_node.deleteNode()
         }
+        
         size_type erase (const key_type& k)
         {}
+        
         void erase (iterator first, iterator last)
         {}
         
@@ -198,7 +200,7 @@ namespace ft
         // clear
         void clear()
         {
-            this->_root.clear();
+            this->_node.clear();
             this->_size = 0;
         }
         
@@ -239,6 +241,7 @@ namespace ft
         // equal_range
         pair<const_iterator,const_iterator> equal_range (const key_type& k) const
         {}
+        
         pair<iterator,iterator> equal_range (const key_type& k)
         {}
         
@@ -251,12 +254,11 @@ namespace ft
         }
     
 
-     private:
+    private:
 
         allocator_type  _alloc;
-        Node<T>         _root;
-        size_type       _size;
-        
+        Node<T>         _node;
+        size_type       _size;  
       
     };
 }
