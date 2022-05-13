@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 14:18:58 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/13 12:08:04 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/13 17:45:58 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,23 @@ namespace ft
     template <class Key, class T> 
     class Node
     {
-        private:
-            ft::pair<Key, T>    _key;
-            Node                *_left;
-            Node                *_right;
-            int                 _height;
-            Node                *_parent;
-
-
-        Node() :_left(NULL), _right(NULL), _height(0), _parent(NULL)
-        {}
-        
         public :
+
+        typedef ft::pair<const Key, T>  value_type;
+        typedef std::allocator<Node>    alloc_type;
         
-        Node(ft::pair<Key, T> key) : _key(key), _left(NULL), _right(NULL), _height(1), _parent(NULL)
+        
+        Node(value_type key)
+        : alloc(alloc_type()), _key(key), _left(NULL), _right(NULL), _height(1), _parent(NULL)
         {}
 
+        Node *newNode(value_type key)
+        {
+            Node *node = alloc.allocate(1);
+            alloc.construct(node, key);
+            return (node);
+        }
+        
         virtual ~Node()
         {
             clear();
@@ -45,14 +46,15 @@ namespace ft
         {
             if (this->_left != NULL)
             {
-                delete (this->_left);
+                alloc.destroy(this->_left); 
                 this->_left = NULL;
             }
             if (this->_right != NULL)
             {
-                delete(this->_right);
+                alloc.destroy(this->_right);
                 this->_right = NULL;
             }
+            alloc.deallocate(this, 1);
         }
         
         void setParent(Node *node)
@@ -74,11 +76,6 @@ namespace ft
             }
         }
         
-        Node *newNode(ft::pair<Key, T> key)
-        {
-            Node *node = new Node(key);
-            return (node);
-        }
 
         Node* search(Node *node, Key key)
         {
@@ -93,7 +90,7 @@ namespace ft
             return NULL;
         }
 
-        Node *insert(Node *node, ft::pair<Key, T> key)
+        Node *insert(Node *node, value_type key)
         {
             if (node == NULL)
                 return (newNode(key));
@@ -127,7 +124,7 @@ namespace ft
             return current;
         }
 
-        Node *deleteNode(Node *node, ft::pair<Key, T> key) 
+        Node *deleteNode(Node *node, value_type key) 
         {
             Node *temp;
             if (node == NULL)
@@ -152,7 +149,7 @@ namespace ft
                     }
                     else
                         *node = *temp;
-                    delete (temp);
+                    alloc.destroy(temp);
                 } 
                 else
                 {
@@ -186,7 +183,7 @@ namespace ft
             return (this->_parent);
         }
 
-        ft::pair<Key, T> getKey() const
+        value_type getKey() const
         {
             return (this->_key);
         }        
@@ -206,7 +203,7 @@ namespace ft
             this->_right = newright;
         }
 
-        void setKey(ft::pair<Key, T> newkey)
+        void setKey(value_type newkey)
         {
             this->_key = newkey;
         }
@@ -274,7 +271,7 @@ namespace ft
                 node->setHeight(1 + max(node->getLeft()->getHeight(), node->getRight()->getHeight()));   
         }
         
-        Node *balanceTreeInsert(Node *node, ft::pair<Key, T> key)
+        Node *balanceTreeInsert(Node *node, value_type key)
         {
             modifHeight(node);
             int balanceFactor = getBalanceFactor(node);
@@ -368,6 +365,20 @@ namespace ft
             }
             return (node);
         }
+        
+        private:
+            alloc_type    alloc;
+            value_type    _key;
+            Node          *_left;
+            Node          *_right;
+            int           _height;
+            Node          *_parent;
+            
+
+
+        Node()
+        {}
+        
 
     };
 

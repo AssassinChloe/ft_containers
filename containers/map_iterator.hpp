@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 12:05:23 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/13 12:09:46 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/13 17:43:48 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ namespace ft
     {
         public:
             typedef T value_type;
-            typedef ptrdiff_t difference_type;
+            typedef std::ptrdiff_t difference_type;
             typedef T* pointer;
             typedef T& reference;
             typedef ft::bidirectional_iterator_tag iterator_category;
@@ -98,4 +98,4 @@ namespace ft
                 pointer ptr;
     };
 }
-#endif;
+#endif
