@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 12:05:23 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/16 11:31:58 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/16 17:30:42 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,13 @@
 #define MAP_ITERATOR_HPP
 
 #include "iterators_traits.hpp"
+#include "binary_search_tree.hpp"
 #include "map.hpp"
 
 namespace ft
 {
     class bidirectional_iterator_tag;
-    template <typename T>
+    template <typename Node, typename T>
     class map_iterator
     {
         public:
@@ -29,11 +30,14 @@ namespace ft
             typedef T& reference;
             typedef ft::bidirectional_iterator_tag iterator_category;
 
-            map_iterator() : ptr(NULL)
+            map_iterator() : ptr(NULL), _root(NULL)
             {}
 
-            map_iterator(pointer src) : ptr(src)
-            {}
+            map_iterator(Node *src) : _root(src)
+            {
+                T tmp = src->getKey();
+                ptr = (&tmp);
+            }
 
             map_iterator(const map_iterator &src) 
             {
@@ -43,7 +47,10 @@ namespace ft
             map_iterator &operator=(const map_iterator &rhs)
             {
                 if (this != &rhs)
+                {
                     this->ptr = rhs.ptr;
+                    this->_root = rhs._root;
+                }
                 return (*this);
             }
             ~map_iterator() 
@@ -60,25 +67,29 @@ namespace ft
 
             map_iterator &operator++()
             {
-                this->ptr = *(this->ptr)->increase(this->ptr);
+                T tmp = this->_root->increase(*this->ptr);
+                this->ptr = &tmp;
                 return (*this);
             }
             map_iterator operator++(int)
             {
-                map_iterator tmp = this;
-                this->ptr = *(this->ptr)->increase(this->ptr);
-                return (tmp);
+                map_iterator copy = *this;
+                T tmp = this->_root->increase(*this->ptr);
+                this->ptr = &tmp;
+                return (copy);
             }
             map_iterator &operator--()
             {
-                this->ptr = *(this->ptr)->decrease(this->ptr);
+                T tmp = this->_root->decrease(*this->ptr);
+                ptr = &tmp;
                 return (*this);
             }
             map_iterator operator--(int)
             {
-                map_iterator tmp = this;
-                this->ptr = *(this->ptr)->decrease(this->ptr);
-                return (tmp);
+                map_iterator copy = *this;
+                T tmp = this->_root->decrease(*this->ptr);
+                ptr = &tmp;
+                return (copy);
             }
 
             bool operator==(const map_iterator &rhs) const
@@ -93,6 +104,7 @@ namespace ft
             private:
 
                 pointer ptr;
+                Node    *_root;
     };
 }
 #endif

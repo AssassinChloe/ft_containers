@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/16 12:04:59 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/16 17:32:10 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,8 @@ namespace ft
         typedef typename allocator_type::const_reference                const_reference;
         typedef typename allocator_type::pointer                        pointer;
         typedef typename allocator_type::const_pointer                  const_pointer;
-        typedef typename ft::map_iterator<value_type>                   iterator;
-        typedef typename ft::map_iterator<const value_type>             const_iterator;
+        typedef typename ft::map_iterator<Node<key_type, mapped_type>, value_type>                   iterator;
+        typedef typename ft::map_iterator<Node<key_type, mapped_type>, const value_type>             const_iterator;
         typedef typename ft::reverse_iterator<iterator>                 reverse_iterator;
         typedef typename ft::reverse_iterator<const_iterator>           const_reverse_iterator;
         typedef typename ft::iterator_traits<iterator>::difference_type difference_type;
@@ -86,15 +86,19 @@ namespace ft
     //
         // Constructors
         explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) :
-        _alloc(alloc), _comp(comp), _root(NULL), _size(0)
-        {}
+        _alloc(alloc), _comp(comp), _size(0)
+        {
+            std::allocator<Node<key_type, mapped_type> > tmp;
+            _root = tmp.allocate(1);
+            _root->setStatus(true);
+        }
                      
         template <class InputIterator>
         map(InputIterator first, 
         typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last,
         const key_compare& comp = key_compare(),
         const allocator_type& alloc = allocator_type()) :
-        _alloc(alloc), _comp(comp), _root(Node<Key, T>(*first)), _size(1)
+        _alloc(alloc), _comp(comp), _root(&Node<Key, T>(*first)), _size(1)
         {
             this->insert(this->begin(), ++first, last);
         }
@@ -126,25 +130,21 @@ namespace ft
         // begin
         iterator begin()
         {
-            value_type tmp = this->_root->minValueNode(_root)->getKey();
-            return (iterator(&tmp));
+            return (iterator(this->_root->minValueNode(_root)));
         }
         const_iterator begin() const
         {
-            value_type tmp = this->_root->minValueNode(_root)->getKey();
-            return (const_iterator(&tmp));
+            return (const_iterator(this->_root->minValueNode(_root)));
         }
         
         // end
         iterator end()
         {
-            value_type tmp = this->_root->maxValueNode(_root)->getKey();
-            return (iterator(&tmp));
+            return (iterator(this->_root->maxValueNode(_root)));
         }
         const_iterator end() const
         {
-            value_type tmp = this->_root->maxValueNode(_root)->getKey();
-            return (const_iterator(&tmp));
+            return (const_iterator(this->_root->maxValueNode(_root)));
         }
         
         // rbegin     
@@ -205,24 +205,30 @@ namespace ft
         // insert
         pair<iterator,bool> insert(const value_type& val)
         {
-            iterator ite = this->end();
-            iterator it = this->begin();
-
-            while (it != ite || *it != val)
-            {
-                it++;
-            }
-            if (*it != val)
+            if (this->_size == 0)
             {
                 this->_root = this->_root->insert(this->_root, val);
                 this->_size++;
-                for (it = begin(); it != ite; it++)
-                {
-                    if (*it == val)
-                        return (ft::make_pair(it, true));
-                }
+
+                return (ft::make_pair(iterator(_root), true));
             }
-            return (ft::make_pair(it, false));
+
+            iterator ite = this->end();
+            iterator it = this->begin();
+            while (it != ite && *it != val)
+            {
+                if (*it == val)
+                    return (ft::make_pair(it, false));
+                it++;
+            }
+
+            this->_root = this->_root->insert(this->_root, val);
+            this->_size++;
+
+
+                /*MUST FIND IT*/
+                
+            return (ft::make_pair(it, true));
         }
         
         iterator insert (iterator position, const value_type& val)
@@ -230,7 +236,7 @@ namespace ft
             (void)position;
             this->_root = this->_root->insert(this->_root, val);
             this->_size++;
-            return(iterator(this->_root->search(this->_root, val.first)));
+            return (iterator(this->_root->search(this->_root, val.first)));
         }
         
         template <class InputIterator>
@@ -397,13 +403,40 @@ namespace ft
             return (this->_alloc);
 		}
 
+        //FONCTION POUR TEST
+        ft::Node<key_type, mapped_type>	*getRoot()const
+        {return (_root);}
+
+        
         private:
 
             allocator_type  				_alloc;
             key_compare     				_comp;
             ft::Node<key_type, mapped_type>	*_root;
             size_type       				_size;  
-      
+        
+            value_type *increase(value_type pos) 
+            {
+                Node<key_type, mapped_type> *node = _root->search(_root, pos.first);
+                if (node->getRight())
+                {
+                    node = node->getRight();
+                    while (node->getLeft())
+                        node = node->getLeft();
+                }
+                else 
+                {
+                    Node<key_type, mapped_type> *temp = node;
+                    node = node->getParent();
+                    while (node->getLeft() != temp)
+                    {
+                        temp = node;
+                        node = node->getParent();
+                    }
+                }
+
+                return (node);
+            }
     };
 }
 

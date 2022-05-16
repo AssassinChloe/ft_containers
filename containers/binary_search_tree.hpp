@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 14:18:58 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/16 11:17:49 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/16 16:36:38 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,12 @@ namespace ft
         typedef ft::pair<const Key, T>  value_type;
         typedef std::allocator<Node>    alloc_type;
         
+        Node()
+        : alloc(alloc_type()), _key(value_type()), _left(NULL), _right(NULL), _height(1), _parent(NULL), _first(false)
+        {}
         
         Node(value_type key)
-        : alloc(alloc_type()), _key(key), _left(NULL), _right(NULL), _height(1), _parent(NULL)
+        : alloc(alloc_type()), _key(key), _left(NULL), _right(NULL), _height(1), _parent(NULL), _first(false)
         {}
 
         Node *newNode(value_type key)
@@ -39,7 +42,8 @@ namespace ft
         
         virtual ~Node()
         {
-            clear();
+            if (this->_first != false)
+                clear();
         }
 
         void clear()
@@ -92,9 +96,10 @@ namespace ft
 
         Node *insert(Node *node, value_type key)
         {
-            if (node == NULL)
+            if (node == NULL || this->_first == true)
+            {
                 return (newNode(key));
-                
+            }
             if (key.first < node->getKey().first)
                 node->setLeft(insert(node->getLeft(), key));
             else if (key.first > node->getKey().first)
@@ -186,6 +191,19 @@ namespace ft
         value_type getKey() const
         {
             return (this->_key);
+        }
+
+        bool getStatus() const
+        {
+            return (this->_first);
+        }
+        
+        Node *getRoot() const
+        {
+            Node *tmp = this;
+            while (tmp->getParent() != NULL)
+                tmp = tmp->getParent();
+            return (tmp);
         }        
         
         void setHeight(int newheight)
@@ -206,6 +224,11 @@ namespace ft
         void setKey(value_type newkey)
         {
             this->_key = newkey;
+        }
+
+        void setStatus(bool status)
+        {
+            this->_first = status;
         }
         
         int max(int a, int b)
@@ -312,59 +335,51 @@ namespace ft
             }
             return (node);
         }
-
-        void inorder_traversal(Node* node)
-        {
-            if(node != NULL) 
-            {
-                inorder_traversal(node->getLeft());
-                std::cout << node->getKey().first << std::endl;          
-                inorder_traversal(node->getRight());
-            }
-        }
         
-        Node *increase(Node *node) 
-        {
-		    if (node->getRight())
+            value_type increase(value_type pos) 
             {
-			    node = node->getRight();
-                while (node->getLeft())
-                    node = node->getLeft();
-            }
-            else 
-            {
-                Node *temp = node;
-                node = node->getParent();
-                while (node->getLeft() != temp)
+                Node *node = this->search(this, pos.first);
+                if (node->getRight())
                 {
-                    temp = node;
-                    node = node->getParent();
-                }
-            }
-
-            return (node);
-	    }
-
-        Node *decrease(Node *node) 
-        {
-            if (node->getLeft()) 
-            {
-                node = node->getLeft();
-                while (node->getRight())
                     node = node->getRight();
-            }
-            else 
-            {
-                Node *temp = node;
-                node = node->getParent();
-                while (node->getRight() != temp) 
-                {
-                    temp = node;
-                    node = node->getParent();
+                    while (node->getLeft())
+                        node = node->getLeft();
                 }
+                else 
+                {
+                    Node *temp = node;
+                    node = node->getParent();
+                    while (node->getLeft() != temp)
+                    {
+                        temp = node;
+                        node = node->getParent();
+                    }
+                }
+
+                return (node->getKey());
             }
-            return (node);
-        }
+
+            value_type decrease(value_type pos) 
+            {
+                Node *node = this->search(this, pos.first);
+                if (node->getLeft()) 
+                {
+                    node = node->getLeft();
+                    while (node->getRight())
+                        node = node->getRight();
+                }
+                else 
+                {
+                    Node *temp = node;
+                    node = node->getParent();
+                    while (node->getRight() != temp) 
+                    {
+                        temp = node;
+                        node = node->getParent();
+                    }
+                }
+                return (node->getKey());
+            }
         
         private:
             alloc_type    alloc;
@@ -373,12 +388,7 @@ namespace ft
             Node          *_right;
             int           _height;
             Node          *_parent;
-            
-
-
-        Node()
-        {}
-        
+            bool          _first;        
 
     };
 
