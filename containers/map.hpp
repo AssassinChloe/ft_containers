@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/13 17:51:27 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/16 12:04:59 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <iostream>
 # include <functional>
 # include <memory>
+# include <stdint.h> 
 # include "pair.hpp"
 # include "is_integral.hpp"
 # include "enable_if.hpp"
@@ -25,6 +26,7 @@
 
 namespace ft
 {
+    
     template <class Arg1, class Arg2, class Result>
     struct binary_function 
     {
@@ -92,7 +94,7 @@ namespace ft
         typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last,
         const key_compare& comp = key_compare(),
         const allocator_type& alloc = allocator_type()) :
-        _alloc(alloc), _comp(comp), _root(Node(*first)), _size(1)
+        _alloc(alloc), _comp(comp), _root(Node<Key, T>(*first)), _size(1)
         {
             this->insert(this->begin(), ++first, last);
         }
@@ -113,9 +115,9 @@ namespace ft
         // operator=
         map& operator= (const map& x)
         {
-            iterator tmp = x.begin()
+            iterator tmp = x.begin();
             this->_root->clear();
-            this->_root = Node(tmp++);
+            this->_root = Node<Key, T>(tmp++);
             this->insert(this->begin(), tmp, x.last()); 
         }
 
@@ -124,21 +126,25 @@ namespace ft
         // begin
         iterator begin()
         {
-            return (this->_root.minValueNode(_root));
+            value_type tmp = this->_root->minValueNode(_root)->getKey();
+            return (iterator(&tmp));
         }
         const_iterator begin() const
         {
-            return (this->_root.minValueNode(_root));
+            value_type tmp = this->_root->minValueNode(_root)->getKey();
+            return (const_iterator(&tmp));
         }
         
         // end
         iterator end()
         {
-            return (this->_root.maxValueNode(_root));
+            value_type tmp = this->_root->maxValueNode(_root)->getKey();
+            return (iterator(&tmp));
         }
         const_iterator end() const
         {
-            return (this->_root.maxValueNode(_root));
+            value_type tmp = this->_root->maxValueNode(_root)->getKey();
+            return (const_iterator(&tmp));
         }
         
         // rbegin     
@@ -190,25 +196,33 @@ namespace ft
         //operator[]
         mapped_type& operator[] (const key_type& k)
         {
-            Node *tmp = this->_root.search(this->_root);
+            Node<Key, T> *tmp = this->_root.search(this->_root, k);
             return (tmp->getKey().second);
         }
     
     //MODIFIERS
     
         // insert
-        pair<iterator,bool> insert (const value_type& val)
+        pair<iterator,bool> insert(const value_type& val)
         {
-            Node *tmp = this->_root.search(this->_root, val.first);
-            if (tmp == NULL)
+            iterator ite = this->end();
+            iterator it = this->begin();
+
+            while (it != ite || *it != val)
+            {
+                it++;
+            }
+            if (*it != val)
             {
                 this->_root = this->_root->insert(this->_root, val);
                 this->_size++;
-                tmp = this->_root.search(this->_root, val.first);
-                return (ft::make_pair(iterator(tmp), true));
-                
+                for (it = begin(); it != ite; it++)
+                {
+                    if (*it == val)
+                        return (ft::make_pair(it, true));
+                }
             }
-            return (ft::make_pair(iterator(tmp), false));
+            return (ft::make_pair(it, false));
         }
         
         iterator insert (iterator position, const value_type& val)
@@ -216,7 +230,7 @@ namespace ft
             (void)position;
             this->_root = this->_root->insert(this->_root, val);
             this->_size++;
-            return(iterator(this->_root->search(this->_root, val.first)))
+            return(iterator(this->_root->search(this->_root, val.first)));
         }
         
         template <class InputIterator>
@@ -243,10 +257,10 @@ namespace ft
         
         size_type erase (const key_type& k)
         {
-            Node<value_type> *tmp = this->_root.search(this->_root, k);
+            Node<Key, T> *tmp = this->_root.search(this->_root, k);
             if (tmp != NULL)
             {
-                this->_root.deleteNode(tmp, key);
+                this->_root.deleteNode(tmp, k);
                 this->_size--;
             }
         }
@@ -255,14 +269,14 @@ namespace ft
         {
             for(; first != last; first++)
             {
-                this->_root.deleteNode(*first, *first.first)
+                this->_root.deleteNode(*first, *first.first);
                 this->size--;
             }
         }
         
         // swap
-        void swap (map& x)
-        {}
+        // void swap (map& x)
+        // {}
         
         // clear
         void clear()

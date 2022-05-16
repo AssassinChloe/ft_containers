@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 12:05:23 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/13 17:43:48 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/16 11:31:58 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,7 @@ namespace ft
             map_iterator &operator=(const map_iterator &rhs)
             {
                 if (this != &rhs)
-                {
                     this->ptr = rhs.ptr;
-                    this->prev = rhs.prev;
-                }
                 return (*this);
             }
             ~map_iterator() 
