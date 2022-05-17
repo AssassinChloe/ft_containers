@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/16 17:32:10 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/17 15:35:42 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,14 +98,20 @@ namespace ft
         typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last,
         const key_compare& comp = key_compare(),
         const allocator_type& alloc = allocator_type()) :
-        _alloc(alloc), _comp(comp), _root(&Node<Key, T>(*first)), _size(1)
+        _alloc(alloc), _comp(comp), _size(0)
         {
-            this->insert(this->begin(), ++first, last);
+            std::allocator<Node<key_type, mapped_type> > tmp;
+            _root = tmp.allocate(1);
+            _root->setStatus(true);
+            this->insert(this->begin(), first, last);
         }
             
         map(const map& x) :
-        _alloc(allocator_type()), _comp(key_compare())
+        _alloc(allocator_type()), _comp(key_compare()), _size(0)
         {
+            std::allocator<Node<key_type, mapped_type> > tmp;
+            _root = tmp.allocate(1);
+            _root->setStatus(true);
             if (&x != this)
                 *this = x;
         }
@@ -119,10 +125,15 @@ namespace ft
         // operator=
         map& operator= (const map& x)
         {
-            iterator tmp = x.begin();
-            this->_root->clear();
-            this->_root = Node<Key, T>(tmp++);
-            this->insert(this->begin(), tmp, x.last()); 
+            if (this->_size > 0)
+            {
+                this->clear();
+                std::allocator<Node<key_type, mapped_type> > tmp;
+                _root = tmp.allocate(1);
+                _root->setStatus(true);
+            }
+            this->insert(this->begin(), x.begin(), x.end());
+            return (*this);
         }
 
     //ITERATORS
@@ -130,20 +141,28 @@ namespace ft
         // begin
         iterator begin()
         {
+            if (this->_size == 0)
+                return(iterator(this->_root));
             return (iterator(this->_root->minValueNode(_root)));
         }
         const_iterator begin() const
         {
+                        if (this->_size == 0)
+                return(const_iterator(this->_root));
             return (const_iterator(this->_root->minValueNode(_root)));
         }
         
         // end
         iterator end()
         {
+            if (this->_size == 0)
+                return(iterator(this->_root));
             return (iterator(this->_root->maxValueNode(_root)));
         }
         const_iterator end() const
         {
+            if (this->_size == 0)
+                return(const_iterator(this->_root));
             return (const_iterator(this->_root->maxValueNode(_root)));
         }
         
@@ -196,8 +215,7 @@ namespace ft
         //operator[]
         mapped_type& operator[] (const key_type& k)
         {
-            Node<Key, T> *tmp = this->_root.search(this->_root, k);
-            return (tmp->getKey().second);
+            return (this->_root->search(this->_root, k)->getKeyPtr()->second);
         }
     
     //MODIFIERS
@@ -207,12 +225,12 @@ namespace ft
         {
             if (this->_size == 0)
             {
-                this->_root = this->_root->insert(this->_root, val);
-                this->_size++;
-
+                bool insert_valid = true;
+                this->_root = this->_root->insert(this->_root, val, &insert_valid);
+                if (insert_valid == true)
+                    this->_size++;
                 return (ft::make_pair(iterator(_root), true));
             }
-
             iterator ite = this->end();
             iterator it = this->begin();
             while (it != ite && *it != val)
@@ -221,21 +239,26 @@ namespace ft
                     return (ft::make_pair(it, false));
                 it++;
             }
-
-            this->_root = this->_root->insert(this->_root, val);
-            this->_size++;
-
-
-                /*MUST FIND IT*/
-                
+            bool insert_valid = true;
+            this->_root = this->_root->insert(this->_root, val, &insert_valid);
+            if (insert_valid == true)
+                this->_size++;
+            ite = this->end();
+            it = this->begin();
+            while (it != ite && *it != val)
+            {
+                it++;
+            }
             return (ft::make_pair(it, true));
         }
         
         iterator insert (iterator position, const value_type& val)
         {
             (void)position;
-            this->_root = this->_root->insert(this->_root, val);
-            this->_size++;
+            bool insert_valid = true;
+            this->_root = this->_root->insert(this->_root, val, &insert_valid);
+            if (insert_valid == true)
+                this->_size++;
             return (iterator(this->_root->search(this->_root, val.first)));
         }
         
@@ -246,37 +269,47 @@ namespace ft
             (void)position;
             for(; first != last; first++)
             {
-                this->_root = this->_root->insert(this->_root, *first->getKey());
-                this->_size++;
+                bool insert_valid = true;
+                this->_root = this->_root->insert(this->_root, *first, &insert_valid);
+                if (insert_valid == true)
+                    this->_size++;
             }
+            bool insert_valid = true;
+            this->_root = this->_root->insert(this->_root, *first, &insert_valid);
+            if (insert_valid == true)
+                this->_size++;
         }
 
         // erase
         void erase (iterator position)
         {
-            if (this->_root.search(this->_root, *position->getKey().first))
+            if (this->_root->search(this->_root, (*position).first))
             {
-                this->_root.deleteNode(this->_root, *position->getKey());
+                this->_root = this->_root->deleteNode(this->_root, (*position));
                 this->_size--;
             }
         }
         
         size_type erase (const key_type& k)
         {
-            Node<Key, T> *tmp = this->_root.search(this->_root, k);
+            Node<Key, T> *tmp = this->_root->search(this->_root, k);
             if (tmp != NULL)
             {
-                this->_root.deleteNode(tmp, k);
+                this->_root = this->_root->deleteNode(this->_root, tmp->getKey());
                 this->_size--;
             }
+            return (1);
         }
         
         void erase (iterator first, iterator last)
         {
             for(; first != last; first++)
             {
-                this->_root.deleteNode(*first, *first.first);
-                this->size--;
+                if (this->_root->search(this->_root, (*first).first))
+                {
+                    this->_root = this->_root->deleteNode(this->_root, *first);
+                    this->_size--;
+                }
             }
         }
         
@@ -313,7 +346,7 @@ namespace ft
             iterator ite = this->end();
             for(iterator it = this->begin(); it != ite; it++)
             {
-                if (k == *it->getKey().first)
+                if (k == *it->getKey()->first)
                     return(it);
             }
             return (ite);
@@ -324,7 +357,7 @@ namespace ft
             const_iterator ite = this->end();
             for(const_iterator it = this->begin(); it != ite; it++)
             {
-                if (k == *it->getKey().first)
+                if (k == *it->getKey()->first)
                     return(it);
             }
             return (ite);
@@ -344,7 +377,7 @@ namespace ft
             iterator ite = this->end();
             for (iterator it = this->begin(); it != ite; it++)
             {
-                if (!this->_comp(*it->getKey().first, k))
+                if (!this->_comp(*it->getKey()->first, k))
                 return (it);
             }
             return (ite);
@@ -355,7 +388,7 @@ namespace ft
             const_iterator ite = this->end();
             for (const_iterator it = this->begin(); it != ite; it++)
             {
-                if (!this->_comp(*it->getKey().first, k))
+                if (!this->_comp(*it->getKey()->first, k))
                 return (it);
             }
             return (ite);
@@ -367,7 +400,7 @@ namespace ft
             iterator ite = this->end();
             for (iterator it = this->begin(); it != ite; it++)
             {
-                if (!this->_comp(k, *it->getKey().first))
+                if (!this->_comp(k, *it->getKey()->first))
                     return (it);
             }
             return (ite);
@@ -378,7 +411,7 @@ namespace ft
             const_iterator ite = this->end();
             for (const_iterator it = this->begin(); it != ite; it++)
             {
-                if (!this->_comp(k, *it->getKey().first))
+                if (!this->_comp(k, *it->getKey()->first))
                 return (+it);
             }
             return (ite);
@@ -406,6 +439,20 @@ namespace ft
         //FONCTION POUR TEST
         ft::Node<key_type, mapped_type>	*getRoot()const
         {return (_root);}
+
+        void printMap()
+        {
+            iterator ite = this->end();
+            iterator it = this->begin();
+            std::cout << "Map print start" << std::endl;   
+            for (;it != ite; it++)
+            {
+                std::cout << (*it).first << std::endl;   
+            }
+            std::cout << (*it).first << std::endl;
+            std::cout << "Map print end" << std::endl;   
+
+        }
 
         
         private:

@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 14:18:58 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/16 16:36:38 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/17 15:37:10 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,33 @@ namespace ft
 
         typedef ft::pair<const Key, T>  value_type;
         typedef std::allocator<Node>    alloc_type;
+        typedef std::allocator<value_type> alloc_val;
         
         Node()
-        : alloc(alloc_type()), _key(value_type()), _left(NULL), _right(NULL), _height(1), _parent(NULL), _first(false)
-        {}
+        : alloc(alloc_type()),_key(NULL), _left(NULL), _right(NULL), _height(1), _parent(NULL), _first(false)
+        {
+            
+        }
         
         Node(value_type key)
-        : alloc(alloc_type()), _key(key), _left(NULL), _right(NULL), _height(1), _parent(NULL), _first(false)
+        : alloc(alloc_type()), _key(constructKey(key)), _left(NULL), _right(NULL), _height(1), _parent(NULL), _first(false)
         {}
 
+        value_type *constructKey(value_type key)
+        {
+            alloc_val tmp;
+            _key = tmp.allocate(1);
+            tmp.construct(_key, key);
+            return (_key);
+        }
+
+        void destructKey(value_type *key)
+        {
+            alloc_val tmp;
+            tmp.destroy(key);
+            tmp.deallocate(key, 1);
+        }
+        
         Node *newNode(value_type key)
         {
             Node *node = alloc.allocate(1);
@@ -42,12 +60,13 @@ namespace ft
         
         virtual ~Node()
         {
-            if (this->_first != false)
+            if (this->_first != true)
                 clear();
         }
 
         void clear()
         {
+            alloc_val tmp;
             if (this->_left != NULL)
             {
                 alloc.destroy(this->_left); 
@@ -94,18 +113,22 @@ namespace ft
             return NULL;
         }
 
-        Node *insert(Node *node, value_type key)
+        Node *insert(Node *node, value_type key, bool *is_insert)
         {
             if (node == NULL || this->_first == true)
             {
+                this->_first = false;
                 return (newNode(key));
             }
             if (key.first < node->getKey().first)
-                node->setLeft(insert(node->getLeft(), key));
+                node->setLeft(insert(node->getLeft(), key, is_insert));
             else if (key.first > node->getKey().first)
-                node->setRight(insert(node->getRight(), key));
+                node->setRight(insert(node->getRight(), key, is_insert));
             else
+            {
+                *is_insert = false;
                 return (node);
+            }
             node = balanceTreeInsert(node, key);
             setAllParents(node);
             return node;
@@ -142,7 +165,7 @@ namespace ft
             {
                 if ((node->getLeft() == NULL) || (node->getRight() == NULL))
                 {
-                    
+                    alloc_val tmp;
                     if (node->getLeft())
                         temp = node->getLeft();
                     else
@@ -154,7 +177,10 @@ namespace ft
                     }
                     else
                         *node = *temp;
+                    tmp.destroy(temp->getKeyPtr());
+                    tmp.deallocate(temp->getKeyPtr(), 1);
                     alloc.destroy(temp);
+                    alloc.deallocate(temp, 1);
                 } 
                 else
                 {
@@ -163,7 +189,9 @@ namespace ft
                     node->setRight(deleteNode(node->getRight(), temp->getKey()));
                 }
             }
+            std::cout << "balance tree delete" << std::endl;
             node = balanceTreeDelete(node);
+            std::cout << "set parent" << std::endl;
             setAllParents(node);
             return (node);
         }
@@ -189,6 +217,11 @@ namespace ft
         }
 
         value_type getKey() const
+        {
+            return (*this->_key);
+        }
+
+        value_type *getKeyPtr() const
         {
             return (this->_key);
         }
@@ -223,7 +256,10 @@ namespace ft
 
         void setKey(value_type newkey)
         {
-            this->_key = newkey;
+            alloc_val tmp;
+            tmp.destroy(_key);
+            *this->_key = newkey;
+            
         }
 
         void setStatus(bool status)
@@ -336,9 +372,8 @@ namespace ft
             return (node);
         }
         
-            value_type increase(value_type pos) 
+            Node * increase(Node *node) 
             {
-                Node *node = this->search(this, pos.first);
                 if (node->getRight())
                 {
                     node = node->getRight();
@@ -356,12 +391,11 @@ namespace ft
                     }
                 }
 
-                return (node->getKey());
+                return (node);
             }
 
-            value_type decrease(value_type pos) 
+            Node * decrease(Node * node) 
             {
-                Node *node = this->search(this, pos.first);
                 if (node->getLeft()) 
                 {
                     node = node->getLeft();
@@ -378,12 +412,12 @@ namespace ft
                         node = node->getParent();
                     }
                 }
-                return (node->getKey());
+                return (node);
             }
         
         private:
             alloc_type    alloc;
-            value_type    _key;
+            value_type    *_key;
             Node          *_left;
             Node          *_right;
             int           _height;

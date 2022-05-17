@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 17:21:47 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/12 14:23:12 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/17 13:45:22 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,28 @@ namespace ft
             typedef typename Iterator::value_type value_type;
             typedef typename Iterator::reference reference;
             typedef typename Iterator::pointer pointer;
+    };
+
+    template <class T>
+    class iterator_traits <T *>
+    {
+	    public:
+		    typedef std::ptrdiff_t difference_type;
+            typedef T value_type;
+            typedef T* pointer;
+            typedef T& reference;
+            typedef std::random_access_iterator_tag iterator_category;
+    };
+
+    template <class T>
+    class iterator_traits <const T *>
+    {
+        public:
+            typedef std::ptrdiff_t difference_type;
+            typedef T value_type;
+            typedef const T* pointer;
+            typedef const T& reference;
+            typedef std::random_access_iterator_tag iterator_category;
     };
 
         //                 FUNCTIONS
