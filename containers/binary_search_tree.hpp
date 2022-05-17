@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 14:18:58 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/17 15:37:10 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/17 17:29:04 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,16 @@ namespace ft
         value_type *constructKey(value_type key)
         {
             alloc_val tmp;
-            _key = tmp.allocate(1);
-            tmp.construct(_key, key);
-            return (_key);
+            this->_key = tmp.allocate(1);
+            tmp.construct(this->_key, key);
+            return (this->_key);
         }
 
-        void destructKey(value_type *key)
+        void destroyKey(value_type *key)
         {
             alloc_val tmp;
-            tmp.destroy(key);
-            tmp.deallocate(key, 1);
+            if (key != NULL)
+                tmp.deallocate(key, 1);
         }
         
         Node *newNode(value_type key)
@@ -60,13 +60,14 @@ namespace ft
         
         virtual ~Node()
         {
-            if (this->_first != true)
+            if (this->_first == false)
+            {
                 clear();
+            }
         }
 
         void clear()
         {
-            alloc_val tmp;
             if (this->_left != NULL)
             {
                 alloc.destroy(this->_left); 
@@ -78,6 +79,7 @@ namespace ft
                 this->_right = NULL;
             }
             alloc.deallocate(this, 1);
+            
         }
         
         void setParent(Node *node)
@@ -117,7 +119,6 @@ namespace ft
         {
             if (node == NULL || this->_first == true)
             {
-                this->_first = false;
                 return (newNode(key));
             }
             if (key.first < node->getKey().first)
@@ -165,34 +166,32 @@ namespace ft
             {
                 if ((node->getLeft() == NULL) || (node->getRight() == NULL))
                 {
-                    alloc_val tmp;
+                    destroyKey(node->getKeyPtr());
                     if (node->getLeft())
                         temp = node->getLeft();
                     else
                         temp = node->getRight();
                     if (temp == NULL)
                     {
+                        
                         temp = node;
                         node = NULL;
                     }
                     else
+                    {
                         *node = *temp;
-                    tmp.destroy(temp->getKeyPtr());
-                    tmp.deallocate(temp->getKeyPtr(), 1);
+                    }
                     alloc.destroy(temp);
-                    alloc.deallocate(temp, 1);
                 } 
                 else
                 {
+                    alloc_val tmp;
                     temp = minValueNode(node->getRight());
                     node->setKey(temp->getKey());
-                    node->setRight(deleteNode(node->getRight(), temp->getKey()));
+                    node->setRight(deleteNode(node->getRight(), node->getKey()));
                 }
             }
-            std::cout << "balance tree delete" << std::endl;
             node = balanceTreeDelete(node);
-            std::cout << "set parent" << std::endl;
-            setAllParents(node);
             return (node);
         }
 
@@ -258,7 +257,7 @@ namespace ft
         {
             alloc_val tmp;
             tmp.destroy(_key);
-            *this->_key = newkey;
+            this->_key = constructKey(newkey);
             
         }
 

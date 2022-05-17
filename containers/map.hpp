@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/17 15:35:42 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/17 17:28:47 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,9 +223,9 @@ namespace ft
         // insert
         pair<iterator,bool> insert(const value_type& val)
         {
+            bool insert_valid = true;
             if (this->_size == 0)
             {
-                bool insert_valid = true;
                 this->_root = this->_root->insert(this->_root, val, &insert_valid);
                 if (insert_valid == true)
                     this->_size++;
@@ -239,7 +239,6 @@ namespace ft
                     return (ft::make_pair(it, false));
                 it++;
             }
-            bool insert_valid = true;
             this->_root = this->_root->insert(this->_root, val, &insert_valid);
             if (insert_valid == true)
                 this->_size++;
@@ -249,6 +248,8 @@ namespace ft
             {
                 it++;
             }
+    std::cout << "plop" << std::endl;
+    
             return (ft::make_pair(it, true));
         }
         
@@ -288,6 +289,14 @@ namespace ft
                 this->_root = this->_root->deleteNode(this->_root, (*position));
                 this->_size--;
             }
+            if (!this->_root)
+            {
+                std::allocator<Node<key_type, mapped_type> > tmp;
+                _root = tmp.allocate(1);
+                _root->setStatus(true);
+            }
+            if (this->_size > 0)
+                this->_root->setAllParents(this->_root);
         }
         
         size_type erase (const key_type& k)
@@ -298,6 +307,14 @@ namespace ft
                 this->_root = this->_root->deleteNode(this->_root, tmp->getKey());
                 this->_size--;
             }
+            if (!this->_root)
+            {
+                std::allocator<Node<key_type, mapped_type> > tmp;
+                _root = tmp.allocate(1);
+                _root->setStatus(true);
+            }
+            if (this->_size > 0)
+                this->_root->setAllParents(this->_root);
             return (1);
         }
         
@@ -311,6 +328,19 @@ namespace ft
                     this->_size--;
                 }
             }
+            if (this->_root->search(this->_root, (*first).first))
+            {
+                this->_root = this->_root->deleteNode(this->_root, *first);
+                this->_size--;
+            }
+            if (!this->_root)
+            {
+                std::allocator<Node<key_type, mapped_type> > tmp;
+                _root = tmp.allocate(1);
+                _root->setStatus(true);
+            }
+            if (this->_size > 0)
+                this->_root->setAllParents(this->_root);
         }
         
         // swap
@@ -442,6 +472,8 @@ namespace ft
 
         void printMap()
         {
+            if (this->_size == 0)
+                return ;
             iterator ite = this->end();
             iterator it = this->begin();
             std::cout << "Map print start" << std::endl;   

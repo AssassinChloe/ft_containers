@@ -9,6 +9,7 @@ int main ()
     std::cout << "Init map sana argument" << std::endl;
 
     ft::map<const int, char> maptest;
+
     std::cout << "empty : " << std::boolalpha << maptest.empty() << std::endl;
     std::cout << "Create pairs" << std::endl;
 
@@ -95,16 +96,22 @@ int main ()
     maptest.printMap();
     std::cout << std::endl;
 
-    // std::cout << "Erase map3 from map2" << std::endl;
+    std::cout << "Erase map3 from map2" << std::endl;
 
-    // maptest3.erase(maptest.begin(), maptest.end());
-    std::cout << "Erase map3 45" << std::endl;
-
-    maptest3.erase(45);
+    maptest3.erase(maptest.begin(), maptest.end());
+    std::cout << "Print Map3" << std::endl;
+    std::cout << "size : " << maptest3.size() << std::endl;
+    maptest3.printMap();
     
+    std::cout << "Erase map3 45" << std::endl;
+    maptest3.erase(45);
+    std::cout << "Print Map3" << std::endl;
+    std::cout << "size : " << maptest3.size() << std::endl;
+    maptest3.printMap();
+
     std::cout << "Erase map3 begin()" << std::endl;
     maptest3.erase(maptest3.begin());
-
+    maptest3.insert(bar13);
     std::cout << "Print Map3" << std::endl;
     std::cout << "size : " << maptest3.size() << std::endl;
     maptest3.printMap();
