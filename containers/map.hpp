@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/17 17:28:47 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/18 15:51:05 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,16 @@ namespace ft
         // destructor
         ~map()
         {
-			this->_root->clear();
+            if (this->_size == 0)
+            {
+                std::allocator<Node<key_type, mapped_type> > tmp;
+                tmp.deallocate(this->_root, 1);
+            }
+            else
+            {
+                this->_root->clear();
+            }
+
         }
 
         // operator=
@@ -226,7 +235,11 @@ namespace ft
             bool insert_valid = true;
             if (this->_size == 0)
             {
-                this->_root = this->_root->insert(this->_root, val, &insert_valid);
+                Node<key_type, mapped_type> *tmp;
+                std::allocator<Node<key_type, mapped_type> > tmpall;
+                tmp = this->_root->insert(this->_root, val, &insert_valid);
+                tmpall.deallocate(this->_root, 1);
+                this->_root = tmp;
                 if (insert_valid == true)
                     this->_size++;
                 return (ft::make_pair(iterator(_root), true));
@@ -248,8 +261,6 @@ namespace ft
             {
                 it++;
             }
-    std::cout << "plop" << std::endl;
-    
             return (ft::make_pair(it, true));
         }
         
@@ -258,6 +269,7 @@ namespace ft
             (void)position;
             bool insert_valid = true;
             this->_root = this->_root->insert(this->_root, val, &insert_valid);
+
             if (insert_valid == true)
                 this->_size++;
             return (iterator(this->_root->search(this->_root, val.first)));
@@ -376,7 +388,7 @@ namespace ft
             iterator ite = this->end();
             for(iterator it = this->begin(); it != ite; it++)
             {
-                if (k == *it->getKey()->first)
+                if (k == (*it).first)
                     return(it);
             }
             return (ite);

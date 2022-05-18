@@ -28,11 +28,18 @@ int main ()
     std::cout << "Insert pairs" << std::endl;
     
     maptest.insert(bar2);
+
+    std::cout << "Insert pairs" << std::endl;
+
     maptest.insert(bar3);
+    std::cout << "Insert pairs" << std::endl;
+
     maptest.insert(bar4);
+    std::cout << "Insert pairs" << std::endl;
     maptest.insert(bar5);
+    std::cout << "Insert pairs" << std::endl;
     maptest.insert(bar6);
-    std::cout << "insert pair with it position" << std::endl;
+    std::cout << std::endl << "insert pair with it position"<< std::endl << std::endl;
 
     maptest.insert(maptest.begin(), bar7);
     std::cout << "empty : " << std::boolalpha << maptest.empty() << std::endl;
@@ -98,19 +105,19 @@ int main ()
 
     std::cout << "Erase map3 from map2" << std::endl;
 
-    maptest3.erase(maptest.begin(), maptest.end());
-    std::cout << "Print Map3" << std::endl;
-    std::cout << "size : " << maptest3.size() << std::endl;
-    maptest3.printMap();
+    // maptest3.erase(maptest.begin(), maptest.end());
+    // std::cout << "Print Map3" << std::endl;
+    // std::cout << "size : " << maptest3.size() << std::endl;
+    // maptest3.printMap();
     
-    std::cout << "Erase map3 45" << std::endl;
-    maptest3.erase(45);
-    std::cout << "Print Map3" << std::endl;
-    std::cout << "size : " << maptest3.size() << std::endl;
-    maptest3.printMap();
+    // std::cout << "Erase map3 45" << std::endl;
+    // maptest3.erase(45);
+    // std::cout << "Print Map3" << std::endl;
+    // std::cout << "size : " << maptest3.size() << std::endl;
+    // maptest3.printMap();
 
-    std::cout << "Erase map3 begin()" << std::endl;
-    maptest3.erase(maptest3.begin());
+    // std::cout << "Erase map3 begin()" << std::endl;
+    // maptest3.erase(maptest3.begin());
     maptest3.insert(bar13);
     std::cout << "Print Map3" << std::endl;
     std::cout << "size : " << maptest3.size() << std::endl;

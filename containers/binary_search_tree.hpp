@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 14:18:58 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/17 17:29:04 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/18 15:53:41 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,8 @@ namespace ft
         typedef std::allocator<value_type> alloc_val;
         
         Node()
-        : alloc(alloc_type()),_key(NULL), _left(NULL), _right(NULL), _height(1), _parent(NULL), _first(false)
-        {
-            
-        }
+        : alloc(alloc_type()), _key(NULL), _left(NULL), _right(NULL), _height(1), _parent(NULL), _first(true)
+        {}
         
         Node(value_type key)
         : alloc(alloc_type()), _key(constructKey(key)), _left(NULL), _right(NULL), _height(1), _parent(NULL), _first(false)
@@ -44,41 +42,45 @@ namespace ft
             return (this->_key);
         }
 
-        void destroyKey(value_type *key)
+        void destroyKey()
         {
             alloc_val tmp;
-            if (key != NULL)
-                tmp.deallocate(key, 1);
+            if (this->_key)
+            {
+                tmp.destroy(this->_key);
+                tmp.deallocate(this->_key, 1);
+                this->_key = NULL;
+            }
         }
         
         Node *newNode(value_type key)
         {
             Node *node = alloc.allocate(1);
             alloc.construct(node, key);
+            node->setStatus(false);
             return (node);
         }
         
         virtual ~Node()
         {
-            if (this->_first == false)
-            {
-                clear();
-            }
+            
         }
 
         void clear()
         {
-            if (this->_left != NULL)
+            if (this->_key)
+                this->destroyKey();
+            if (this->_left)
             {
-                alloc.destroy(this->_left); 
+                this->getLeft()->clear(); 
                 this->_left = NULL;
             }
-            if (this->_right != NULL)
+            if (this->_right)
             {
-                alloc.destroy(this->_right);
+                this->getRight()->clear();
                 this->_right = NULL;
             }
-            alloc.deallocate(this, 1);
+            this->alloc.deallocate(this, 1);
             
         }
         
@@ -166,7 +168,7 @@ namespace ft
             {
                 if ((node->getLeft() == NULL) || (node->getRight() == NULL))
                 {
-                    destroyKey(node->getKeyPtr());
+                    node->destroyKey();
                     if (node->getLeft())
                         temp = node->getLeft();
                     else
@@ -236,7 +238,12 @@ namespace ft
             while (tmp->getParent() != NULL)
                 tmp = tmp->getParent();
             return (tmp);
-        }        
+        }      
+        
+        alloc_type getAlloc() const
+        {
+            return (this->alloc);
+        }  
         
         void setHeight(int newheight)
         {
@@ -255,8 +262,11 @@ namespace ft
 
         void setKey(value_type newkey)
         {
-            alloc_val tmp;
-            tmp.destroy(_key);
+            if (this->_key != NULL)
+            {
+                alloc_val tmp;
+                tmp.destroy(_key);
+            }
             this->_key = constructKey(newkey);
             
         }
@@ -370,50 +380,49 @@ namespace ft
             }
             return (node);
         }
-        
-            Node * increase(Node *node) 
+    
+        Node * increase(Node *node) 
+        {
+            if (node->getRight())
             {
-                if (node->getRight())
-                {
-                    node = node->getRight();
-                    while (node->getLeft())
-                        node = node->getLeft();
-                }
-                else 
-                {
-                    Node *temp = node;
-                    node = node->getParent();
-                    while (node->getLeft() != temp)
-                    {
-                        temp = node;
-                        node = node->getParent();
-                    }
-                }
-
-                return (node);
-            }
-
-            Node * decrease(Node * node) 
-            {
-                if (node->getLeft()) 
-                {
+                node = node->getRight();
+                while (node->getLeft())
                     node = node->getLeft();
-                    while (node->getRight())
-                        node = node->getRight();
-                }
-                else 
-                {
-                    Node *temp = node;
-                    node = node->getParent();
-                    while (node->getRight() != temp) 
-                    {
-                        temp = node;
-                        node = node->getParent();
-                    }
-                }
-                return (node);
             }
+            else 
+            {
+                Node *temp = node;
+                node = node->getParent();
+                while (node->getLeft() != temp)
+                {
+                    temp = node;
+                    node = node->getParent();
+                }
+            }
+            return (node);
+        }
         
+        Node * decrease(Node * node) 
+        {
+            if (node->getLeft()) 
+            {
+                node = node->getLeft();
+                while (node->getRight())
+                    node = node->getRight();
+            }
+            else 
+            {
+                Node *temp = node;
+                node = node->getParent();
+                while (node->getRight() != temp) 
+                {
+                    temp = node;
+                    node = node->getParent();
+                }
+            }
+            return (node);
+        }
+    
         private:
             alloc_type    alloc;
             value_type    *_key;
