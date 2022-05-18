@@ -60,10 +60,10 @@ int main ()
     maptest2.insert(bar11);
     maptest2.insert(bar12);
 
-    // maptest.printMap();
-    // std::cout << std::endl;
+    maptest.printMap();
+    std::cout << std::endl;
 
-    // maptest.insert(maptest.begin(), maptest2.begin(), maptest2.end());
+    maptest.insert(maptest.begin(), maptest2.begin(), maptest2.end());
     std::cout << "Print Map2" << std::endl;
     std::cout << "size : " << maptest2.size() << std::endl;
 
@@ -78,32 +78,32 @@ int main ()
 
     ft::map<const int, char> maptest3(maptest2);
 
-    std::cout << "insert pair in map3" << std::endl;
+    // std::cout << "insert pair in map3" << std::endl;
 
-    ft::pair<const int,char> bar13(42,'*');
-    maptest3.insert(bar13);
+    // ft::pair<const int,char> bar13(42,'*');
+    // maptest3.insert(bar13);
 
-    std::cout << "Print Map3" << std::endl;
-    std::cout << "size : " << maptest3.size() << std::endl;
-    maptest3.printMap();
-    std::cout << std::endl;
-    std::cout << "Print Map2" << std::endl;
-    maptest2.printMap();
-    std::cout << std::endl;
+    // std::cout << "Print Map3" << std::endl;
+    // std::cout << "size : " << maptest3.size() << std::endl;
+    // maptest3.printMap();
+    // std::cout << std::endl;
+    // std::cout << "Print Map2" << std::endl;
+    // maptest2.printMap();
+    // std::cout << std::endl;
 
-    std::cout << "maptest = maptest2" << std::endl;
+    // std::cout << "maptest = maptest2" << std::endl;
 
-    maptest = maptest2;
-    std::cout << "Print Map2" << std::endl;
-    std::cout << "size : " << maptest2.size() << std::endl;
-    maptest2.printMap();
-    std::cout << std::endl;
-    std::cout << "Print Map" << std::endl;
-    std::cout << "size : " << maptest2.size() << std::endl;
-    maptest.printMap();
-    std::cout << std::endl;
+    // maptest = maptest2;
+    // std::cout << "Print Map2" << std::endl;
+    // std::cout << "size : " << maptest2.size() << std::endl;
+    // maptest2.printMap();
+    // std::cout << std::endl;
+    // std::cout << "Print Map" << std::endl;
+    // std::cout << "size : " << maptest2.size() << std::endl;
+    // maptest.printMap();
+    // std::cout << std::endl;
 
-    std::cout << "Erase map3 from map2" << std::endl;
+    // std::cout << "Erase map3 from map2" << std::endl;
 
     // maptest3.erase(maptest.begin(), maptest.end());
     // std::cout << "Print Map3" << std::endl;
@@ -118,15 +118,15 @@ int main ()
 
     // std::cout << "Erase map3 begin()" << std::endl;
     // maptest3.erase(maptest3.begin());
-    maptest3.insert(bar13);
-    std::cout << "Print Map3" << std::endl;
-    std::cout << "size : " << maptest3.size() << std::endl;
-    maptest3.printMap();
-    std::cout << std::endl;
-    std::cout << "Print Map2" << std::endl;
-    std::cout << "size : " << maptest2.size() << std::endl;
-    maptest2.printMap();
-    std::cout << std::endl;
+    // maptest3.insert(bar13);
+    // std::cout << "Print Map3" << std::endl;
+    // std::cout << "size : " << maptest3.size() << std::endl;
+    // maptest3.printMap();
+    // std::cout << std::endl;
+    // std::cout << "Print Map2" << std::endl;
+    // std::cout << "size : " << maptest2.size() << std::endl;
+    // maptest2.printMap();
+    // std::cout << std::endl;
 
 
     return 0;

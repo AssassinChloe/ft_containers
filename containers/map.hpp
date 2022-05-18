@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/18 15:51:05 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/18 17:54:37 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,7 @@ namespace ft
             this->insert(this->begin(), first, last);
         }
             
-        map(const map& x) :
-        _alloc(allocator_type()), _comp(key_compare()), _size(0)
+        map(const map& x)
         {
             std::allocator<Node<key_type, mapped_type> > tmp;
             _root = tmp.allocate(1);
@@ -128,7 +127,6 @@ namespace ft
             {
                 this->_root->clear();
             }
-
         }
 
         // operator=
@@ -137,9 +135,8 @@ namespace ft
             if (this->_size > 0)
             {
                 this->clear();
-                std::allocator<Node<key_type, mapped_type> > tmp;
-                _root = tmp.allocate(1);
-                _root->setStatus(true);
+                map();
+                this->_size = 0;
             }
             this->insert(this->begin(), x.begin(), x.end());
             return (*this);
@@ -156,7 +153,7 @@ namespace ft
         }
         const_iterator begin() const
         {
-                        if (this->_size == 0)
+            if (this->_size == 0)
                 return(const_iterator(this->_root));
             return (const_iterator(this->_root->minValueNode(_root)));
         }
@@ -268,7 +265,19 @@ namespace ft
         {
             (void)position;
             bool insert_valid = true;
-            this->_root = this->_root->insert(this->_root, val, &insert_valid);
+            if (this->_size == 0)
+            {
+                Node<key_type, mapped_type> *tmp;
+                std::allocator<Node<key_type, mapped_type> > tmpall;
+                tmp = this->_root->insert(this->_root, val, &insert_valid);
+                tmpall.deallocate(this->_root, 1);
+                this->_root = tmp;
+                if (insert_valid == true)
+                    this->_size++;
+                return (iterator(this->_root->search(this->_root, val.first)));
+            }
+            else
+                this->_root = this->_root->insert(this->_root, val, &insert_valid);
 
             if (insert_valid == true)
                 this->_size++;
@@ -280,14 +289,26 @@ namespace ft
         typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last)
         {
             (void)position;
+            bool insert_valid = true;
+            if (this->_size == 0)
+            {
+                Node<key_type, mapped_type> *tmp;
+                std::allocator<Node<key_type, mapped_type> > tmpall;
+                tmp = this->_root->insert(this->_root, *first, &insert_valid);
+                tmpall.deallocate(this->_root, 1);
+                this->_root = tmp;
+                if (insert_valid == true)
+                    this->_size++;
+                first++;
+            }
             for(; first != last; first++)
             {
-                bool insert_valid = true;
+                insert_valid = true;
                 this->_root = this->_root->insert(this->_root, *first, &insert_valid);
                 if (insert_valid == true)
                     this->_size++;
             }
-            bool insert_valid = true;
+            insert_valid = true;
             this->_root = this->_root->insert(this->_root, *first, &insert_valid);
             if (insert_valid == true)
                 this->_size++;
