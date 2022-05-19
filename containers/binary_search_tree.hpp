@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 14:18:58 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/19 11:30:42 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/19 17:16:37 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ namespace ft
         typedef ft::pair<const Key, T>  value_type;
         typedef std::allocator<Node>    alloc_type;
         typedef std::allocator<value_type> alloc_val;
+
         
         Node()
         : alloc(alloc_type()), _key(NULL), _left(NULL), _right(NULL), _height(1), _parent(NULL), _first(true)
@@ -132,7 +133,7 @@ namespace ft
                 *is_insert = false;
                 return (node);
             }
-            node = balanceTreeInsert(node, key);
+            node = balanceTree(node);
             setAllParents(node);
             return node;
         }
@@ -194,7 +195,7 @@ namespace ft
                     node->setRight(deleteNode(node->getRight(), node->getKey()));
                 }
             }
-            node = balanceTreeDelete(node);
+            node = balanceTree(node);
             return (node);
         }
 
@@ -255,11 +256,8 @@ namespace ft
 
         void setKey(value_type newkey)
         {
-            if (this->_key != NULL)
-            {
-                alloc_val tmp;
-                tmp.destroy(_key);
-            }
+            if (this->_key)
+                this->destroyKey();
             this->_key = constructKey(newkey);
             
         }
@@ -302,56 +300,21 @@ namespace ft
         {
             if (N == NULL)
                 return 0;
-            if (N->getLeft() == NULL)
-            {
-                if (N->getRight() == NULL)
-                    return (0);
-                else
-                    return (0 - N->getRight()->getHeight());
-            }
-            else
-            {
-                if (N->getRight() == NULL)
-                    return (N->getLeft()->getHeight());
-            }
-            return (N->getLeft()->getHeight() - N->getRight()->getHeight());
+            return (N->height(N->getLeft()) - N->height(N->getRight()));
         }
 
+        int height(Node *N)
+        {
+            if (N == NULL)
+                return 0;
+            return N->getHeight();
+        }
         void modifHeight(Node *node)
         {
-            if (node->getLeft() == NULL || node->getRight() == NULL)
-            {
-                if (node->getLeft() == NULL && node->getRight() == NULL)
-                    node->setHeight(0);
-                else if (node->getLeft() == NULL)
-                    node->setHeight(1 + max(0, node->getRight()->getHeight()));
-                else if (node->getRight() == NULL)
-                    node->setHeight(1 + max(node->getLeft()->getHeight(), 0));
-            }
-            else
-                node->setHeight(1 + max(node->getLeft()->getHeight(), node->getRight()->getHeight()));   
+            node->setHeight(1 + max(node->height(node->getLeft()), node->height(node->getRight())));   
         }
-        
-        Node *balanceTreeInsert(Node *node, value_type key)
-        {
-            modifHeight(node);
-            int balanceFactor = getBalanceFactor(node);
-            if (balanceFactor > 1)
-            {
-                if (key.first > node->getLeft()->getKey().first)
-                    node->setLeft(leftRotate(node->getLeft()));
-                return rightRotate(node);
-            }
-            if (balanceFactor < -1 && key.first > node->getRight()->getKey().first)
-            {
-                if (key < node->getRight()->getKey())
-                    node->setRight(rightRotate(node->getRight()));
-                return leftRotate(node);
-            }
-            return (node);
-        }
-        
-        Node *balanceTreeDelete(Node *node)
+            
+        Node *balanceTree(Node *node)
         {
             if (node == NULL)
                 return node;
@@ -416,7 +379,7 @@ namespace ft
             return (node);
         }
     
-        private:
+        // private:
             alloc_type    alloc;
             value_type    *_key;
             Node          *_left;

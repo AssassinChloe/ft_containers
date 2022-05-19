@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/19 12:08:21 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/19 16:37:31 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -514,7 +514,7 @@ namespace ft
         }
 
         
-        private:
+        // private:
 
             allocator_type  				_alloc;
             key_compare     				_comp;
