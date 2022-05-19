@@ -1,18 +1,29 @@
-#include "map.hpp"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_std.cpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/19 11:31:27 by cassassi          #+#    #+#             */
+/*   Updated: 2022/05/19 12:03:34 by cassassi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <map>
 #include <iostream>
 #include <string>
 
-void printMap(ft::map<const int, char> *map)
+void printMap(std::map<const int, char> *map)
 {
     if (map->size() == 0)
         return ;
-    ft::map<const int, char>::iterator ite = map->end();
-    ft::map<const int, char>::iterator it = map->begin();
+    std::map<const int, char>::iterator ite = map->end();
+    std::map<const int, char>::iterator it = map->begin();
     for (;it != ite; it++)
     {
         std::cout << (*it).first << std::endl;   
     }
-    std::cout << (*it).first << std::endl;
 }
 
 int main ()
@@ -21,22 +32,22 @@ int main ()
     
     std::cout << "Init map sans arguments" << std::endl;
 
-    ft::map<const int, char> maptest;
+    std::map<const int, char> maptest;
 
     std::cout << "empty : " << std::boolalpha << maptest.empty() << std::endl;
     std::cout << "Create pairs" << std::endl;
 
-    ft::pair<const int,char> bar2 (90,'g');
-    ft::pair<const int,char> bar3 (45,'f');
-    ft::pair<const int,char> bar4 (9,'b');
-    ft::pair<const int,char> bar5 (19,'d');
-    ft::pair<const int,char> bar6 (5,'a');
-    ft::pair<const int,char> bar7 (20,'e');
-    ft::pair<const int,char> bar8 (21,'e');
-    ft::pair<const int,char> bar9 (22,'e');
-    ft::pair<const int,char> bar10(23,'e');
-    ft::pair<const int,char> bar11(24,'e');
-    ft::pair<const int,char> bar12(25,'e');
+    std::pair<const int,char> bar2 (90,'g');
+    std::pair<const int,char> bar3 (45,'f');
+    std::pair<const int,char> bar4 (9,'b');
+    std::pair<const int,char> bar5 (19,'d');
+    std::pair<const int,char> bar6 (5,'a');
+    std::pair<const int,char> bar7 (20,'e');
+    std::pair<const int,char> bar8 (21,'e');
+    std::pair<const int,char> bar9 (22,'e');
+    std::pair<const int,char> bar10(23,'e');
+    std::pair<const int,char> bar11(24,'e');
+    std::pair<const int,char> bar12(25,'e');
 
     std::cout << "Insert pairs" << std::endl;
     
@@ -62,7 +73,7 @@ int main ()
     
     std::cout << "init map2 it first, it last" << std::endl;
 
-    ft::map<const int, char> maptest2(maptest.begin(), maptest.end());
+    std::map<const int, char> maptest2(maptest.begin(), maptest.end());
     
     std::cout << "insert in map 2" << std::endl;
 
@@ -89,11 +100,11 @@ int main ()
 
     std::cout << "init map3 using map2" << std::endl;
 
-    ft::map<const int, char> maptest3(maptest2);
+    std::map<const int, char> maptest3(maptest2);
 
     std::cout << "insert pair in map3" << std::endl;
 
-    ft::pair<const int,char> bar13(42,'*');
+    std::pair<const int,char> bar13(42,'*');
     maptest3.insert(bar13);
 
     std::cout << "Print Map3" << std::endl;
@@ -159,7 +170,7 @@ int main ()
     std::cout << std::endl;
 
     std::cout << "Find 22" << std::endl;
-    ft::map<const int, char>::iterator it = maptest.find(90);
+    std::map<const int, char>::iterator it = maptest.find(90);
     std::cout << "At Key : " << (*it).first << " there is : " << (*it).second << std::endl;
     std::cout << std::endl;
 

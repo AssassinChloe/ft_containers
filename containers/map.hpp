@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/18 17:54:37 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/19 12:08:21 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ namespace ft
     template <class T> 
     class less : ft::binary_function<T,T,bool>
     {
+        public :
         bool operator() (const T& x, const T& y) const 
         {
             return x<y;
@@ -89,8 +90,8 @@ namespace ft
         _alloc(alloc), _comp(comp), _size(0)
         {
             std::allocator<Node<key_type, mapped_type> > tmp;
-            _root = tmp.allocate(1);
-            _root->setStatus(true);
+          this->_root = tmp.allocate(1);
+          this->_root->setStatus(true);
         }
                      
         template <class InputIterator>
@@ -101,16 +102,16 @@ namespace ft
         _alloc(alloc), _comp(comp), _size(0)
         {
             std::allocator<Node<key_type, mapped_type> > tmp;
-            _root = tmp.allocate(1);
-            _root->setStatus(true);
-            this->insert(this->begin(), first, last);
+          this->_root = tmp.allocate(1);
+          this->_root->setStatus(true);
+            this->insert(first, last);
         }
             
-        map(const map& x)
+        map(const map& x) : _alloc(allocator_type()), _comp(key_compare()), _size(0)
         {
             std::allocator<Node<key_type, mapped_type> > tmp;
-            _root = tmp.allocate(1);
-            _root->setStatus(true);
+            this->_root = tmp.allocate(1);
+            this->_root->setStatus(true);
             if (&x != this)
                 *this = x;
         }
@@ -133,12 +134,8 @@ namespace ft
         map& operator= (const map& x)
         {
             if (this->_size > 0)
-            {
                 this->clear();
-                map();
-                this->_size = 0;
-            }
-            this->insert(this->begin(), x.begin(), x.end());
+            this->insert(x.begin(), x.end());
             return (*this);
         }
 
@@ -285,10 +282,9 @@ namespace ft
         }
         
         template <class InputIterator>
-        void insert (iterator position, InputIterator first, 
+        void insert (InputIterator first, 
         typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last)
         {
-            (void)position;
             bool insert_valid = true;
             if (this->_size == 0)
             {
@@ -325,8 +321,8 @@ namespace ft
             if (!this->_root)
             {
                 std::allocator<Node<key_type, mapped_type> > tmp;
-                _root = tmp.allocate(1);
-                _root->setStatus(true);
+                this->_root = tmp.allocate(1);
+                this->_root->setStatus(true);
             }
             if (this->_size > 0)
                 this->_root->setAllParents(this->_root);
@@ -343,8 +339,8 @@ namespace ft
             if (!this->_root)
             {
                 std::allocator<Node<key_type, mapped_type> > tmp;
-                _root = tmp.allocate(1);
-                _root->setStatus(true);
+                this->_root = tmp.allocate(1);
+                this->_root->setStatus(true);
             }
             if (this->_size > 0)
                 this->_root->setAllParents(this->_root);
@@ -369,8 +365,8 @@ namespace ft
             if (!this->_root)
             {
                 std::allocator<Node<key_type, mapped_type> > tmp;
-                _root = tmp.allocate(1);
-                _root->setStatus(true);
+                this->_root = tmp.allocate(1);
+                this->_root->setStatus(true);   
             }
             if (this->_size > 0)
                 this->_root->setAllParents(this->_root);
@@ -384,6 +380,9 @@ namespace ft
         void clear()
         {
             this->_root->clear();
+            std::allocator<Node<key_type, mapped_type> > tmp;
+            this->_root = tmp.allocate(1);
+            this->_root->setStatus(true);
             this->_size = 0;
         }
         
@@ -420,7 +419,7 @@ namespace ft
             const_iterator ite = this->end();
             for(const_iterator it = this->begin(); it != ite; it++)
             {
-                if (k == *it->getKey()->first)
+                if (k == *(*it).first)
                     return(it);
             }
             return (ite);
@@ -429,7 +428,7 @@ namespace ft
         // count
         size_type count (const key_type& k) const
         {
-            if(this->_root.search(this->root, k))
+            if(this->_root->search(this->_root, k))
                 return (1);
             return (0);
         }
@@ -440,7 +439,7 @@ namespace ft
             iterator ite = this->end();
             for (iterator it = this->begin(); it != ite; it++)
             {
-                if (!this->_comp(*it->getKey()->first, k))
+                if (!this->_comp((*it).first, k))
                 return (it);
             }
             return (ite);
@@ -451,7 +450,7 @@ namespace ft
             const_iterator ite = this->end();
             for (const_iterator it = this->begin(); it != ite; it++)
             {
-                if (!this->_comp(*it->getKey()->first, k))
+                if (!this->_comp((*it).first, k))
                 return (it);
             }
             return (ite);
@@ -460,24 +459,21 @@ namespace ft
         // upper_bond
         iterator upper_bound (const key_type& k)
         {
-            iterator ite = this->end();
-            for (iterator it = this->begin(); it != ite; it++)
-            {
-                if (!this->_comp(k, *it->getKey()->first))
-                    return (it);
-            }
-            return (ite);
+            Node<Key, T> *tmp = this->_root->search(this->_root, k);
+            if (tmp == NULL /* || tmp == _root->maxValueNode(this->_root)*/)
+                return (this->lower_bound(k));
+            else
+                return (++this->lower_bound(k));
+
         }
 		
         const_iterator upper_bound (const key_type& k) const
         {
-            const_iterator ite = this->end();
-            for (const_iterator it = this->begin(); it != ite; it++)
-            {
-                if (!this->_comp(k, *it->getKey()->first))
-                return (+it);
-            }
-            return (ite);
+            Node<Key, T> *tmp = this->_root->search(this->_root, k);
+            if (tmp == NULL || tmp == _root->maxValueNode(this->_root))
+                return (this->lower_bound(k));
+            else
+                return (++this->lower_bound(k));
         }
         
         // equal_range
@@ -500,9 +496,7 @@ namespace ft
 		}
 
         //FONCTION POUR TEST
-        ft::Node<key_type, mapped_type>	*getRoot()const
-        {return (_root);}
-
+        
         void printMap()
         {
             if (this->_size == 0)

@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 14:18:58 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/18 15:53:41 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/19 11:30:42 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,11 +168,11 @@ namespace ft
             {
                 if ((node->getLeft() == NULL) || (node->getRight() == NULL))
                 {
-                    node->destroyKey();
                     if (node->getLeft())
                         temp = node->getLeft();
                     else
                         temp = node->getRight();
+                    node->destroyKey();
                     if (temp == NULL)
                     {
                         
@@ -183,12 +183,13 @@ namespace ft
                     {
                         *node = *temp;
                     }
-                    alloc.destroy(temp);
+                    alloc.deallocate(temp, 1);
                 } 
                 else
                 {
                     alloc_val tmp;
                     temp = minValueNode(node->getRight());
+                    node->destroyKey();
                     node->setKey(temp->getKey());
                     node->setRight(deleteNode(node->getRight(), node->getKey()));
                 }
@@ -230,15 +231,7 @@ namespace ft
         bool getStatus() const
         {
             return (this->_first);
-        }
-        
-        Node *getRoot() const
-        {
-            Node *tmp = this;
-            while (tmp->getParent() != NULL)
-                tmp = tmp->getParent();
-            return (tmp);
-        }      
+        }   
         
         alloc_type getAlloc() const
         {
