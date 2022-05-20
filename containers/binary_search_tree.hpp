@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 14:18:58 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/19 17:16:37 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/20 15:20:29 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,17 @@ namespace ft
 
         value_type *constructKey(value_type key)
         {
-            alloc_val tmp;
-            this->_key = tmp.allocate(1);
-            tmp.construct(this->_key, key);
+            this->_key = _all_pair.allocate(1);
+            _all_pair.construct(this->_key, key);
             return (this->_key);
         }
 
         void destroyKey()
         {
-            alloc_val tmp;
             if (this->_key)
             {
-                tmp.destroy(this->_key);
-                tmp.deallocate(this->_key, 1);
+                _all_pair.destroy(this->_key);
+                _all_pair.deallocate(this->_key, 1);
                 this->_key = NULL;
             }
         }
@@ -58,14 +56,12 @@ namespace ft
         {
             Node *node = alloc.allocate(1);
             alloc.construct(node, key);
-            node->setStatus(false);
+            node->_first = false;
             return (node);
         }
         
         virtual ~Node()
-        {
-            
-        }
+        {}
 
         void clear()
         {
@@ -73,12 +69,12 @@ namespace ft
                 this->destroyKey();
             if (this->_left)
             {
-                this->getLeft()->clear(); 
+                this->_left->clear(); 
                 this->_left = NULL;
             }
             if (this->_right)
             {
-                this->getRight()->clear();
+                this->_right->clear();
                 this->_right = NULL;
             }
             this->alloc.deallocate(this, 1);
@@ -92,15 +88,15 @@ namespace ft
         
         void setAllParents(Node *node)
         {
-            if (node->getRight())
+            if (node->_right)
             {
-                node->getRight()->setParent(node);
-                node->setAllParents(node->getRight());
+                node->_right->_parent = node;
+                node->setAllParents(node->_right);
             }
-            if (node->getLeft())
+            if (node->_left)
             {
-                node->getLeft()->setParent(node);
-                node->setAllParents(node->getLeft());
+                node->_left->_parent = node;
+                node->setAllParents(node->_left);
             }
         }
         
@@ -109,11 +105,11 @@ namespace ft
         {
             if (node)
             {
-                if (node->getKey().first == key)
+                if (node->_key->first == key)
                     return (node);
-                if (node->getKey().first < key)
-                    return (search(node->getRight(), key));
-                return (search(node->getLeft(), key));
+                if (node->_key->first < key)
+                    return (search(node->_right, key));
+                return (search(node->_left, key));
             }
             return NULL;
         }
@@ -124,10 +120,10 @@ namespace ft
             {
                 return (newNode(key));
             }
-            if (key.first < node->getKey().first)
-                node->setLeft(insert(node->getLeft(), key, is_insert));
-            else if (key.first > node->getKey().first)
-                node->setRight(insert(node->getRight(), key, is_insert));
+            if (key.first < node->_key->first)
+                node->_left = insert(node->_left, key, is_insert);
+            else if (key.first > node->_key->first)
+                node->_right = insert(node->_right, key, is_insert);
             else
             {
                 *is_insert = false;
@@ -142,8 +138,8 @@ namespace ft
         {
             Node *current = node;
 
-            while (current && current->getLeft() != NULL)
-                current = current->getLeft();
+            while (current && current->_left != NULL)
+                current = current->_left;
             return current;
         }
 
@@ -151,8 +147,8 @@ namespace ft
         {
             Node *current = node;
 
-            while (current && current->getRight() != NULL)
-                current = current->getRight();
+            while (current && current->_right != NULL)
+                current = current->_right;
             return current;
         }
 
@@ -161,22 +157,21 @@ namespace ft
             Node *temp;
             if (node == NULL)
                 return (node);
-            if (key.first < node->getKey().first)
-                node->setLeft(deleteNode(node->getLeft(), key));
-            else if (key.first > node->getKey().first)
-                node->setRight(deleteNode(node->getRight(), key));
+            if (key.first < node->_key->first)
+                node->_left = deleteNode(node->_left, key);
+            else if (key.first > node->_key->first)
+                node->_right = deleteNode(node->_right, key);
             else
             {
-                if ((node->getLeft() == NULL) || (node->getRight() == NULL))
+                if ((node->_left == NULL) || (node->_right == NULL))
                 {
-                    if (node->getLeft())
-                        temp = node->getLeft();
+                    if (node->_left)
+                        temp = node->_left;
                     else
-                        temp = node->getRight();
+                        temp = node->_right;
                     node->destroyKey();
                     if (temp == NULL)
                     {
-                        
                         temp = node;
                         node = NULL;
                     }
@@ -188,83 +183,14 @@ namespace ft
                 } 
                 else
                 {
-                    alloc_val tmp;
-                    temp = minValueNode(node->getRight());
+                    temp = minValueNode(node->_right);
                     node->destroyKey();
-                    node->setKey(temp->getKey());
-                    node->setRight(deleteNode(node->getRight(), node->getKey()));
+                    node->_key = node->constructKey(*(temp->_key));
+                    node->_right = deleteNode(node->_right, *(node->_key));
                 }
             }
             node = balanceTree(node);
             return (node);
-        }
-
-        int getHeight() const 
-        {
-            return (this->_height);
-        }
-        
-        Node *getLeft() const
-        {
-            return (this->_left);
-        }
-
-        Node *getRight() const
-        {
-            return (this->_right);
-        }        
-        
-        Node *getParent() const
-        {
-            return (this->_parent);
-        }
-
-        value_type getKey() const
-        {
-            return (*this->_key);
-        }
-
-        value_type *getKeyPtr() const
-        {
-            return (this->_key);
-        }
-
-        bool getStatus() const
-        {
-            return (this->_first);
-        }   
-        
-        alloc_type getAlloc() const
-        {
-            return (this->alloc);
-        }  
-        
-        void setHeight(int newheight)
-        {
-            this->_height = newheight;
-        }
-        
-        void setLeft(Node *newleft)
-        {
-            this->_left = newleft;
-        }
-
-        void setRight(Node *newright)
-        {
-            this->_right = newright;
-        }
-
-        void setKey(value_type newkey)
-        {
-            if (this->_key)
-                this->destroyKey();
-            this->_key = constructKey(newkey);
-            
-        }
-
-        void setStatus(bool status)
-        {
-            this->_first = status;
         }
         
         int max(int a, int b)
@@ -276,10 +202,10 @@ namespace ft
 
         Node *rightRotate(Node *y) 
         {
-            Node *x = y->getLeft();
-            Node *T2 = x->getRight();
-            x->setRight(y);
-            y->setLeft(T2);
+            Node *x = y->_left;
+            Node *T2 = x->_right;
+            x->_right = y;
+            y->_left = T2;
             modifHeight(y);
             modifHeight(x);
             return x;
@@ -287,10 +213,10 @@ namespace ft
 
         Node *leftRotate(Node *x)
         {
-            Node *y = x->getRight();
-            Node *T2 = y->getLeft();
-            y->setLeft(x);
-            x->setRight(T2);
+            Node *y = x->_right;
+            Node *T2 = y->_left;
+            y->_left = x;
+            x->_right = T2;
             modifHeight(y);
             modifHeight(x);
             return y;
@@ -300,18 +226,18 @@ namespace ft
         {
             if (N == NULL)
                 return 0;
-            return (N->height(N->getLeft()) - N->height(N->getRight()));
+            return (N->height(N->_left) - N->height(N->_right));
         }
 
         int height(Node *N)
         {
             if (N == NULL)
                 return 0;
-            return N->getHeight();
+            return N->_height;
         }
         void modifHeight(Node *node)
         {
-            node->setHeight(1 + max(node->height(node->getLeft()), node->height(node->getRight())));   
+            node->_height = (1 + max(node->height(node->_left), node->height(node->_right)));   
         }
             
         Node *balanceTree(Node *node)
@@ -322,16 +248,16 @@ namespace ft
             int balanceFactor = getBalanceFactor(node);
             if (balanceFactor > 1)
             {
-                if (getBalanceFactor(node->getLeft()) >= 0) 
+                if (getBalanceFactor(node->_left) >= 0) 
                     return rightRotate(node);
-                node->setLeft(leftRotate(node->getLeft()));
+                node->_left = leftRotate(node->_left);
                 return rightRotate(node);
             }
             if (balanceFactor < -1) 
             {
-                if (getBalanceFactor(node->getRight()) <= 0)
+                if (getBalanceFactor(node->_right) <= 0)
                     return leftRotate(node);
-                node->setRight(rightRotate(node->getRight()));
+                node->_right = rightRotate(node->_right);
                 return leftRotate(node);
             }
             return (node);
@@ -339,20 +265,20 @@ namespace ft
     
         Node * increase(Node *node) 
         {
-            if (node->getRight())
+            if (node->_right)
             {
-                node = node->getRight();
-                while (node->getLeft())
-                    node = node->getLeft();
+                node = node->_right;
+                while (node->_left)
+                    node = node->_left;
             }
             else 
             {
                 Node *temp = node;
-                node = node->getParent();
-                while (node->getLeft() != temp)
+                node = node->_parent;
+                while (node->_left != temp)
                 {
                     temp = node;
-                    node = node->getParent();
+                    node = node->_parent;
                 }
             }
             return (node);
@@ -360,33 +286,33 @@ namespace ft
         
         Node * decrease(Node * node) 
         {
-            if (node->getLeft()) 
+            if (node->_left) 
             {
-                node = node->getLeft();
-                while (node->getRight())
-                    node = node->getRight();
+                node = node->_left;
+                while (node->_right)
+                    node = node->_right;
             }
             else 
             {
                 Node *temp = node;
-                node = node->getParent();
-                while (node->getRight() != temp) 
+                node = node->_parent;
+                while (node->_right != temp) 
                 {
                     temp = node;
-                    node = node->getParent();
+                    node = node->_parent;
                 }
             }
             return (node);
         }
-    
-        // private:
-            alloc_type    alloc;
-            value_type    *_key;
-            Node          *_left;
-            Node          *_right;
-            int           _height;
-            Node          *_parent;
-            bool          _first;        
+        
+        alloc_type    alloc;
+        alloc_val     _all_pair;
+        value_type    *_key;
+        Node          *_left;
+        Node          *_right;
+        int           _height;
+        Node          *_parent;
+        bool          _first;        
 
     };
 

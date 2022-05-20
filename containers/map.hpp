@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/19 16:37:31 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/20 15:45:07 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,8 @@ namespace ft
         explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) :
         _alloc(alloc), _comp(comp), _size(0)
         {
-            std::allocator<Node<key_type, mapped_type> > tmp;
-          this->_root = tmp.allocate(1);
-          this->_root->setStatus(true);
+          this->_root = this->_node.allocate(1);
+          this->_root->_first = true;
         }
                      
         template <class InputIterator>
@@ -101,17 +100,15 @@ namespace ft
         const allocator_type& alloc = allocator_type()) :
         _alloc(alloc), _comp(comp), _size(0)
         {
-            std::allocator<Node<key_type, mapped_type> > tmp;
-          this->_root = tmp.allocate(1);
-          this->_root->setStatus(true);
+            this->_root =this->_node.allocate(1);
+            this->_root->_first = true;
             this->insert(first, last);
         }
             
         map(const map& x) : _alloc(allocator_type()), _comp(key_compare()), _size(0)
         {
-            std::allocator<Node<key_type, mapped_type> > tmp;
-            this->_root = tmp.allocate(1);
-            this->_root->setStatus(true);
+            this->_root =this->_node.allocate(1);
+            this->_root->_first =true;
             if (&x != this)
                 *this = x;
         }
@@ -120,14 +117,9 @@ namespace ft
         ~map()
         {
             if (this->_size == 0)
-            {
-                std::allocator<Node<key_type, mapped_type> > tmp;
-                tmp.deallocate(this->_root, 1);
-            }
+               this->_node.deallocate(this->_root, 1);
             else
-            {
                 this->_root->clear();
-            }
         }
 
         // operator=
@@ -146,13 +138,13 @@ namespace ft
         {
             if (this->_size == 0)
                 return(iterator(this->_root));
-            return (iterator(this->_root->minValueNode(_root)));
+            return (iterator(this->_root->minValueNode(this->_root)));
         }
         const_iterator begin() const
         {
             if (this->_size == 0)
                 return(const_iterator(this->_root));
-            return (const_iterator(this->_root->minValueNode(_root)));
+            return (const_iterator(this->_root->minValueNode(this->_root)));
         }
         
         // end
@@ -160,13 +152,13 @@ namespace ft
         {
             if (this->_size == 0)
                 return(iterator(this->_root));
-            return (iterator(this->_root->maxValueNode(_root)));
+            return (iterator(this->_root->maxValueNode(this->_root)));
         }
         const_iterator end() const
         {
             if (this->_size == 0)
                 return(const_iterator(this->_root));
-            return (const_iterator(this->_root->maxValueNode(_root)));
+            return (const_iterator(this->_root->maxValueNode(this->_root)));
         }
         
         // rbegin     
@@ -208,8 +200,8 @@ namespace ft
         // max_size
         size_type max_size() const
         {
-            const size_type diffmax = PTRDIFF_MAX / sizeof(value_type);
-            const size_type allocmax = _alloc.max_size();
+            const size_type diffmax = PTRDIFF_MAX / sizeof(ft::Node<key_type, mapped_type>);
+            const size_type allocmax = _node.max_size();
             return (std::min(diffmax, allocmax));
         }
 
@@ -218,7 +210,10 @@ namespace ft
         //operator[]
         mapped_type& operator[] (const key_type& k)
         {
-            return (this->_root->search(this->_root, k)->getKeyPtr()->second);
+            Node<key_type, mapped_type> *tmp = this->_root->search(this->_root, k);
+            if (tmp)
+                return (tmp->_key->second);
+            return ((*((this->insert(make_pair(k,mapped_type()))).first)).second);
         }
     
     //MODIFIERS
@@ -230,13 +225,12 @@ namespace ft
             if (this->_size == 0)
             {
                 Node<key_type, mapped_type> *tmp;
-                std::allocator<Node<key_type, mapped_type> > tmpall;
                 tmp = this->_root->insert(this->_root, val, &insert_valid);
-                tmpall.deallocate(this->_root, 1);
+               this->_node.deallocate(this->_root, 1);
                 this->_root = tmp;
                 if (insert_valid == true)
                     this->_size++;
-                return (ft::make_pair(iterator(_root), true));
+                return (ft::make_pair(iterator(this->_root), true));
             }
             iterator ite = this->end();
             iterator it = this->begin();
@@ -265,9 +259,8 @@ namespace ft
             if (this->_size == 0)
             {
                 Node<key_type, mapped_type> *tmp;
-                std::allocator<Node<key_type, mapped_type> > tmpall;
                 tmp = this->_root->insert(this->_root, val, &insert_valid);
-                tmpall.deallocate(this->_root, 1);
+               this->_node.deallocate(this->_root, 1);
                 this->_root = tmp;
                 if (insert_valid == true)
                     this->_size++;
@@ -289,9 +282,8 @@ namespace ft
             if (this->_size == 0)
             {
                 Node<key_type, mapped_type> *tmp;
-                std::allocator<Node<key_type, mapped_type> > tmpall;
                 tmp = this->_root->insert(this->_root, *first, &insert_valid);
-                tmpall.deallocate(this->_root, 1);
+                this->_node.deallocate(this->_root, 1);
                 this->_root = tmp;
                 if (insert_valid == true)
                     this->_size++;
@@ -320,9 +312,8 @@ namespace ft
             }
             if (!this->_root)
             {
-                std::allocator<Node<key_type, mapped_type> > tmp;
-                this->_root = tmp.allocate(1);
-                this->_root->setStatus(true);
+                this->_root = this->_node.allocate(1);
+                this->_root->_first = true;
             }
             if (this->_size > 0)
                 this->_root->setAllParents(this->_root);
@@ -333,14 +324,13 @@ namespace ft
             Node<Key, T> *tmp = this->_root->search(this->_root, k);
             if (tmp != NULL)
             {
-                this->_root = this->_root->deleteNode(this->_root, tmp->getKey());
+                this->_root = this->_root->deleteNode(this->_root, *(tmp->_key));
                 this->_size--;
             }
             if (!this->_root)
             {
-                std::allocator<Node<key_type, mapped_type> > tmp;
-                this->_root = tmp.allocate(1);
-                this->_root->setStatus(true);
+                this->_root = this->_node.allocate(1);
+                this->_root->_first = true;
             }
             if (this->_size > 0)
                 this->_root->setAllParents(this->_root);
@@ -364,9 +354,8 @@ namespace ft
             }
             if (!this->_root)
             {
-                std::allocator<Node<key_type, mapped_type> > tmp;
-                this->_root = tmp.allocate(1);
-                this->_root->setStatus(true);   
+                this->_root = this->_node.allocate(1);
+                this->_root->_first = true;   
             }
             if (this->_size > 0)
                 this->_root->setAllParents(this->_root);
@@ -380,9 +369,8 @@ namespace ft
         void clear()
         {
             this->_root->clear();
-            std::allocator<Node<key_type, mapped_type> > tmp;
-            this->_root = tmp.allocate(1);
-            this->_root->setStatus(true);
+            this->_root = this->_node.allocate(1);
+            this->_root->_first = true;
             this->_size = 0;
         }
         
@@ -428,7 +416,7 @@ namespace ft
         // count
         size_type count (const key_type& k) const
         {
-            if(this->_root->search(this->_root, k))
+            if (this->_root->search(this->_root, k))
                 return (1);
             return (0);
         }
@@ -460,7 +448,7 @@ namespace ft
         iterator upper_bound (const key_type& k)
         {
             Node<Key, T> *tmp = this->_root->search(this->_root, k);
-            if (tmp == NULL /* || tmp == _root->maxValueNode(this->_root)*/)
+            if (tmp == NULL  || tmp == _root->maxValueNode(this->_root))
                 return (this->lower_bound(k));
             else
                 return (++this->lower_bound(k));
@@ -495,27 +483,12 @@ namespace ft
             return (this->_alloc);
 		}
 
-        //FONCTION POUR TEST
-        
-        void printMap()
-        {
-            if (this->_size == 0)
-                return ;
-            iterator ite = this->end();
-            iterator it = this->begin();
-            std::cout << "Map print start" << std::endl;   
-            for (;it != ite; it++)
-            {
-                std::cout << (*it).first << std::endl;   
-            }
-            std::cout << (*it).first << std::endl;
-            std::cout << "Map print end" << std::endl;   
-
-        }
-
         
         // private:
 
+            typedef std::allocator<Node<key_type, mapped_type> > node_alloc;
+
+            node_alloc                      _node;
             allocator_type  				_alloc;
             key_compare     				_comp;
             ft::Node<key_type, mapped_type>	*_root;
@@ -524,17 +497,17 @@ namespace ft
             value_type *increase(value_type pos) 
             {
                 Node<key_type, mapped_type> *node = _root->search(_root, pos.first);
-                if (node->getRight())
+                if (node->_right)
                 {
-                    node = node->getRight();
-                    while (node->getLeft())
-                        node = node->getLeft();
+                    node = node->_right;
+                    while (node->_left)
+                        node = node->_left;
                 }
                 else 
                 {
                     Node<key_type, mapped_type> *temp = node;
-                    node = node->getParent();
-                    while (node->getLeft() != temp)
+                    node = node->_parent;
+                    while (node->_left != temp)
                     {
                         temp = node;
                         node = node->getParent();

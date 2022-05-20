@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 12:05:23 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/17 13:22:52 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/20 12:24:06 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ namespace ft
 
             reference operator*() const
             {
-                T *tmp = this->ptr->getKeyPtr();
+                T *tmp = this->ptr->_key;
                 return (*tmp);
             }
             pointer operator->() const
