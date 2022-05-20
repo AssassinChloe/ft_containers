@@ -3,9 +3,11 @@
 #include <iostream>
 #include <string>
 #include <deque>
-	#include "../containers/map.hpp"
-	#include "../containers/stack.hpp"
-	#include "../containers/vector.hpp"
+	#include <map>
+	#include <stack>
+	#include <vector>
+	namespace ft = std;
+
 
 
 #include <stdlib.h>

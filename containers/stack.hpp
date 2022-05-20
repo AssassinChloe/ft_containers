@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:46 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/06 17:02:46 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/20 17:06:54 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,40 +30,40 @@ namespace ft
                     //                  PUBLIC MEMBER FUNCTIONS
         
         // Constructors
-            explicit stack (const container_type& ctnr = container_type()) : _stack(ctnr)
+            explicit stack (const container_type& ctnr = container_type()) : c(ctnr)
             {}
         
         //empty
             bool empty() const
             {
-                return (_stack.empty());
+                return (c.empty());
             }
             
         //size
             size_type size() const        
             {
-                return (_stack.size());
+                return (c.size());
             }
         //top
             value_type& top()
             {
-                return (_stack.back());
+                return (c.back());
             }
 
             const value_type& top() const
             {
-                return (_stack.back());
+                return (c.back());
             }
         //push
             void push(const value_type& val)
             {
-                return (_stack.push_back(val));
+                return (c.push_back(val));
             }
         
         //pop
             void pop()
             {
-                return (_stack.pop_back());
+                return (c.pop_back());
             }
 
             template <class Tsrc, class Containersrc>
@@ -85,7 +85,8 @@ namespace ft
             friend bool operator>= (const stack<Tsrc,Containersrc>& lhs, const stack<Tsrc,Containersrc>& rhs);
         
         protected :
-            container_type _stack;
+            container_type c;
+            
     };
 
                 //                  NON-MEMBER FUNCTION OVERLOADS
@@ -95,37 +96,37 @@ namespace ft
         template <class T, class Container>
         bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
         {
-            return(lhs._stack == rhs._stack);
+            return(lhs.c == rhs.c);
         }
 
         template <class T, class Container>
         bool operator!= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
         {
-            return(lhs._stack != rhs._stack);
+            return(lhs.c != rhs.c);
         }
 
         template <class T, class Container>
         bool operator<  (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
         {
-            return(lhs._stack < rhs._stack);
+            return(lhs.c < rhs.c);
         }
 
         template <class T, class Container>
         bool operator<=(const stack<T,Container>& lhs, const stack<T,Container>& rhs)
         {
-            return(lhs._stack >= rhs._stack);
+            return(lhs.c >= rhs.c);
         }
 
         template <class T, class Container>
         bool operator>  (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
         {
-            return(lhs._stack > rhs._stack);
+            return(lhs.c > rhs.c);
         }
 
         template <class T, class Container>
         bool operator>= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
         {
-            return(lhs._stack >= rhs._stack);
+            return(lhs.c >= rhs.c);
         }
 }
 #endif
