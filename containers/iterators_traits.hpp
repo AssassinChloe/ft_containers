@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 17:21:47 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/20 15:24:37 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/23 10:29:35 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ namespace ft
             typedef typename Iterator::value_type value_type;
             typedef typename Iterator::reference reference;
             typedef typename Iterator::pointer pointer;
+            typedef ft::random_access_iterator_tag iterator_category;
+
     };
 
     template <class T>
@@ -42,7 +44,7 @@ namespace ft
             typedef T value_type;
             typedef T* pointer;
             typedef T& reference;
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef ft::random_access_iterator_tag iterator_category;
     };
 
     template <class T>
@@ -53,7 +55,7 @@ namespace ft
             typedef T value_type;
             typedef const T* pointer;
             typedef const T& reference;
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef ft::random_access_iterator_tag iterator_category;
     };
 
         //                 FUNCTIONS

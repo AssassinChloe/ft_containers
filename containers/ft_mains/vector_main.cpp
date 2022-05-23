@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 18:31:22 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/06 17:24:40 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/23 10:33:25 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,12 +199,19 @@ int main()
             std::cout << ">=" << std::endl;
                     else
             std::cout << "not >=" << std::endl;
+        
+        for (int i = 0; i < 10000; i++)
+        {
+            test1.push_back(i);
+        }
+        std::cout << test1.size() << std::endl;
     }
     catch(const std::exception& e)
     {
         std::cerr << e.what() << '\n';
         std::cout << "Try again !" << std::endl;
     }
+    
     
     end = clock();
     double time_taken = double(end - start) / double(CLOCKS_PER_SEC);

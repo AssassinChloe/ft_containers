@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/20 15:45:07 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/23 12:30:45 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,15 +100,15 @@ namespace ft
         const allocator_type& alloc = allocator_type()) :
         _alloc(alloc), _comp(comp), _size(0)
         {
-            this->_root =this->_node.allocate(1);
+            this->_root = this->_node.allocate(1);
             this->_root->_first = true;
             this->insert(first, last);
         }
             
         map(const map& x) : _alloc(allocator_type()), _comp(key_compare()), _size(0)
         {
-            this->_root =this->_node.allocate(1);
-            this->_root->_first =true;
+            this->_root = this->_node.allocate(1);
+            this->_root->_first = true;
             if (&x != this)
                 *this = x;
         }
@@ -363,7 +363,9 @@ namespace ft
         
         // swap
         // void swap (map& x)
-        // {}
+        // {
+            
+        // }
         
         // clear
         void clear()
@@ -484,7 +486,7 @@ namespace ft
 		}
 
         
-        // private:
+        private:
 
             typedef std::allocator<Node<key_type, mapped_type> > node_alloc;
 
@@ -493,29 +495,6 @@ namespace ft
             key_compare     				_comp;
             ft::Node<key_type, mapped_type>	*_root;
             size_type       				_size;  
-        
-            value_type *increase(value_type pos) 
-            {
-                Node<key_type, mapped_type> *node = _root->search(_root, pos.first);
-                if (node->_right)
-                {
-                    node = node->_right;
-                    while (node->_left)
-                        node = node->_left;
-                }
-                else 
-                {
-                    Node<key_type, mapped_type> *temp = node;
-                    node = node->_parent;
-                    while (node->_left != temp)
-                    {
-                        temp = node;
-                        node = node->getParent();
-                    }
-                }
-
-                return (node);
-            }
     };
 }
 

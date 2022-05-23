@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.cpp                                           :+:      :+:    :+:   */
+/*   test_vector.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 14:01:28 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/06 16:54:33 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/23 10:27:36 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,11 +199,19 @@ int main()
             std::cout << ">=" << std::endl;
                     else
             std::cout << "not >=" << std::endl;
+        
+        for (int i = 0; i < 10000; i++)
+        {
+            test1.push_back(i);
+        }
+        std::cout << test1.size() << std::endl;
     }
     catch(const std::exception& e)
     {
         std::cerr << e.what() << std::endl;
     }
+
+
     end = clock();
     double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
     std::cout << std::endl << "Time taken by program is : " << std::fixed 

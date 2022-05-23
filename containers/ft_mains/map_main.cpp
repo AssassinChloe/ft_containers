@@ -1,4 +1,4 @@
-#include "map.hpp"
+#include "../map.hpp"
 #include <iostream>
 #include <string>
 #include <iomanip>
@@ -188,7 +188,7 @@ int main ()
     std::cout << std::endl;
 
     std::cout << "upper Bound" << std::endl;
-    it = maptest.upper_bound(90);
+    it = maptest.upper_bound(654);
     std::cout << "upper Bond 90 : " << (*it).first << std::endl;
     it = maptest.upper_bound(24);
     std::cout << "upper Bond 24 : " << (*it).first << std::endl;
@@ -199,7 +199,7 @@ int main ()
     std::cout << std::endl;
 
     ft::map<const int, char> maptest4;
-    for (int i = 1; i < 100; i++)
+    for (int i = 1; i < 1000; i++)
     {
         maptest4.insert(ft::make_pair(i, 'a'));
     }

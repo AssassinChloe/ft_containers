@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:39 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/13 13:20:47 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/23 11:00:39 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ namespace ft
 
 
             explicit vector(const allocator_type &alloc = allocator_type()) 
-            : _alloc(alloc), _capacity(10), _arr(_alloc.allocate(_capacity)), _current(0) 
+            : _alloc(alloc), _capacity(10), _arr(_alloc.allocate(_capacity)), _current_size(0) 
             {}
 
             explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()) 
-            : _alloc(alloc), _capacity(10 + n * 2), _arr(_alloc.allocate(_capacity)), _current(n)
+            : _alloc(alloc), _capacity(10 + n * 2), _arr(_alloc.allocate(_capacity)), _current_size(n)
             {
                 unsigned int i;
                 for (i = 0; i < n; i++)
@@ -64,7 +64,7 @@ namespace ft
             }
             
             vector(const vector & copy)
-            : _alloc(allocator_type()), _capacity(10), _arr(_alloc.allocate(_capacity)), _current(0)
+            : _alloc(allocator_type()), _capacity(10), _arr(_alloc.allocate(_capacity)), _current_size(0)
             {
                 if (&copy != this)
                     *this = copy;
@@ -73,7 +73,7 @@ namespace ft
             template <typename InputIterator>
             vector (InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value,
             InputIterator>::type last, const allocator_type& alloc = allocator_type())
-            : _alloc(alloc), _capacity(10), _arr(_alloc.allocate(_capacity)), _current(0)
+            : _alloc(alloc), _capacity(10), _arr(_alloc.allocate(_capacity)), _current_size(0)
             {
                 this->insert(this->begin(), first, last);
             }
@@ -85,8 +85,8 @@ namespace ft
                 _alloc.deallocate(this->_arr, this->_capacity);
                 this->_capacity = x.capacity();
                 this->_arr = _alloc.allocate(this->_capacity);
-                this->_current = x.size();
-                for (unsigned int i = 0; i < this->_current; i++)
+                this->_current_size = x.size();
+                for (unsigned int i = 0; i < this->_current_size; i++)
                 {
                     _alloc.construct(this->_arr + i, x[i]);
                 }
@@ -111,10 +111,10 @@ namespace ft
 
             // end
             iterator end() 
-            { return (this->_arr + this->_current);}
+            { return (this->_arr + this->_current_size);}
             
             const_iterator end() const 
-            {return (this->_arr + this->_current);}
+            {return (this->_arr + this->_current_size);}
 
             // rbegin
             reverse_iterator rbegin() 
@@ -135,7 +135,7 @@ namespace ft
             // size
             size_type size() const
             {
-                return (this->_current);
+                return (this->_current_size);
             }
 
             // max_size
@@ -149,12 +149,12 @@ namespace ft
             // resize
             void resize(size_type n, value_type val = value_type())
             {
-                if (n <= this->_current)
+                if (n <= this->_current_size)
                 {
-                    while (this->_current != n)
+                    while (this->_current_size != n)
                     {
-                        this->_current--;
-                        _alloc.destroy(this->_arr + (this->_current));
+                        this->_current_size--;
+                        _alloc.destroy(this->_arr + (this->_current_size));
                     }
                     return ;
                 }
@@ -162,7 +162,7 @@ namespace ft
                 {
                     if (n >= this->_capacity)
                         this->reserve(n + 1);
-                    insert(this->end(), (n - this->_current), val);
+                    insert(this->end(), (n - this->_current_size), val);
                 }
             }
 
@@ -173,7 +173,7 @@ namespace ft
             // empty
             bool empty() const
             {
-                if (this->_current == 0)
+                if (this->_current_size == 0)
                     return (true);
                 return (false);
             }
@@ -185,9 +185,9 @@ namespace ft
                 {
                     size_type i = 0;
                     pointer tmp = _alloc.allocate(n);
-                    if (this->_current > 0)
+                    if (this->_current_size > 0)
                     {
-                        for (i = 0; i < this->_current; i++)
+                        for (i = 0; i < this->_current_size; i++)
                         {
                             tmp[i] = this->_arr[i];
                         }
@@ -196,7 +196,7 @@ namespace ft
                     }
                     this->_capacity = n;
                     this->_arr = tmp;
-                    this->_current = i;
+                    this->_current_size = i;
                 }
             }
 
@@ -212,14 +212,14 @@ namespace ft
             // At
             reference at(size_type n) 
             {
-                if (n < this->_current && n >= 0)
+                if (n < this->_current_size && n >= 0)
                     return (this->_arr[n]);
                 throw std::out_of_range("out of range"); 
             }
             
             const_reference at(size_type n) const 
             {
-                if (n < this->_current && n >= 0)
+                if (n < this->_current_size && n >= 0)
                     return (this->_arr[n]);
                 throw std::out_of_range("out of range"); 
             }
@@ -233,10 +233,10 @@ namespace ft
 
             // Back
             reference back() 
-            { return (this->_arr[this->_current - 1]); }
+            { return (this->_arr[this->_current_size - 1]); }
             
             const_reference back() const 
-            { return (this->_arr[this->_current - 1]); }
+            { return (this->_arr[this->_current_size - 1]); }
 
             // MODIFIERS
 
@@ -247,7 +247,7 @@ namespace ft
             {
                 size_type i;
 
-                for (i = 0; i < this->_current; i++)
+                for (i = 0; i < this->_current_size; i++)
                 {    
                     _alloc.destroy(this->_arr + i);
                 }    
@@ -260,7 +260,7 @@ namespace ft
                     first++;
                     i++;
                 }
-                this->_current = i;
+                this->_current_size = i;
             }
             
             void assign(size_type n, const value_type &val)
@@ -273,7 +273,7 @@ namespace ft
                 }
                 else
                 {
-                    for (size_type i = 0; i < this->_current; i++)
+                    for (size_type i = 0; i < this->_current_size; i++)
                     {    
                         _alloc.destroy(this->_arr + i);
                     }  
@@ -282,25 +282,25 @@ namespace ft
                 {
                     _alloc.construct(this->_arr + i, val);
                 }
-                this->_current = n;
+                this->_current_size = n;
             }
 
             // push_back
             void push_back(const value_type &val)
             {
-                if (this->_current == this->_capacity)
+                if (this->_current_size == this->_capacity)
                     this->reserve(this->_capacity * 2);
-                this->_arr[this->_current] = val;
-                this->_current++;
+                this->_arr[this->_current_size] = val;
+                this->_current_size++;
             }
 
             // pop_back
             void pop_back()
             {
-                if (this->_current == 0)
+                if (this->_current_size == 0)
                     return ;
-                this->_current--;
-                _alloc.destroy(this->_arr + (this->_current));
+                this->_current_size--;
+                _alloc.destroy(this->_arr + (this->_current_size));
             }
 
             // insert
@@ -313,7 +313,7 @@ namespace ft
             void insert(iterator position, size_type n, const value_type &val) 
             {
                 size_type i = 0;
-                while ((this->_current + n) >= this->_capacity)
+                while ((this->_current_size + n) >= this->_capacity)
                         this->reserve(this->_capacity * 2);
                 if (position == this->end())
                 {
@@ -338,7 +338,7 @@ namespace ft
                         *it = val;
                         i++;
                         it++;
-                        this->_current++;
+                        this->_current_size++;
                     }
                     ite = this->end();
                     while(it != ite)
@@ -367,16 +367,16 @@ namespace ft
                 }
                 while (first != last)
                 {
-                    if (this->_current == this->_capacity)
+                    if (this->_current_size == this->_capacity)
                         this->reserve(this->_capacity * 2);
                     this->_arr[i] = *first;
-                    this->_current++;
+                    this->_current_size++;
                     first++;
                     i++;
                 }
                 while (it_copy != ite)
                 {
-                    if (this->_current == this->_capacity)
+                    if (this->_current_size == this->_capacity)
                         this->reserve(this->_capacity * 2);
                     this->_arr[i++] = *it_copy;
                     it_copy++;
@@ -399,7 +399,7 @@ namespace ft
                     {
                         i++;
                     }
-                    this->_current--;
+                    this->_current_size--;
                     iterator ite = this->end();
                     while (it != ite)
                     {
@@ -443,7 +443,7 @@ namespace ft
 						j++;
                         it++;
                     }
-                    this->_current = j;
+                    this->_current_size = j;
                 }
                 return (last);
             }
@@ -451,20 +451,36 @@ namespace ft
             // swap
             void swap(vector &x) 
             {
-				std::swap(*this, x);
+                if (this == &x)
+                    return ;
+                    
+				allocator_type  tmp_alloc = x._alloc;
+                size_type       tmp_capacity = x._capacity;
+                pointer         tmp_arr = x._arr;
+                size_type       tmp_current_size = x._current_size;
+
+                x._alloc = this->_alloc;
+                x._capacity = this->_capacity;
+                x._arr = this->_arr;
+                x._current_size = this->_current_size;
+
+                this->_alloc = tmp_alloc;
+                this->_capacity = tmp_capacity;
+                this->_arr = tmp_arr;
+                this->_current_size = tmp_current_size;
             }
 
             // clear
             void clear() 
             {
-                for (size_type i = 0; i < this->_current; i++)
+                for (size_type i = 0; i < this->_current_size; i++)
                 {
                     _alloc.destroy(_arr + i);
                 }
                 _alloc.deallocate(this->_arr, this->_capacity);
-                this->_capacity = 0;
-                this->_current = 0;
-                _arr = _alloc.allocate(0);
+                this->_capacity = 1;
+                this->_current_size = 0;
+                _arr = _alloc.allocate(1);
             }
 
         // ALLOCATOR
@@ -477,7 +493,7 @@ namespace ft
             allocator_type  _alloc;
             size_type       _capacity;
             pointer         _arr;
-            size_type       _current;
+            size_type       _current_size;
     };
 	
     //                  NON MEMBER FUNCTION OVERLOADS

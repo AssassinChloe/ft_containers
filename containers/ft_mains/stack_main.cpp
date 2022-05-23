@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 16:11:20 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/06 17:24:29 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/23 10:45:38 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,7 @@ int main()
         ft::stack<int, ft::vector<int> > test1;
         ft::stack<int, ft::vector<int> > test2;
         ft::stack<int> copy = test1;
-        std::cout << std::endl << "size, front et back" << std::endl;
-        std::cout << "t1 size : " << test1.size() << std::endl;
-        std::cout << "t1 top : " << test1.top() << std::endl;        
-        std::cout << "copy size : " << test1.size() << std::endl;
-        std::cout << "copy top : " << test1.top() << std::endl;
+
         test1.push(45);
         test1.push(46);
         test1.push(47);
@@ -99,6 +95,16 @@ int main()
         std::cout << "test 1 is empty ? : "<< test1.empty() << std::endl;
         std::cout << "copy (before push) is empty ? : "<< copy.empty() << std::endl;
 
+        std::cout << "clear stack" << std::endl;
+        while(test1.size() > 0)
+            test1.pop();
+
+        std::cout << "fill stack" << std::endl;
+        for (int i = 0; i < 10000; i++)
+        {
+            test1.push(i);
+        }
+        std::cout << test1.size() << std::endl;
                 
     }
     catch(const std::exception& e)

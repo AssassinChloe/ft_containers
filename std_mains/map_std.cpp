@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:31:27 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/20 15:36:20 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/23 12:37:45 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,7 @@ int main ()
     std::cout << std::endl;
 
     std::cout << "upper Bound" << std::endl;
-    it = maptest.upper_bound(90);
+    it = maptest.upper_bound(654);
     std::cout << "upper Bond 90 : " << (*it).first << std::endl;
     it = maptest.upper_bound(24);
     std::cout << "upper Bond 24 : " << (*it).first << std::endl;
@@ -212,7 +212,7 @@ int main ()
     std::cout << std::endl;
 
     std::map<const int, char> maptest4;
-    for (int i = 1; i < 100; i++)
+    for (int i = 1; i < 1000; i++)
     {
         maptest4.insert(std::make_pair(i, 'a'));
     }
