@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 14:18:58 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/23 12:08:38 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/23 17:22:56 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,21 @@ namespace ft
 
         
         Node()
-        : alloc(alloc_type()), _key(NULL), _left(NULL), _right(NULL), _height(1), _parent(NULL), _first(true)
+        : alloc(alloc_type()), _key(NULL), _left(NULL), _right(NULL),
+        _height(1), _parent(NULL), _first(true)
         {}
         
         Node(value_type key)
-        : alloc(alloc_type()), _key(constructKey(key)), _left(NULL), _right(NULL), _height(1), _parent(NULL), _first(false)
-        {}
+        : alloc(alloc_type()), _key(constructKey(key)), _left(NULL), _right(alloc.allocate(1)),
+        _height(1), _parent(NULL), _first(false)
+        {
+            this->_right->_key = NULL;
+        }
 
         value_type *constructKey(value_type key)
         {
-            this->_key = _all_pair.allocate(1);
-            _all_pair.construct(this->_key, key);
+            this->_key = _alloc_pair.allocate(1);
+            _alloc_pair.construct(this->_key, key);
             return (this->_key);
         }
 
@@ -46,8 +50,8 @@ namespace ft
         {
             if (this->_key)
             {
-                _all_pair.destroy(this->_key);
-                _all_pair.deallocate(this->_key, 1);
+                _alloc_pair.destroy(this->_key);
+                _alloc_pair.deallocate(this->_key, 1);
                 this->_key = NULL;
             }
         }
@@ -116,7 +120,7 @@ namespace ft
 
         Node *insert(Node *node, value_type key, bool *is_insert)
         {
-            if (node == NULL || this->_first == true)
+            if (!node || this->_first == true)
             {
                 return (newNode(key));
             }
@@ -146,9 +150,11 @@ namespace ft
         Node *maxValueNode(Node *node) 
         {
             Node *current = node;
-
-            while (current && current->_right != NULL)
+            std::cout << "test" <<std::endl;
+            while (current && current->_right->_key)
                 current = current->_right;
+            std::cout << "test2" <<std::endl;
+
             return current;
         }
 
@@ -306,14 +312,13 @@ namespace ft
         }
         
         alloc_type    alloc;
-        alloc_val     _all_pair;
+        alloc_val     _alloc_pair;
         value_type    *_key;
         Node          *_left;
         Node          *_right;
         int           _height;
         Node          *_parent;
-        bool          _first;        
-
+        bool          _first;
     };
 
 }

@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 12:05:23 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/20 12:24:06 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/23 15:42:38 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ namespace ft
                 T *tmp = this->ptr->_key;
                 return (*tmp);
             }
+            
             pointer operator->() const
             {
                 return (this->ptr);
@@ -71,17 +72,20 @@ namespace ft
                 this->ptr = this->ptr->increase(this->ptr);
                 return (*this);
             }
+            
             map_iterator operator++(int)
             {
                 map_iterator copy = *this;
                 this->ptr = this->ptr->increase(this->ptr);
                 return (copy);
             }
+            
             map_iterator &operator--()
             {
                 this->ptr = this->ptr->decrease(this->ptr);
                 return (*this);
             }
+            
             map_iterator operator--(int)
             {
                 map_iterator copy = *this;

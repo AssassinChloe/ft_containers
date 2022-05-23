@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/23 12:30:45 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/23 17:16:25 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,13 +152,13 @@ namespace ft
         {
             if (this->_size == 0)
                 return(iterator(this->_root));
-            return (iterator(this->_root->maxValueNode(this->_root)));
+            return (iterator(this->_root->maxValueNode(this->_root)->_right));
         }
         const_iterator end() const
         {
             if (this->_size == 0)
                 return(const_iterator(this->_root));
-            return (const_iterator(this->_root->maxValueNode(this->_root)));
+            return (const_iterator(&(*(this->_root->maxValueNode(this->_root)->_right))));
         }
         
         // rbegin     
@@ -232,6 +232,7 @@ namespace ft
                     this->_size++;
                 return (ft::make_pair(iterator(this->_root), true));
             }
+            std::cout << "test 3" << std::endl;
             iterator ite = this->end();
             iterator it = this->begin();
             while (it != ite && *it != val)
@@ -240,6 +241,8 @@ namespace ft
                     return (ft::make_pair(it, false));
                 it++;
             }
+            std::cout << "test 4" << std::endl;
+
             this->_root = this->_root->insert(this->_root, val, &insert_valid);
             if (insert_valid == true)
                 this->_size++;
