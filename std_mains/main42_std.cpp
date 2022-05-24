@@ -8,7 +8,8 @@
 	#include <vector>
 	namespace ft = std;
 
-
+#include <bits/stdc++.h>
+#include <iomanip>
 
 #include <stdlib.h>
 
@@ -47,12 +48,12 @@ int main(int argc, char** argv) {
 	{
 		std::cerr << "Usage: ./test seed" << std::endl;
 		std::cerr << "Provide a seed please" << std::endl;
-		std::cerr << "Count value:" << COUNT << std::endl;
 		return 1;
 	}
 	const int seed = atoi(argv[1]);
 	srand(seed);
-
+    clock_t start, end;
+    start = clock();
 	ft::vector<std::string> vector_str;
 	ft::vector<int> vector_int;
 	ft::stack<int> stack_int;
@@ -111,5 +112,10 @@ int main(int argc, char** argv) {
 		std::cout << *it;
 	}
 	std::cout << std::endl;
+	    end = clock();
+    double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+    std::cout << std::endl << "Time taken by program is : " << std::fixed 
+         << time_taken << std::setprecision(5);
+    std::cout << " sec " << std::endl;
 	return (0);
 }
