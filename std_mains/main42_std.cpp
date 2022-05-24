@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
 	}
 
 	int sum = 0;
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 10000; i++)
 	{
 		int access = rand();
 		sum += map_int[access];

@@ -42,17 +42,29 @@ int main ()
     ft::pair<const int,char> bar12(25,'e');
 
     std::cout << "Insert pairs" << std::endl;
-    
     maptest.insert(bar2);
+    std::cout << std::endl;
+    printMap(&maptest);
+    std::cout << std::endl;
 
     std::cout << "Insert pairs" << std::endl;
-
     maptest.insert(bar3);
-    std::cout << "Insert pairs" << std::endl;
+     std::cout << std::endl;
+    printMap(&maptest);
+    std::cout << std::endl;
 
+    std::cout << "Insert pairs" << std::endl;
     maptest.insert(bar4);
+    std::cout << std::endl;
+    printMap(&maptest);
+    std::cout << std::endl;
+    
     std::cout << "Insert pairs" << std::endl;
     maptest.insert(bar5);
+    std::cout << std::endl;
+    printMap(&maptest);
+    std::cout << std::endl;
+    
     std::cout << "Insert pairs" << std::endl;
     maptest.insert(bar6);
     std::cout << std::endl << "insert pair with it position"<< std::endl << std::endl;
@@ -204,23 +216,12 @@ int main ()
     it = maptest.upper_bound(5);
     std::cout << "upper Bond 5 : " << (*it).first << std::endl;
     std::cout << std::endl;
-    end = clock();
 
-    double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-    std::cout << std::endl << "Time taken by program is : " << std::fixed 
-         << time_taken << std::setprecision(5);
-    std::cout << " sec " << std::endl;
     ft::map<const int, char> maptest4;
     for (int i = 0; i < 10000; i++)
     {
         maptest4.insert(ft::make_pair(i, 'a'));
     }
-    end = clock();
-    time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-    std::cout << std::endl << "Time taken by program is : " << std::fixed 
-         << time_taken << std::setprecision(5);
-    std::cout << " sec " << std::endl;
-    std::cout << "size " << maptest4.size() << std::endl;
 
     std::cout << std::endl;
     printMap(&maptest);
@@ -229,10 +230,11 @@ int main ()
     std::cout << std::endl;
     printMap(&maptest3);
     std::cout << std::endl;
-    
+    printMap(&maptest4);
+    std::cout << std::endl;
 
     end = clock();
-    time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+    double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
     std::cout << std::endl << "Time taken by program is : " << std::fixed 
          << time_taken << std::setprecision(5);
     std::cout << " sec " << std::endl;

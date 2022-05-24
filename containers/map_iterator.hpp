@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 12:05:23 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/24 11:53:21 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/24 17:10:16 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,8 @@ namespace ft
             map_iterator() : ptr(NULL), _root(NULL)
             {}
 
-            map_iterator(Node *src) : ptr(src), _root(src)
-            {
-                
-            }
+            map_iterator(Node *src, Node*root) : ptr(src), _root(root)
+            {}
 
             map_iterator(const map_iterator &src) 
             {
@@ -69,12 +67,22 @@ namespace ft
 
             map_iterator &operator++()
             {
+                if (this->_root->_modify == true)
+                {
+                    this->_root->setAllParents(this->_root);
+                    this->_root->_modify = false;
+                }
                 this->ptr = this->ptr->increase(this->ptr);
                 return (*this);
             }
             
             map_iterator operator++(int)
             {
+                if (this->_root->_modify == true)
+                {
+                    this->_root->setAllParents(this->_root);
+                    this->_root->_modify = false;
+                }
                 map_iterator copy = *this;
                 this->ptr = this->ptr->increase(this->ptr);
                 return (copy);
@@ -82,12 +90,22 @@ namespace ft
             
             map_iterator &operator--()
             {
+                if (this->_root->_modify == true)
+                {
+                    this->_root->setAllParents(this->_root);
+                    this->_root->_modify = false;
+                }
                 this->ptr = this->ptr->decrease(this->ptr);
                 return (*this);
             }
             
             map_iterator operator--(int)
             {
+                if (this->_root->_modify == true)
+                {
+                    this->_root->setAllParents(this->_root);
+                    this->_root->_modify = false;
+                }
                 map_iterator copy = *this;
                 this->ptr = this->ptr->decrease(this->ptr);
                 return (copy);

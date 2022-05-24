@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/24 12:29:59 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/24 17:10:48 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,28 +128,28 @@ namespace ft
         iterator begin()
         {
             if (this->_size == 0)
-                return(iterator(this->_root));
-            return (iterator(this->_root->minValueNode(this->_root)));
+                return(iterator(this->_root, this->_root));
+            return (iterator(this->_root->minValueNode(this->_root), this->_root));
         }
         const_iterator begin() const
         {
             if (this->_size == 0)
-                return(const_iterator(this->_root));
-            return (const_iterator(this->_root->minValueNode(this->_root)));
+                return(const_iterator(this->_root, this->_root));
+            return (const_iterator(this->_root->minValueNode(this->_root), this->_root));
         }
         
         // end
         iterator end()
         {
             if (this->_size == 0)
-                return(iterator(this->_root));
-            return (iterator(this->_root->maxValueNode(this->_root)));
+                return(iterator(this->_root, this->_root));
+            return (iterator(this->_root->maxValueNode(this->_root), this->_root));
         }
         const_iterator end() const
         {
             if (this->_size == 0)
-                return(const_iterator(this->_root));
-            return (const_iterator(this->_root->maxValueNode(this->_root)));
+                return(const_iterator(this->_root, this->_root));
+            return (const_iterator(this->_root->maxValueNode(this->_root), this->_root));
         }
         
         // rbegin     
@@ -201,7 +201,7 @@ namespace ft
         //operator[]
         mapped_type& operator[] (const key_type& k)
         {
-            Node<key_type, mapped_type> *tmp = this->_root->search(this->_root, k);
+            Node *tmp = this->_root->search(this->_root, k);
             if (tmp)
                 return (tmp->_key.second);
             return ((*((insert(make_pair(k, mapped_type()))).first)).second);
@@ -213,11 +213,14 @@ namespace ft
         pair<iterator,bool> insert(const value_type& val)
         {
             bool insert_valid = true;
-            Node<key_type, mapped_type> *tmp = NULL;
+            Node *tmp = NULL;
             this->_root = this->_root->insert(this->_root, val, &insert_valid, &tmp);
             if (insert_valid == true)
+            {
                 this->_size++;
-            return (ft::make_pair(iterator(tmp), insert_valid));
+                this->_root->_modify = true;
+            }
+            return (ft::make_pair(iterator(tmp, this->_root), insert_valid));
         }
         
         iterator insert (iterator position, const value_type& val)
@@ -240,11 +243,12 @@ namespace ft
         
         size_type erase(const key_type& k)
         {
-            Node<key_type, mapped_type> *tmp = this->_root->search(this->_root, k);
+            Node *tmp = this->_root->search(this->_root, k);
             if (tmp)
             {
                 this->_root = this->_root->deleteNode(this->_root, tmp->_key);
                 this->_size--;
+                this->_root->_modify = true;
                 return (1);
             }
             return (0);
@@ -296,18 +300,18 @@ namespace ft
         // find
         iterator find (const key_type& k)
         {
-            Node<key_type, mapped_type> *tmp = this->_root->search(this->_root, k);
+            Node *tmp = this->_root->search(this->_root, k);
             if (!tmp)
                 return (this->end());
-            return (iterator(tmp));
+            return (iterator(tmp, this->_root));
         }
 		
         const_iterator find (const key_type& k) const
         {
-            Node<key_type, mapped_type> *tmp = this->_root->search(this->_root, k);
+            Node *tmp = this->_root->search(this->_root, k);
             if (!tmp)
                 return (this->end());
-            return (const_iterator(tmp));
+            return (const_iterator(tmp, this->_root));
         }
         
         // count
@@ -344,7 +348,7 @@ namespace ft
         // upper_bond
         iterator upper_bound (const key_type& k)
         {
-            Node<Key, T> *tmp = this->_root->search(this->_root, k);
+            Node *tmp = this->_root->search(this->_root, k);
             if (tmp == NULL  || tmp == _root->maxValueNode(this->_root))
                 return (this->lower_bound(k));
             else
@@ -354,7 +358,7 @@ namespace ft
 		
         const_iterator upper_bound (const key_type& k) const
         {
-            Node<Key, T> *tmp = this->_root->search(this->_root, k);
+            Node *tmp = this->_root->search(this->_root, k);
             if (tmp == NULL || tmp == _root->maxValueNode(this->_root))
                 return (this->lower_bound(k));
             else
@@ -383,13 +387,15 @@ namespace ft
         
         private:
 
-            typedef std::allocator<Node<key_type, mapped_type> > node_alloc;
+            typedef ft::Node<key_type, mapped_type> Node;
+            typedef std::allocator<Node> node_alloc;
+            
+            node_alloc      _node;
+            allocator_type  _alloc;
+            key_compare     _comp;
+            Node	        *_root;
+            size_type       _size;
 
-            node_alloc                      _node;
-            allocator_type  				_alloc;
-            key_compare     				_comp;
-            ft::Node<key_type, mapped_type>	*_root;
-            size_type       				_size;  
     };
 }
 

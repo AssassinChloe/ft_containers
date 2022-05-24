@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 14:18:58 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/24 12:30:29 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/24 17:08:01 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ namespace ft
               
         Node(value_type key)
         : alloc(alloc_type()), _key(key), _left(NULL), _right(NULL),
-        _height(1), _parent(NULL)
+        _height(1), _parent(NULL), _modify(false)
         {}
 
        
@@ -54,7 +54,25 @@ namespace ft
                 this->_right = NULL;
             }
             this->alloc.deallocate(this, 1);
+            
         }
+        
+        void setAllParents(Node *node)
+        {
+            if (node->_right)
+            {
+                if (node->_right->_parent != node)
+                    node->_right->_parent = node;
+                node->setAllParents(node->_right);
+            }
+            if (node->_left)
+            {
+                if (node->_left->_parent != node)
+                    node->_left->_parent = node;
+                node->setAllParents(node->_left);
+            }
+        }
+        
 
         Node* search(Node *node, Key key)
         {
@@ -88,10 +106,6 @@ namespace ft
                 return (node);
             }
             node = balanceTree(node);
-            if (node->_right)
-                node->_right->_parent = node;
-            if (node->_left)
-                node->_left->_parent = node;
             return node;
         }
 
@@ -148,10 +162,6 @@ namespace ft
                 }
             }
             node = balanceTree(node);
-            if (node->_right)
-                node->_right->_parent = node;
-            if (node->_left)
-                node->_left->_parent = node;
             return (node);
         }
         
@@ -168,8 +178,8 @@ namespace ft
             Node *T2 = x->_right;
             x->_right = y;
             y->_left = T2;
-            modifHeight(y);
-            modifHeight(x);
+            y->_height = (1 + max(y->height(y->_left), y->height(y->_right)));
+            x->_height = (1 + max(x->height(x->_left), x->height(x->_right)));
             return x;
         }
 
@@ -179,8 +189,8 @@ namespace ft
             Node *T2 = y->_left;
             y->_left = x;
             x->_right = T2;
-            modifHeight(y);
-            modifHeight(x);
+            y->_height = (1 + max(y->height(y->_left), y->height(y->_right)));
+            x->_height = (1 + max(x->height(x->_left), x->height(x->_right)));
             return y;
         }
 
@@ -193,20 +203,16 @@ namespace ft
 
         int height(Node *N)
         {
-            if (N == NULL)
+            if (!N)
                 return 0;
             return N->_height;
-        }
-        void modifHeight(Node *node)
-        {
-            node->_height = (1 + max(node->height(node->_left), node->height(node->_right)));   
         }
             
         Node *balanceTree(Node *node)
         {
             if (node == NULL)
                 return node;
-            modifHeight(node);
+            node->_height = (1 + max(node->height(node->_left), node->height(node->_right)));
             int balanceFactor = getBalanceFactor(node);
             if (balanceFactor > 1)
             {
@@ -225,7 +231,7 @@ namespace ft
             return (node);
         }
     
-        Node * increase(Node *node) 
+        Node *increase(Node *node) 
         {
             if (node->_right)
             {
@@ -246,7 +252,7 @@ namespace ft
             return (node);
         }
         
-        Node * decrease(Node * node) 
+        Node *decrease(Node * node) 
         {
             if (node->_left) 
             {
@@ -273,6 +279,7 @@ namespace ft
         Node          *_right;
         int           _height;
         Node          *_parent;
+        bool          _modify;  
     };
 
 }

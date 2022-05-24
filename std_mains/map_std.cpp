@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:31:27 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/24 11:23:12 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/24 17:11:32 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,8 @@ int main ()
     printMap(&maptest2);
     std::cout << std::endl;
     printMap(&maptest3);
+    std::cout << std::endl;
+    printMap(&maptest4);
     std::cout << std::endl;
     
 
