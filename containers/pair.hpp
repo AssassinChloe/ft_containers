@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 17:21:54 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/16 16:47:43 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/24 11:08:59 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ namespace ft
         typedef T1 first_type;
         typedef T2 second_type;
         
-        pair() : first(0), second(0)
+        pair() : first(), second()
         {}
         
         template<class U, class V> pair (const pair<U,V>& pr) : first(pr.first), second(pr.second)

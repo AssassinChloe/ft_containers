@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/23 17:16:25 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/24 12:29:59 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,28 +87,21 @@ namespace ft
     //
         // Constructors
         explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) :
-        _alloc(alloc), _comp(comp), _size(0)
-        {
-          this->_root = this->_node.allocate(1);
-          this->_root->_first = true;
-        }
+        _alloc(alloc), _comp(comp), _root(NULL), _size(0)
+        {}
                      
         template <class InputIterator>
         map(InputIterator first, 
         typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last,
         const key_compare& comp = key_compare(),
         const allocator_type& alloc = allocator_type()) :
-        _alloc(alloc), _comp(comp), _size(0)
+        _alloc(alloc), _comp(comp), _root(NULL), _size(0)
         {
-            this->_root = this->_node.allocate(1);
-            this->_root->_first = true;
             this->insert(first, last);
         }
             
-        map(const map& x) : _alloc(allocator_type()), _comp(key_compare()), _size(0)
+        map(const map& x) : _alloc(allocator_type()), _comp(key_compare()), _root(NULL), _size(0)
         {
-            this->_root = this->_node.allocate(1);
-            this->_root->_first = true;
             if (&x != this)
                 *this = x;
         }
@@ -116,9 +109,7 @@ namespace ft
         // destructor
         ~map()
         {
-            if (this->_size == 0)
-               this->_node.deallocate(this->_root, 1);
-            else
+            if (this->_size > 0)
                 this->_root->clear();
         }
 
@@ -152,13 +143,13 @@ namespace ft
         {
             if (this->_size == 0)
                 return(iterator(this->_root));
-            return (iterator(this->_root->maxValueNode(this->_root)->_right));
+            return (iterator(this->_root->maxValueNode(this->_root)));
         }
         const_iterator end() const
         {
             if (this->_size == 0)
                 return(const_iterator(this->_root));
-            return (const_iterator(&(*(this->_root->maxValueNode(this->_root)->_right))));
+            return (const_iterator(this->_root->maxValueNode(this->_root)));
         }
         
         // rbegin     
@@ -212,8 +203,8 @@ namespace ft
         {
             Node<key_type, mapped_type> *tmp = this->_root->search(this->_root, k);
             if (tmp)
-                return (tmp->_key->second);
-            return ((*((this->insert(make_pair(k,mapped_type()))).first)).second);
+                return (tmp->_key.second);
+            return ((*((insert(make_pair(k, mapped_type()))).first)).second);
         }
     
     //MODIFIERS
@@ -222,146 +213,54 @@ namespace ft
         pair<iterator,bool> insert(const value_type& val)
         {
             bool insert_valid = true;
-            if (this->_size == 0)
-            {
-                Node<key_type, mapped_type> *tmp;
-                tmp = this->_root->insert(this->_root, val, &insert_valid);
-               this->_node.deallocate(this->_root, 1);
-                this->_root = tmp;
-                if (insert_valid == true)
-                    this->_size++;
-                return (ft::make_pair(iterator(this->_root), true));
-            }
-            std::cout << "test 3" << std::endl;
-            iterator ite = this->end();
-            iterator it = this->begin();
-            while (it != ite && *it != val)
-            {
-                if (*it == val)
-                    return (ft::make_pair(it, false));
-                it++;
-            }
-            std::cout << "test 4" << std::endl;
-
-            this->_root = this->_root->insert(this->_root, val, &insert_valid);
+            Node<key_type, mapped_type> *tmp = NULL;
+            this->_root = this->_root->insert(this->_root, val, &insert_valid, &tmp);
             if (insert_valid == true)
                 this->_size++;
-            ite = this->end();
-            it = this->begin();
-            while (it != ite && *it != val)
-            {
-                it++;
-            }
-            return (ft::make_pair(it, true));
+            return (ft::make_pair(iterator(tmp), insert_valid));
         }
         
         iterator insert (iterator position, const value_type& val)
         {
             (void)position;
-            bool insert_valid = true;
-            if (this->_size == 0)
-            {
-                Node<key_type, mapped_type> *tmp;
-                tmp = this->_root->insert(this->_root, val, &insert_valid);
-               this->_node.deallocate(this->_root, 1);
-                this->_root = tmp;
-                if (insert_valid == true)
-                    this->_size++;
-                return (iterator(this->_root->search(this->_root, val.first)));
-            }
-            else
-                this->_root = this->_root->insert(this->_root, val, &insert_valid);
-
-            if (insert_valid == true)
-                this->_size++;
-            return (iterator(this->_root->search(this->_root, val.first)));
+            return (insert(val).first);            
         }
         
         template <class InputIterator>
         void insert (InputIterator first, 
         typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last)
         {
-            bool insert_valid = true;
-            if (this->_size == 0)
-            {
-                Node<key_type, mapped_type> *tmp;
-                tmp = this->_root->insert(this->_root, *first, &insert_valid);
-                this->_node.deallocate(this->_root, 1);
-                this->_root = tmp;
-                if (insert_valid == true)
-                    this->_size++;
-                first++;
-            }
             for(; first != last; first++)
             {
-                insert_valid = true;
-                this->_root = this->_root->insert(this->_root, *first, &insert_valid);
-                if (insert_valid == true)
-                    this->_size++;
+                insert((*first));
             }
-            insert_valid = true;
-            this->_root = this->_root->insert(this->_root, *first, &insert_valid);
-            if (insert_valid == true)
-                this->_size++;
         }
 
         // erase
-        void erase (iterator position)
+        
+        size_type erase(const key_type& k)
         {
-            if (this->_root->search(this->_root, (*position).first))
+            Node<key_type, mapped_type> *tmp = this->_root->search(this->_root, k);
+            if (tmp)
             {
-                this->_root = this->_root->deleteNode(this->_root, (*position));
+                this->_root = this->_root->deleteNode(this->_root, tmp->_key);
                 this->_size--;
+                return (1);
             }
-            if (!this->_root)
-            {
-                this->_root = this->_node.allocate(1);
-                this->_root->_first = true;
-            }
-            if (this->_size > 0)
-                this->_root->setAllParents(this->_root);
+            return (0);
         }
         
-        size_type erase (const key_type& k)
+        void erase (iterator position)
         {
-            Node<Key, T> *tmp = this->_root->search(this->_root, k);
-            if (tmp != NULL)
-            {
-                this->_root = this->_root->deleteNode(this->_root, *(tmp->_key));
-                this->_size--;
-            }
-            if (!this->_root)
-            {
-                this->_root = this->_node.allocate(1);
-                this->_root->_first = true;
-            }
-            if (this->_size > 0)
-                this->_root->setAllParents(this->_root);
-            return (1);
+            erase((*position).first);
         }
         
         void erase (iterator first, iterator last)
         {
             for(; first != last; first++)
             {
-                if (this->_root->search(this->_root, (*first).first))
-                {
-                    this->_root = this->_root->deleteNode(this->_root, *first);
-                    this->_size--;
-                }
+                erase((*first));
             }
-            if (this->_root->search(this->_root, (*first).first))
-            {
-                this->_root = this->_root->deleteNode(this->_root, *first);
-                this->_size--;
-            }
-            if (!this->_root)
-            {
-                this->_root = this->_node.allocate(1);
-                this->_root->_first = true;   
-            }
-            if (this->_size > 0)
-                this->_root->setAllParents(this->_root);
         }
         
         // swap
@@ -374,9 +273,8 @@ namespace ft
         void clear()
         {
             this->_root->clear();
-            this->_root = this->_node.allocate(1);
-            this->_root->_first = true;
             this->_size = 0;
+            this->_root = NULL;
         }
         
     //OBSERVERS
@@ -398,24 +296,18 @@ namespace ft
         // find
         iterator find (const key_type& k)
         {
-            iterator ite = this->end();
-            for(iterator it = this->begin(); it != ite; it++)
-            {
-                if (k == (*it).first)
-                    return(it);
-            }
-            return (ite);
+            Node<key_type, mapped_type> *tmp = this->_root->search(this->_root, k);
+            if (!tmp)
+                return (this->end());
+            return (iterator(tmp));
         }
 		
         const_iterator find (const key_type& k) const
         {
-            const_iterator ite = this->end();
-            for(const_iterator it = this->begin(); it != ite; it++)
-            {
-                if (k == *(*it).first)
-                    return(it);
-            }
-            return (ite);
+            Node<key_type, mapped_type> *tmp = this->_root->search(this->_root, k);
+            if (!tmp)
+                return (this->end());
+            return (const_iterator(tmp));
         }
         
         // count
