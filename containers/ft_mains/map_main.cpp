@@ -230,6 +230,8 @@ int main ()
     std::cout << std::endl;
     printMap(&maptest3);
     std::cout << std::endl;
+
+    maptest4.swap(maptest3);
     printMap(&maptest4);
     std::cout << std::endl;
 

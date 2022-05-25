@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/24 17:10:48 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/25 14:23:03 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,10 +268,26 @@ namespace ft
         }
         
         // swap
-        // void swap (map& x)
-        // {
+        void swap (map& x)
+        {
+            node_alloc      tmp_node = x._node;
+            allocator_type  tmp_alloc = x._alloc;
+            key_compare     tmp_comp = x._comp;
+            Node	        *tmp_root = x._root;
+            size_type       tmp_size = x._size;
+
+            x._node = this->_node;
+            x._alloc = this->_alloc;
+            x._comp = this->_comp;
+            x._root = this->_root;
+            x._size = this->_size;
             
-        // }
+            this->_node = tmp_node;
+            this->_alloc = tmp_alloc;
+            this->_comp = tmp_comp;
+            this->_root = tmp_root;
+            this->_size = tmp_size;
+        }
         
         // clear
         void clear()
@@ -397,6 +413,37 @@ namespace ft
             size_type       _size;
 
     };
+
+    //NON-MEMBER OVERLOADS
+
+    //relationnal operators (1)	
+    template <class Key, class T, class Compare, class Alloc>
+    bool operator== ( const map<Key,T,Compare,Alloc>& lhs,
+                        const map<Key,T,Compare,Alloc>& rhs );
+
+    template <class Key, class T, class Compare, class Alloc>
+    bool operator!= ( const map<Key,T,Compare,Alloc>& lhs,
+                        const map<Key,T,Compare,Alloc>& rhs );
+
+    template <class Key, class T, class Compare, class Alloc>
+    bool operator<  ( const map<Key,T,Compare,Alloc>& lhs,
+                        const map<Key,T,Compare,Alloc>& rhs );
+        
+    template <class Key, class T, class Compare, class Alloc>
+    bool operator<= ( const map<Key,T,Compare,Alloc>& lhs,
+                        const map<Key,T,Compare,Alloc>& rhs );
+
+    template <class Key, class T, class Compare, class Alloc>
+    bool operator>  ( const map<Key,T,Compare,Alloc>& lhs,
+                        const map<Key,T,Compare,Alloc>& rhs );
+
+    template <class Key, class T, class Compare, class Alloc>
+    bool operator>= ( const map<Key,T,Compare,Alloc>& lhs,
+                        const map<Key,T,Compare,Alloc>& rhs );
+    
+    //swap
+    template <class Key, class T, class Compare, class Alloc>
+    void swap (map<Key,T,Compare,Alloc>& x, map<Key,T,Compare,Alloc>& y);                    
 }
 
 #endif
