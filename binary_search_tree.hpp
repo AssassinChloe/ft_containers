@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 14:18:58 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/24 17:08:01 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/25 18:57:50 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,39 @@ namespace ft
               
         Node(value_type key)
         : alloc(alloc_type()), _key(key), _left(NULL), _right(NULL),
-        _height(1), _parent(NULL), _modify(false)
+        _height(1), _parent(NULL), _modify(false), _end(false)
         {}
 
        
         Node *newNode(value_type key)
         {
             Node *node = alloc.allocate(1);
-            alloc.construct(node, key);
+            alloc.construct(node, key); 
             return (node);
         }
         
         virtual ~Node()
         {}
 
+        Node& operator= (const Node& x)
+        {
+            std::cout << "egal op" << std::endl;
+            this->_key = x._key;
+            std::cout << "egal op" << std::endl;
+            
+            if (this->_left && this->_left->_end == true)
+                alloc.deallocate(this->_left, 1);
+            this->_left = x._left;
+            if (this->_right && this->_right->_end == true)
+                alloc.deallocate(this->_right, 1);
+            this->_right = x._right;
+            this->_height = x._height;
+            this->_parent = x._parent;
+            this->_modify = x._modify;
+            this->_end = x._end;
+            return (*this);
+        }
+        
         void clear()
         {
             if (this->_left)
@@ -76,7 +95,7 @@ namespace ft
 
         Node* search(Node *node, Key key)
         {
-            if (node)
+            if (node && node->_end == false)
             {
                 if (node->_key.first == key)
                     return (node);
@@ -89,9 +108,13 @@ namespace ft
 
         Node *insert(Node *node, value_type key, bool *is_insert, Node **tmp)
         {
-            if (!node)
+            if (node == NULL || node->_end == true)
             {
+                if (node)
+                    alloc.deallocate(node, 1);
                 node = newNode(key);
+                node->_right = newNode(value_type());
+                node->_right->_end = true;
                 *tmp = node;
                 return (node);
             }
@@ -113,7 +136,7 @@ namespace ft
         {
             Node *current = node;
 
-            while (current && current->_left != NULL)
+            while (current && (current->_left && current->_left->_end == false))
                 current = current->_left;
             return current;
         }
@@ -121,7 +144,7 @@ namespace ft
         Node *maxValueNode(Node *node) 
         {
             Node *current = node;
-            while (current && current->_right)
+            while (current && (current->_right && current->_right->_end == false))
                 current = current->_right;
             return current;
         }
@@ -129,30 +152,53 @@ namespace ft
         Node *deleteNode(Node *node, value_type key) 
         {
             Node *temp;
-            if (node == NULL)
-                return (node);
+            if (node == NULL || node->_end == true)
+                return (NULL);
             if (key.first < node->_key.first)
                 node->_left = deleteNode(node->_left, key);
             else if (key.first > node->_key.first)
                 node->_right = deleteNode(node->_right, key);
             else
             {
-                if ((node->_left == NULL) || (node->_right == NULL))
+                if (!node->_left || node->_left->_end == true || !node->_right || node->_right->_end == true)
                 {
-                    if (node->_left)
+                    if (node->_left && node->_left->_end != true)
+                    {
                         temp = node->_left;
+                        if (node->_right && node->_right->_end == true)
+                        {
+                            alloc.deallocate(node->_right, 1);
+                            node->_right = NULL;
+                        }
+                    }
+                    else if (node->_left && node->_left->_end == true)
+                    {
+                        alloc.deallocate(node->_left, 1);
+                        node->_left = NULL;
+                        if (node->_right && node->_right->_end == true)
+                        {
+                            alloc.deallocate(node->_right, 1);
+                            node->_right = NULL;
+                        }
+                        temp = NULL;
+                    }   
                     else
                         temp = node->_right;
+                
                     if (temp == NULL)
                     {
-                        temp = node;
-                        node = NULL;
+                        alloc.deallocate(node, 1);
+                        node = newNode(value_type());
+                        node->_end = true;
                     }
                     else
                     {
+                        std::cout << "plop" << std::endl;
+
                         *node = *temp;
+                        std::cout << "plop" << std::endl;
                     }
-                    alloc.deallocate(temp, 1);
+                        alloc.deallocate(temp, 1);
                 } 
                 else
                 {
@@ -196,27 +242,27 @@ namespace ft
 
         int getBalanceFactor(Node *N) 
         {
-            if (N == NULL)
+            if (N == NULL || N->_end == true)
                 return 0;
             return (N->height(N->_left) - N->height(N->_right));
         }
 
         int height(Node *N)
         {
-            if (!N)
+            if (!N || N->_end == true)
                 return 0;
             return N->_height;
         }
             
         Node *balanceTree(Node *node)
         {
-            if (node == NULL)
+            if (node == NULL || node->_end == true)
                 return node;
             node->_height = (1 + max(node->height(node->_left), node->height(node->_right)));
             int balanceFactor = getBalanceFactor(node);
             if (balanceFactor > 1)
             {
-                if (getBalanceFactor(node->_left) >= 0) 
+                if (getBalanceFactor(node->_left) >=  0) 
                     return rightRotate(node);
                 node->_left = leftRotate(node->_left);
                 return rightRotate(node);
@@ -236,7 +282,7 @@ namespace ft
             if (node->_right)
             {
                 node = node->_right;
-                while (node->_left)
+                while (node->_left && node->_left->_end != true)
                     node = node->_left;
             }
             else 
@@ -252,12 +298,12 @@ namespace ft
             return (node);
         }
         
-        Node *decrease(Node * node) 
+        Node *decrease(Node *node) 
         {
-            if (node->_left) 
+            if (node->_left && node->_left->_end != true) 
             {
                 node = node->_left;
-                while (node->_right)
+                while (node->_right && node->_right->_end != true)
                     node = node->_right;
             }
             else 
@@ -273,13 +319,14 @@ namespace ft
             return (node);
         }
         
-        alloc_type    alloc;
-        value_type    _key;
-        Node          *_left;
-        Node          *_right;
-        int           _height;
-        Node          *_parent;
-        bool          _modify;  
+        alloc_type  alloc;
+        value_type  _key;
+        Node        *_left;
+        Node        *_right;
+        int         _height;
+        Node        *_parent;
+        bool        _modify;
+        bool        _end;
     };
 
 }

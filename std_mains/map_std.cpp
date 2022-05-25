@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:31:27 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/24 17:11:32 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/05/25 17:36:01 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,16 @@ void printMap(std::map<const int, char> *map)
     std::map<const int, char>::iterator it = map->begin();
     for (;it != ite; it++)
     {
-        std::cout << (*it).first << " ";   
+        std::cout << (*it).first << ", ";   
     }
-    std::cout << std::endl;
 }
 
 int main ()
 {
     clock_t start, end;
     start = clock();
-    std::cout << "Debut" << std::endl;
+    std::cout << "STD::MAP" << std::endl;
+
     
     std::cout << "Init map sans arguments" << std::endl;
 
@@ -55,17 +55,29 @@ int main ()
     std::pair<const int,char> bar12(25,'e');
 
     std::cout << "Insert pairs" << std::endl;
-    
     maptest.insert(bar2);
+    std::cout << std::endl;
+    printMap(&maptest);
+    std::cout << std::endl;
 
     std::cout << "Insert pairs" << std::endl;
-
     maptest.insert(bar3);
-    std::cout << "Insert pairs" << std::endl;
+     std::cout << std::endl;
+    printMap(&maptest);
+    std::cout << std::endl;
 
+    std::cout << "Insert pairs" << std::endl;
     maptest.insert(bar4);
+    std::cout << std::endl;
+    printMap(&maptest);
+    std::cout << std::endl;
+    
     std::cout << "Insert pairs" << std::endl;
     maptest.insert(bar5);
+    std::cout << std::endl;
+    printMap(&maptest);
+    std::cout << std::endl;
+    
     std::cout << "Insert pairs" << std::endl;
     maptest.insert(bar6);
     std::cout << std::endl << "insert pair with it position"<< std::endl << std::endl;
@@ -76,9 +88,16 @@ int main ()
     std::cout << "maxsize : " << maptest.max_size() << std::endl;
     std::cout << "operator[] : " << maptest[654] << std::endl;
     
+
     std::cout << "init map2 it first, it last" << std::endl;
 
-    std::map<const int, char> maptest2(maptest.begin(), maptest.end());
+    std::cout << "ite" << std::endl;
+    std::map<const int, char>::iterator ite = maptest.end();
+    std::cout << "it" << std::endl;
+    std::map<const int, char>::iterator it = maptest.begin();
+
+    std::cout << "insert" << std::endl;
+    std::map<const int, char> maptest2(it, ite);
     
     std::cout << "insert in map 2" << std::endl;
 
@@ -175,7 +194,7 @@ int main ()
     std::cout << std::endl;
 
     std::cout << "Find 22" << std::endl;
-    std::map<const int, char>::iterator it = maptest.find(90);
+    it = maptest.find(90);
     std::cout << "At Key : " << (*it).first << " there is : " << (*it).second << std::endl;
     std::cout << std::endl;
 
@@ -201,7 +220,7 @@ int main ()
     std::cout << std::endl;
 
     std::cout << "upper Bound" << std::endl;
-    it = maptest.upper_bound(654);
+    it = maptest.upper_bound(90);
     std::cout << "upper Bond 90 : " << (*it).first << std::endl;
     it = maptest.upper_bound(24);
     std::cout << "upper Bond 24 : " << (*it).first << std::endl;
@@ -216,8 +235,7 @@ int main ()
     {
         maptest4.insert(std::make_pair(i, 'a'));
     }
-    std::cout << "size " << maptest4.size() << std::endl;
-    
+
     std::cout << std::endl;
     printMap(&maptest);
     std::cout << std::endl;
@@ -225,15 +243,16 @@ int main ()
     std::cout << std::endl;
     printMap(&maptest3);
     std::cout << std::endl;
+
+    maptest4.swap(maptest3);
     printMap(&maptest4);
     std::cout << std::endl;
-    
 
     end = clock();
     double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
     std::cout << std::endl << "Time taken by program is : " << std::fixed 
          << time_taken << std::setprecision(5);
     std::cout << " sec " << std::endl;
-
-    return 0;
+    
+    return (0);
 }

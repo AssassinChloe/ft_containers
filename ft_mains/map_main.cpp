@@ -13,14 +13,14 @@ void printMap(ft::map<const int, char> *map)
     {
         std::cout << (*it).first << ", ";   
     }
-    std::cout << (*it).first << std::endl;
 }
 
 int main ()
 {
     clock_t start, end;
     start = clock();
-    std::cout << "Debut" << std::endl;
+    std::cout << "FT::MAP" << std::endl;
+
     
     std::cout << "Init map sans arguments" << std::endl;
 
