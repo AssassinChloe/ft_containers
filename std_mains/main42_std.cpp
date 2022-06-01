@@ -96,7 +96,6 @@ int main(int argc, char** argv) {
 		int access = rand();
 		sum += map_int[access];
 	}
-	std::cout << map_int.size() << std::endl;
 	std::cout << "should be constant with the same seed: " << sum << std::endl;
 
 	{

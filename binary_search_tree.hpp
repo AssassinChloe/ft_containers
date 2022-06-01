@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 14:18:58 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/25 18:57:50 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/01 17:57:06 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,25 +40,6 @@ namespace ft
         
         virtual ~Node()
         {}
-
-        Node& operator= (const Node& x)
-        {
-            std::cout << "egal op" << std::endl;
-            this->_key = x._key;
-            std::cout << "egal op" << std::endl;
-            
-            if (this->_left && this->_left->_end == true)
-                alloc.deallocate(this->_left, 1);
-            this->_left = x._left;
-            if (this->_right && this->_right->_end == true)
-                alloc.deallocate(this->_right, 1);
-            this->_right = x._right;
-            this->_height = x._height;
-            this->_parent = x._parent;
-            this->_modify = x._modify;
-            this->_end = x._end;
-            return (*this);
-        }
         
         void clear()
         {
@@ -91,7 +72,17 @@ namespace ft
                 node->setAllParents(node->_left);
             }
         }
-        
+
+        void setEnd(Node *node)
+        {
+            node = node->maxValueNode(node);
+            if (!node->_right)
+            {
+                node->_right = newNode(value_type());
+                node->_right->_end = true;
+            }
+            
+        }
 
         Node* search(Node *node, Key key)
         {
@@ -113,8 +104,6 @@ namespace ft
                 if (node)
                     alloc.deallocate(node, 1);
                 node = newNode(key);
-                node->_right = newNode(value_type());
-                node->_right->_end = true;
                 *tmp = node;
                 return (node);
             }
@@ -160,51 +149,53 @@ namespace ft
                 node->_right = deleteNode(node->_right, key);
             else
             {
-                if (!node->_left || node->_left->_end == true || !node->_right || node->_right->_end == true)
+                if (!node->_left || !node->_right || node->_right->_end == true)
                 {
-                    if (node->_left && node->_left->_end != true)
+                    if (node->_left)
                     {
                         temp = node->_left;
                         if (node->_right && node->_right->_end == true)
-                        {
-                            alloc.deallocate(node->_right, 1);
-                            node->_right = NULL;
-                        }
+                        alloc.deallocate(node->_right, 1);   
                     }
-                    else if (node->_left && node->_left->_end == true)
-                    {
-                        alloc.deallocate(node->_left, 1);
-                        node->_left = NULL;
-                        if (node->_right && node->_right->_end == true)
-                        {
-                            alloc.deallocate(node->_right, 1);
-                            node->_right = NULL;
-                        }
-                        temp = NULL;
-                    }   
                     else
                         temp = node->_right;
-                
                     if (temp == NULL)
                     {
+                        temp = node;
+                        node = NULL;
+                    }
+                    else if (temp->_end == true)
+                    {
+                        alloc.deallocate(temp, 1);
                         alloc.deallocate(node, 1);
-                        node = newNode(value_type());
-                        node->_end = true;
+                        return (NULL);
                     }
                     else
                     {
-                        std::cout << "plop" << std::endl;
-
-                        *node = *temp;
-                        std::cout << "plop" << std::endl;
+                        Node *tmp = newNode(temp->_key);
+                        tmp->_left = temp->_left;
+                        tmp->_right = temp->_right;
+                        tmp->_end = temp->_end;
+                        tmp->_height = temp->_height;
+                        tmp->_modify = temp->_modify;
+                        alloc.deallocate(node, 1);
+                        node = tmp;
                     }
-                        alloc.deallocate(temp, 1);
-                } 
+                    alloc.deallocate(temp, 1);
+                }
                 else
                 {
                     temp = minValueNode(node->_right);
-                    node->_key = temp->_key;
+                    Node *tmp = newNode(temp->_key);
+                    tmp->_left = node->_left;
+                    tmp->_right = node->_right;
+                    tmp->_end = node->_end;
+                    tmp->_height = node->_height;
+                    tmp->_modify = node->_modify;
+                    alloc.deallocate(node, 1);
+                    node = tmp;
                     node->_right = deleteNode(node->_right, node->_key);
+
                 }
             }
             node = balanceTree(node);

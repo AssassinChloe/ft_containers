@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/25 18:33:44 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/01 17:52:10 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,6 +210,7 @@ namespace ft
     //MODIFIERS
     
         // insert
+        
         pair<iterator,bool> insert(const value_type& val)
         {
             bool insert_valid = true;
@@ -219,6 +220,7 @@ namespace ft
             {
                 this->_size++;
                 this->_root->_modify = true;
+                this->_root->setEnd(this->_root);
             }
             return (ft::make_pair(iterator(tmp, this->_root), insert_valid));
         }
@@ -243,13 +245,22 @@ namespace ft
         
         size_type erase(const key_type& k)
         {
-            Node *tmp = this->_root->search(this->_root, k);
-            if (tmp)
+            if (this->_size > 0)
             {
-                this->_root = this->_root->deleteNode(this->_root, tmp->_key);
-                this->_size--;
-                this->_root->_modify = true;
-                return (1);
+                Node *tmp = this->_root->search(this->_root, k);
+                if (tmp)
+                {
+                    if (this->_size == 1)
+                        this->clear();
+                    else
+                    {
+                        this->_root = this->_root->deleteNode(this->_root, tmp->_key);
+                        this->_size--;
+                        this->_root->_modify = true;
+                        this->_root->setEnd(this->_root);
+                    }
+                    return (1);
+                }
             }
             return (0);
         }
@@ -263,7 +274,7 @@ namespace ft
         {
             for(; first != last; first++)
             {
-                erase((*first));
+                erase((*first).first);
             }
         }
         
@@ -365,7 +376,7 @@ namespace ft
         iterator upper_bound (const key_type& k)
         {
             Node *tmp = this->_root->search(this->_root, k);
-            if (tmp == NULL  || tmp == _root->maxValueNode(this->_root))
+            if (tmp == NULL)
                 return (this->lower_bound(k));
             else
                 return (++this->lower_bound(k));
@@ -375,7 +386,7 @@ namespace ft
         const_iterator upper_bound (const key_type& k) const
         {
             Node *tmp = this->_root->search(this->_root, k);
-            if (tmp == NULL || tmp == _root->maxValueNode(this->_root))
+            if (tmp == NULL)
                 return (this->lower_bound(k));
             else
                 return (++this->lower_bound(k));

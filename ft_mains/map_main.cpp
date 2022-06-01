@@ -13,6 +13,7 @@ void printMap(ft::map<const int, char> *map)
     {
         std::cout << (*it).first << ", ";   
     }
+    std::cout << std::endl;
 }
 
 int main ()
@@ -43,13 +44,12 @@ int main ()
 
     std::cout << "Insert pairs" << std::endl;
     maptest.insert(bar2);
-    std::cout << std::endl;
     printMap(&maptest);
     std::cout << std::endl;
 
     std::cout << "Insert pairs" << std::endl;
     maptest.insert(bar3);
-     std::cout << std::endl;
+    std::cout << std::endl;
     printMap(&maptest);
     std::cout << std::endl;
 
@@ -138,16 +138,16 @@ int main ()
     printMap(&maptest);
     std::cout << std::endl;
 
-    // std::cout << "Erase map3 from map2" << std::endl;
-
-    // maptest3.erase(maptest.begin(), maptest.end());
+    std::cout << "Erase map3 from map" << std::endl;
+    
+    maptest3.erase(maptest.begin(), maptest.end());
    
     std::cout << "Print Map3" << std::endl;
     std::cout << "size : " << maptest3.size() << std::endl;
     printMap(&maptest3);
     
-    std::cout << "Erase map3 45" << std::endl;
-    maptest3.erase(45);
+    std::cout << "Erase map3 42" << std::endl;
+    maptest3.erase(42);
     std::cout << "Print Map3" << std::endl;
     std::cout << "size : " << maptest3.size() << std::endl;
     printMap(&maptest3);
@@ -196,8 +196,8 @@ int main ()
     std::cout << std::endl;
 
     std::cout << "Lower Bound" << std::endl;
-    it = maptest.lower_bound(90);
-    std::cout << "Lower Bond 90 : " << (*it).first << std::endl;
+    it = maptest.lower_bound(654);
+    std::cout << "Lower Bond 654 : " << (*it).first << std::endl;
     it = maptest.lower_bound(24);
     std::cout << "Lower Bond 24 : " << (*it).first << std::endl;
     it = maptest.lower_bound(42);
@@ -207,8 +207,8 @@ int main ()
     std::cout << std::endl;
 
     std::cout << "upper Bound" << std::endl;
-    it = maptest.upper_bound(90);
-    std::cout << "upper Bond 90 : " << (*it).first << std::endl;
+    it = maptest.upper_bound(654);
+    std::cout << "upper Bond 654 : " << (*it).first << std::endl;
     it = maptest.upper_bound(24);
     std::cout << "upper Bond 24 : " << (*it).first << std::endl;
     it = maptest.upper_bound(42);
