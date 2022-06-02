@@ -6,15 +6,16 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 14:18:58 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/01 17:57:06 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/02 12:07:40 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BINARY_SEARCH_TREE_HPP
 #define BINARY_SEARCH_TREE_HPP
-#include "pair.hpp"
+# include "pair.hpp"
+# include "compare.hpp"
+# include <iostream>
 
-#include <iostream>
 namespace ft
 {   
     template <class Key, class T> 
@@ -24,9 +25,10 @@ namespace ft
 
         typedef ft::pair<const Key, T>  value_type;
         typedef std::allocator<Node>    alloc_type;
-              
+        typedef ft::less<Key>           Compare;
+            
         Node(value_type key)
-        : alloc(alloc_type()), _key(key), _left(NULL), _right(NULL),
+        : alloc(alloc_type()), _comp(Compare()), _key(key), _left(NULL), _right(NULL),
         _height(1), _parent(NULL), _modify(false), _end(false)
         {}
 
@@ -90,7 +92,7 @@ namespace ft
             {
                 if (node->_key.first == key)
                     return (node);
-                if (node->_key.first < key)
+                if (this->_comp(node->_key.first, key))
                     return (search(node->_right, key));
                 return (search(node->_left, key));
             }
@@ -107,9 +109,9 @@ namespace ft
                 *tmp = node;
                 return (node);
             }
-            if (key.first < node->_key.first)
+            if (this->_comp(key.first, node->_key.first))
                 node->_left = insert(node->_left, key, is_insert, tmp);
-            else if (key.first > node->_key.first)
+            else if (this->_comp(node->_key.first, key.first))
                 node->_right = insert(node->_right, key, is_insert, tmp);
             else
             {
@@ -143,12 +145,13 @@ namespace ft
             Node *temp;
             if (node == NULL || node->_end == true)
                 return (NULL);
-            if (key.first < node->_key.first)
+            if (this->_comp(key.first, node->_key.first))
                 node->_left = deleteNode(node->_left, key);
-            else if (key.first > node->_key.first)
+            else if (this->_comp(node->_key.first, key.first))
                 node->_right = deleteNode(node->_right, key);
             else
             {
+                
                 if (!node->_left || !node->_right || node->_right->_end == true)
                 {
                     if (node->_left)
@@ -311,6 +314,7 @@ namespace ft
         }
         
         alloc_type  alloc;
+        Compare     _comp;
         value_type  _key;
         Node        *_left;
         Node        *_right;

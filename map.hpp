@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/01 17:52:10 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/02 12:07:59 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,26 +26,6 @@
 
 namespace ft
 {
-    
-    template <class Arg1, class Arg2, class Result>
-    struct binary_function 
-    {
-        typedef Arg1 first_argument_type;
-        typedef Arg2 second_argument_type;
-        typedef Result result_type;
-    };
-    
-    template <class T> 
-    class less : ft::binary_function<T,T,bool>
-    {
-        public :
-        bool operator() (const T& x, const T& y) const 
-        {
-            return x<y;
-        }
-    };
-
-    
     template < class Key, class T, class Compare = ft::less<Key>, class Alloc = std::allocator<ft::pair<const Key,T> > >
     class map
     {

@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:31:27 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/01 17:44:57 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/02 11:54:54 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,12 @@ int main ()
 
     std::cout << "Insert pairs" << std::endl;
     maptest.insert(bar2);
-    std::cout << std::endl;
     printMap(&maptest);
     std::cout << std::endl;
 
     std::cout << "Insert pairs" << std::endl;
     maptest.insert(bar3);
-     std::cout << std::endl;
+    std::cout << std::endl;
     printMap(&maptest);
     std::cout << std::endl;
 
@@ -152,9 +151,9 @@ int main ()
     printMap(&maptest);
     std::cout << std::endl;
 
-    std::cout << "Erase map3 from map" << std::endl;
-
-    maptest3.erase(maptest.begin(), maptest.end());
+    // std::cout << "Erase map3 from map" << std::endl;
+    
+    // maptest3.erase(maptest.begin(), maptest.end());
    
     std::cout << "Print Map3" << std::endl;
     std::cout << "size : " << maptest3.size() << std::endl;
@@ -238,14 +237,22 @@ int main ()
     }
 
     std::cout << std::endl;
+    std::cout << "Print Map" << std::endl;
     printMap(&maptest);
     std::cout << std::endl;
+
+    std::cout << "Print Map 2" << std::endl;
     printMap(&maptest2);
     std::cout << std::endl;
+
+    std::cout << "Print Map 3" << std::endl;
     printMap(&maptest3);
     std::cout << std::endl;
 
+    std::cout << "SWAP Map4 et 3" << std::endl;
     maptest4.swap(maptest3);
+
+    std::cout << "Print Map 4 (same as previous map 3)" << std::endl;
     printMap(&maptest4);
     std::cout << std::endl;
 
