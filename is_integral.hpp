@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 13:09:38 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/24 09:01:05 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/02 16:28:12 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ namespace ft
         enum { value = v };
         typedef T value_type;
         typedef integral_constant<T,v> type;
-        operator T() { return v; }
+        operator T() 
+        { 
+            return v;
+        }
     };
 
     //true_type

@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 12:05:23 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/24 17:10:16 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/02 17:29:31 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ namespace ft
             
             pointer operator->() const
             {
-                return (this->ptr);
+                return (&this->ptr->_key);
             }
 
             map_iterator &operator++()

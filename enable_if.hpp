@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 17:25:25 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/06 17:25:26 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/02 16:27:37 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ namespace ft
     {};
     
     template<class T>
-    struct enable_if<true, T> { typedef T type; };
+    struct enable_if<true, T> 
+    { 
+        typedef T type; 
+    };
 }
 //SFINAE
 

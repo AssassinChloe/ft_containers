@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 14:01:28 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/02 15:16:45 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/02 19:55:39 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,11 @@
 
 void affiche(std::vector<int> test1, std::string name)
 {   
-    std::vector<int>::iterator it;
-    std::vector<int>::iterator ite = test1.end();
+    const std::vector<int>::iterator ite = test1.end();
     std::cout << std::endl << name << std::endl;
     std::cout << "size : " << test1.size() << std::endl;
     std::cout << "capacity : " << test1.capacity() << std::endl;
-    for(it = test1.begin(); it != ite; it++)
+    for(std::vector<int>::iterator it = test1.begin(); it != ite; it++)
     {
         std::cout << *it << " ";
     }
@@ -37,7 +36,7 @@ int main()
     start = clock();
 
     std::cout << "STD::VECTOR" << std::endl;
-        std::cout << std::endl;
+    std::cout << std::endl;
     std::cout << "vector<int> test0, test1(4)" << std::endl;
     std::vector<int> test0;
     std::vector<int> test1(4);

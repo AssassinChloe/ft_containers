@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/02 15:22:20 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/02 19:10:40 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,16 @@ namespace ft
                 }
         };
                 
-        typedef typename allocator_type::reference                      reference;
-        typedef typename allocator_type::const_reference                const_reference;
-        typedef typename allocator_type::pointer                        pointer;
-        typedef typename allocator_type::const_pointer                  const_pointer;
-        typedef typename ft::map_iterator<Node<key_type, mapped_type>, value_type>                   iterator;
-        typedef typename ft::map_iterator<Node<key_type, mapped_type>, const value_type>             const_iterator;
-        typedef typename ft::reverse_iterator<iterator>                 reverse_iterator;
-        typedef typename ft::reverse_iterator<const_iterator>           const_reverse_iterator;
-        typedef typename ft::iterator_traits<iterator>::difference_type difference_type;
-        typedef typename allocator_type::size_type                      size_type;
+        typedef typename allocator_type::reference                                          reference;
+        typedef typename allocator_type::const_reference                                    const_reference;
+        typedef typename allocator_type::pointer                                            pointer;
+        typedef typename allocator_type::const_pointer                                      const_pointer;
+        typedef typename ft::map_iterator<Node<key_type, mapped_type>, value_type>          iterator;
+        typedef typename ft::map_iterator<Node<key_type, mapped_type>, const value_type>    const_iterator;
+        typedef typename ft::reverse_iterator<iterator>                                     reverse_iterator;
+        typedef typename ft::reverse_iterator<const_iterator>                               const_reverse_iterator;
+        typedef typename ft::iterator_traits<iterator>::difference_type                     difference_type;
+        typedef typename allocator_type::size_type                                          size_type;
         
         //                  PUBLIC MEMBER FUNCTION
 
@@ -87,12 +87,14 @@ namespace ft
                 *this = x;
         }
         
+        
         // destructor
         ~map()
         {
             if (this->_size > 0)
                 this->_root->clear();
         }
+
 
         // operator=
         map& operator= (const map& x)
@@ -102,6 +104,7 @@ namespace ft
             this->insert(x.begin(), x.end());
             return (*this);
         }
+
 
     //ITERATORS
         
@@ -118,6 +121,7 @@ namespace ft
                 return(const_iterator(this->_root, this->_root));
             return (const_iterator(this->_root->minValueNode(this->_root), this->_root));
         }
+        
         
         // end
         iterator end()
@@ -163,11 +167,13 @@ namespace ft
             return (false);
         }
         
+        
         // size
         size_type size() const
         {
             return (this->_size);
         }
+        
         
         // max_size
         size_type max_size() const
@@ -176,6 +182,7 @@ namespace ft
             const size_type allocmax = _node.max_size();
             return (std::min(diffmax, allocmax));
         }
+
 
     //ELEMENT ACCESS
     
@@ -223,6 +230,11 @@ namespace ft
         }
 
         // erase
+
+        void erase (iterator position)
+        {
+            erase((*position).first);
+        }
         
         size_type erase(const key_type& k)
         {
@@ -245,19 +257,17 @@ namespace ft
             }
             return (0);
         }
-        
-        void erase (iterator position)
-        {
-            erase((*position).first);
-        }
-        
+                
         void erase (iterator first, iterator last)
         {
-            for(; first != last; first++)
+            ft::map<key_type, mapped_type> tmp(first, last);
+            typename ft::map<key_type, mapped_type>::iterator ite = tmp.end();
+            for(typename ft::map<key_type, mapped_type>::iterator it = tmp.begin(); it != ite; it++)
             {
-                erase((*first).first);
+                erase((*it).first);
             }
         }
+        
         
         // swap
         void swap (map& x)
@@ -281,6 +291,7 @@ namespace ft
             this->_size = tmp_size;
         }
         
+        
         // clear
         void clear()
         {
@@ -302,6 +313,7 @@ namespace ft
         {
             return(this->value_compare());
         }
+        
         
     //OPERATION
     
@@ -345,7 +357,7 @@ namespace ft
         const_iterator lower_bound (const key_type& k) const
         {
             const_iterator ite = this->end();
-            for (const_iterator it = this->begin(); it != ite; it++)
+            for (iterator it = this->begin(); it != ite; it++)
             {
                 if (!this->_comp((*it).first, k))
                 return (it);
@@ -374,14 +386,14 @@ namespace ft
         }
         
         // equal_range
-        pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+        pair<const_iterator,const_iterator> equal_range(const key_type& k) const
         {
-            return(ft::make_pair(lower_bond(k), upper_bound(k)));
+            return ft::pair<const_iterator, const_iterator>(lower_bound(k), upper_bound(k));
         }
         
-        pair<iterator,iterator> equal_range (const key_type& k)
+        pair<iterator,iterator> equal_range (const key_type& k) 
         {
-            return(ft::make_pair(lower_bond(k), upper_bound(k)));
+            return ft::pair<iterator, iterator>(lower_bound(k), upper_bound(k));
         }
         
     //ALLOCATOR

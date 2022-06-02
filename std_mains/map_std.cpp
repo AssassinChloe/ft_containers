@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:31:27 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/02 15:25:37 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/02 19:12:31 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int main ()
     std::pair<const int,char> bar9 (22,'e');
     std::pair<const int,char> bar10(23,'e');
     std::pair<const int,char> bar11(24,'e');
-    std::pair<const int,char> bar12(25,'e');
+    std::pair<const int,char> bar12(25,'h');
 
     std::cout << "Insert pairs in map" << std::endl;
     maptest.insert(bar2);
@@ -125,18 +125,6 @@ int main ()
     std::cout << "init map3 using map2" << std::endl;
     std::map<const int, char> maptest3(maptest2);
 
-    std::cout << "insert pair in map3" << std::endl;
-    std::pair<const int,char> bar13(42,'*');
-    maptest3.insert(bar13);
-
-    std::cout << "size : " << maptest3.size() << std::endl;
-    std::cout << "Map 3 : ";
-    printMap(&maptest3);
-    std::cout << std::endl;
-    std::cout << "Map 2 : ";
-    printMap(&maptest2);
-    std::cout << std::endl;
-
     std::cout << "maptest = maptest3" << std::endl;
     maptest = maptest3;
     std::cout << "size : " << maptest3.size() << std::endl;
@@ -173,18 +161,22 @@ int main ()
                 else
         std::cout << "not >=" << std::endl;
     std::cout << std::endl;
-    // std::cout << "Erase map3 from map" << std::endl;
-    // maptest3.erase(maptest.begin(), maptest.end());
-   
+    
+    std::cout << "insert pair in map3" << std::endl;
+    std::pair<const int,char> bar13(42,'*');
+    maptest3.insert(bar13);
+
     std::cout << "size : " << maptest3.size() << std::endl;
     std::cout << "Map 3 : ";
     printMap(&maptest3);
+    std::cout << std::endl;
     
     std::cout << "Erase map3 42" << std::endl;
     maptest3.erase(42);
     std::cout << "size : " << maptest3.size() << std::endl;
     std::cout << "Map 3 : ";
     printMap(&maptest3);
+    std::cout << std::endl;
 
     std::cout << "Erase map3 begin()" << std::endl;
     maptest3.erase(maptest3.begin());
@@ -192,6 +184,15 @@ int main ()
     std::cout << "size : " << maptest3.size() << std::endl;
     std::cout << "Map 3 : ";
     printMap(&maptest3);
+    std::cout << std::endl;
+
+    std::cout << "Erase map3 range begin-end" << std::endl;
+    maptest3.erase(maptest3.begin(), maptest3.end());
+    std::cout << "size : " << maptest3.size() << std::endl;
+    std::cout << "Map 3 : ";
+    printMap(&maptest3);
+    std::cout << std::endl;
+
     
     std::cout << std::endl << "test relational operators maptest, maptest3" << std::endl;
     if (maptest == maptest3)
@@ -277,6 +278,15 @@ int main ()
     std::cout << "upper Bond 5 : " << (*it).first << std::endl;
     std::cout << std::endl;
 
+    std::cout << "Equal_Range(24) maptest" << std::endl;
+    std::pair<std::map<const int, char>::iterator, std::map<const int, char>::iterator> ret;
+    ret = maptest.equal_range(24);
+    std::cout << "lower bound points to: ";
+    std::cout << ret.first->first << " => " << ret.first->second << std::endl;
+    std::cout << "upper bound points to: ";
+    std::cout << ret.second->first << " => " << ret.second->second << std::endl;
+    std::cout << std::endl;
+
     std::cout << "create map4 and insert 10 000 pairs (int i, 'a')" << std::endl;
     std::map<const int, char> maptest4;
     for (int i = 0; i < 10000; i++)
@@ -288,20 +298,30 @@ int main ()
     it = maptest4.find(7584);
     std::cout << "At Key : " << (*it).first << " there is : " << (*it).second << std::endl;
 
-    std::cout << "map 3 ";
+    std::cout << "map 3 : ";
     printMap(&maptest3);
     std::cout << std::endl;
 
     std::cout << "SWAP Map4 et 3" << std::endl;
     maptest4.swap(maptest3);
 
-    std::cout << "Map 4 ";
+    std::cout << "map 4 : ";
     printMap(&maptest4);
-    std::cout << std::endl;
     std::cout << "map3 size : " << maptest3.size() << std::endl;
     std::cout << "Find 7584 in map3" << std::endl;
     it = maptest3.find(7584);
     std::cout << "At Key : " << (*it).first << " there is : " << (*it).second << std::endl;
+    std::cout << std::endl;
+
+    std::cout << "SWAP Map4 et 3 using non-member overload" << std::endl;
+    swap(maptest3, maptest4);
+    std::cout << "map 3 : ";
+    printMap(&maptest3);
+    std::cout << "map4 size : " << maptest4.size() << std::endl;
+    std::cout << "Find 7584 in map4" << std::endl;
+    it = maptest4.find(7584);
+    std::cout << "At Key : " << (*it).first << " there is : " << (*it).second << std::endl;
+    std::cout << std::endl;
 
     std::cout << std::endl << "FIN DES TEST MAP<int, char>" << std::endl;
     std::cout << "DEBUT DES TEST MAP<string, string>" << std::endl;

@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 14:18:58 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/02 12:07:40 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/02 16:26:37 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,24 @@ namespace ft
     template <class Key, class T> 
     class Node
     {
+        private :
+
+        Node()
+        {}
+
+        Node& operator=(Node const & x)
+        {
+            Node *tmp = newNode(x->_key);
+            tmp->_left = x->_left;
+            tmp->_right = x->_right;
+            tmp->_end = x->_end;
+            tmp->_height = x->_height;
+            tmp->_modify = x->_modify;
+            alloc.deallocate(this, 1);
+            this = tmp;
+            return (*this);
+        }
+        
         public :
 
         typedef ft::pair<const Key, T>  value_type;

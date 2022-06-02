@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:39 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/23 11:00:39 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/02 19:47:11 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,25 +30,23 @@ namespace ft
     class vector
     {
         public:
-            typedef T                                               value_type;
-            typedef Alloc                                           allocator_type;
-            typedef typename allocator_type::reference              reference;
-            typedef typename allocator_type::const_reference        const_reference;
-            typedef typename allocator_type::pointer                pointer;
-            typedef typename allocator_type::const_pointer          const_pointer;
-            typedef typename ft::iterator<value_type>               iterator;
-            typedef typename ft::iterator<value_type> const         const_iterator;
-            typedef typename ft::reverse_iterator<iterator>         reverse_iterator;
-            typedef typename ft::reverse_iterator<const_iterator>   const_reverse_iterator;
-            typedef typename allocator_type::difference_type        difference_type;
-            typedef typename allocator_type::size_type              size_type;
+            typedef T                                                   value_type;
+            typedef Alloc                                               allocator_type;
+            typedef typename allocator_type::reference                  reference;
+            typedef typename allocator_type::const_reference            const_reference;
+            typedef typename allocator_type::pointer                    pointer;
+            typedef typename allocator_type::const_pointer              const_pointer;
+            typedef typename ft::iterator<value_type>                   iterator;
+            typedef typename ft::iterator<value_type const>             const_iterator;
+            typedef typename ft::reverse_iterator<iterator>             reverse_iterator;
+            typedef typename ft::reverse_iterator<const_iterator>       const_reverse_iterator;
+            typedef typename iterator_traits<iterator>::difference_type difference_type;
+            typedef typename allocator_type::size_type                  size_type;
 
             //                  PUBLIC MEMBER FUNCTION
 
 
             // Constructors
-
-
             explicit vector(const allocator_type &alloc = allocator_type()) 
             : _alloc(alloc), _capacity(10), _arr(_alloc.allocate(_capacity)), _current_size(0) 
             {}
@@ -63,13 +61,6 @@ namespace ft
                 }
             }
             
-            vector(const vector & copy)
-            : _alloc(allocator_type()), _capacity(10), _arr(_alloc.allocate(_capacity)), _current_size(0)
-            {
-                if (&copy != this)
-                    *this = copy;
-            }
-            
             template <typename InputIterator>
             vector (InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value,
             InputIterator>::type last, const allocator_type& alloc = allocator_type())
@@ -77,6 +68,22 @@ namespace ft
             {
                 this->insert(this->begin(), first, last);
             }
+            
+            vector(const vector & x)
+            : _alloc(allocator_type()), _capacity(10), _arr(_alloc.allocate(_capacity)), _current_size(0)
+            {
+                if (&x != this)
+                    *this = x;
+            }
+            
+            
+        	// Destructors
+            ~vector()
+            {
+                this->clear();
+                _alloc.deallocate(this->_arr, this->_capacity);
+            }
+
 
         	// Operator=
             vector &operator=(const vector &x)
@@ -93,12 +100,6 @@ namespace ft
                 return (*this);
             }
 
-        	// Destructors
-            ~vector()
-            {
-                this->clear();
-                _alloc.deallocate(this->_arr, this->_capacity);
-            }
 
         // ITERATORS
 
@@ -109,26 +110,30 @@ namespace ft
             const_iterator begin() const 
             { return (this->_arr); }
 
+
             // end
             iterator end() 
-            { return (this->_arr + this->_current_size);}
+            { return (this->_arr + this->_current_size); }
             
             const_iterator end() const 
-            {return (this->_arr + this->_current_size);}
+            { return (this->_arr + this->_current_size); }
+
 
             // rbegin
             reverse_iterator rbegin() 
             { return (reverse_iterator(this->end())); }
             
             const_reverse_iterator rbegin() const 
-            { return (reverse_iterator(this->end())); }
+            { return (const_reverse_iterator(this->end())); }
+
 
             // rend
             reverse_iterator rend() 
             { return (reverse_iterator(this->begin())); }
 
             const_reverse_iterator rend() const 
-            { return (reverse_iterator(this->begin())); }
+            { return (const_reverse_iterator(this->begin())); }
+            
 
         // CAPACITY
 
@@ -145,6 +150,7 @@ namespace ft
                 const size_type allocmax = _alloc.max_size();
                 return (std::min(diffmax, allocmax));
             }
+
 
             // resize
             void resize(size_type n, value_type val = value_type())
@@ -166,9 +172,11 @@ namespace ft
                 }
             }
 
+
             // capacity
             size_type capacity() const 
             { return (this->_capacity); }
+
 
             // empty
             bool empty() const
@@ -177,6 +185,7 @@ namespace ft
                     return (true);
                 return (false);
             }
+
 
             // reserve
             void reserve(size_type n)
@@ -199,6 +208,7 @@ namespace ft
                     this->_current_size = i;
                 }
             }
+
 
         // ELEMENT ACCESS
 
@@ -231,12 +241,14 @@ namespace ft
             const_reference front() const 
             { return (this->_arr[0]); }
 
+
             // Back
             reference back() 
             { return (this->_arr[this->_current_size - 1]); }
             
             const_reference back() const 
             { return (this->_arr[this->_current_size - 1]); }
+
 
             // MODIFIERS
 
@@ -285,6 +297,7 @@ namespace ft
                 this->_current_size = n;
             }
 
+
             // push_back
             void push_back(const value_type &val)
             {
@@ -302,6 +315,7 @@ namespace ft
                 this->_current_size--;
                 _alloc.destroy(this->_arr + (this->_current_size));
             }
+
 
             // insert
             iterator insert(iterator position, const value_type &val) 

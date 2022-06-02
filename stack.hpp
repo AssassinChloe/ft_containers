@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:46 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/20 17:06:54 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/02 16:57:59 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ namespace ft
             {
                 return (c.size());
             }
+            
         //top
             value_type& top()
             {
@@ -54,6 +55,7 @@ namespace ft
             {
                 return (c.back());
             }
+            
         //push
             void push(const value_type& val)
             {

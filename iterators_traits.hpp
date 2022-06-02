@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 17:21:47 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/23 10:29:35 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/02 19:21:56 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,24 +57,5 @@ namespace ft
             typedef const T& reference;
             typedef ft::random_access_iterator_tag iterator_category;
     };
-
-        //                 FUNCTIONS
-
-//Iterator operations
-
-    //advance
-        template <class InputIterator, class Distance>
-        void advance (InputIterator& it, Distance n)
-        {
-            return (it + n);
-        }
-
-    //distance
-        template<class InputIterator>
-        typename iterator_traits<InputIterator>::difference_type 
-        distance (InputIterator first, InputIterator last)
-        {
-            return (last - first);
-        }
 }
 #endif

@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 18:31:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/05/13 17:43:53 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/02 19:56:51 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,9 +131,30 @@ namespace ft
             {
                 return (this->ptr[index]);
             }
-
+            
+            pointer getPtr() const
+            {
+                return (this->ptr);
+            }
+            
         private:
             pointer ptr;
     };
+
+    template<typename Tl, typename Tr>
+    typename ft::iterator<Tl>::difference_type operator==(const ft::iterator<Tl> lhs,
+    const ft::iterator<Tr> rhs)
+    {
+        return (lhs.getPtr() == rhs.getPtr());
+    }
+    
+    template<typename Tl, typename Tr>
+    typename ft::iterator<Tl>::difference_type operator!=(const ft::iterator<Tl> lhs,
+    const ft::iterator<Tr> rhs)
+    {
+        return (lhs.getPtr() != rhs.getPtr());
+    }
+
+    
 }
 #endif

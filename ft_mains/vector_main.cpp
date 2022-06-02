@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 18:31:22 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/02 15:16:25 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/02 19:55:18 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,11 @@
 
 void  affiche(ft::vector<int> test1, std::string name)
 {   
-    ft::vector<int>::iterator it;
-    ft::vector<int>::iterator ite = test1.end();
+    const ft::vector<int>::iterator ite = test1.end();
     std::cout << std::endl << name << std::endl;
     std::cout << "size : " << test1.size() << std::endl;
     std::cout << "capacity : " << test1.capacity() << std::endl;
-    for(it = test1.begin(); it != ite; it++)
+    for(ft::vector<int>::iterator it = test1.begin(); it != ite; it++)
     {
         std::cout << *it << " ";
     }
