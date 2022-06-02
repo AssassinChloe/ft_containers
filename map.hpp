@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/02 12:07:59 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/02 15:22:20 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include "map_iterator.hpp"
 # include "reverse_iterator.hpp"
 # include "binary_search_tree.hpp"
+# include "equal.hpp"
 
 namespace ft
 {
@@ -184,7 +185,7 @@ namespace ft
             Node *tmp = this->_root->search(this->_root, k);
             if (tmp)
                 return (tmp->_key.second);
-            return ((*((insert(make_pair(k, mapped_type()))).first)).second);
+            return ((*((insert(ft::make_pair(k, mapped_type()))).first)).second);
         }
     
     //MODIFIERS
