@@ -7,7 +7,7 @@ void printMap(ft::map<const int, char> *map)
 {
     if (map->size() == 0)
         return ;
-    ft::map<const int, char>::iterator ite = map->end();
+    ft::map<const int, char>::const_iterator ite = map->end();
     ft::map<const int, char>::iterator it = map->begin();
     for (;it != ite; it++)
     {
@@ -20,7 +20,7 @@ void printMapstr(ft::map<const std::string, std::string> *map)
 {
     if (map->size() == 0)
         return ;
-    ft::map<const std::string, std::string>::iterator ite = map->end();
+    ft::map<const std::string, std::string>::const_iterator ite(map->end());
     ft::map<const std::string, std::string>::iterator it = map->begin();
     for (;it != ite; it++)
     {

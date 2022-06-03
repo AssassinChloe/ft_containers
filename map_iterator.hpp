@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 12:05:23 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/02 17:29:31 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/03 12:36:21 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,12 @@ namespace ft
             {
                 *this = src;
             }
+            
+            template <typename Noder, typename Tr>
+            map_iterator(const ft::map_iterator<Noder, Tr> &src) 
+            {
+                *this = src;
+            }
 
             map_iterator &operator=(const map_iterator &rhs)
             {
@@ -49,6 +55,14 @@ namespace ft
                     this->ptr = rhs.ptr;
                     this->_root = rhs._root;
                 }
+                return (*this);
+            }
+
+            template <typename Noder, typename Tr>
+            map_iterator &operator=(const ft::map_iterator<Noder, Tr> &rhs)
+            {
+                this->ptr = rhs.getPtr();
+                this->_root = rhs.getRoot();
                 return (*this);
             }
             ~map_iterator() 
@@ -120,10 +134,34 @@ namespace ft
                 return (this->ptr != rhs.ptr);
             }
 
+            Node *getPtr() const
+            {
+                return (this->ptr);
+            }
+
+            Node *getRoot() const
+            {
+                return (this->_root);
+            }
+            
             private:
 
                 Node    *ptr;
                 Node    *_root;
     };
+    
+    template<typename Nl, typename Tl, typename Nr, typename Tr>
+    typename ft::map_iterator<Nl, Tl>::difference_type operator==(const ft::map_iterator<Nl, Tl> lhs,
+    const ft::map_iterator<Nr, Tr> rhs)
+    {
+        return (lhs.getPtr() == rhs.getPtr());
+    }
+    
+    template<typename Nl, typename Tl, typename Nr, typename Tr>
+    typename ft::map_iterator<Nl, Tl>::difference_type operator!=(const ft::map_iterator<Nl, Tl> lhs,
+    const ft::map_iterator<Nr, Tr> rhs)
+    {
+        return (lhs.getPtr() != rhs.getPtr());
+    }
 }
 #endif

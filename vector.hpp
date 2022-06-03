@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:39 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/02 19:47:11 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/03 10:39:06 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ namespace ft
             }
             
             vector(const vector & x)
-            : _alloc(allocator_type()), _capacity(10), _arr(_alloc.allocate(_capacity)), _current_size(0)
+            : _alloc(allocator_type()), _capacity(1), _arr(_alloc.allocate(_capacity)), _current_size(0)
             {
                 if (&x != this)
                     *this = x;
@@ -88,6 +88,7 @@ namespace ft
         	// Operator=
             vector &operator=(const vector &x)
             {
+
                 this->clear();
                 _alloc.deallocate(this->_arr, this->_capacity);
                 this->_capacity = x.capacity();
@@ -250,7 +251,7 @@ namespace ft
             { return (this->_arr[this->_current_size - 1]); }
 
 
-            // MODIFIERS
+        // MODIFIERS
 
             // assign
             template <class InputIterator>

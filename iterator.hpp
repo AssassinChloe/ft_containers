@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 18:31:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/02 19:56:51 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/03 12:14:57 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,13 @@
 #define ITERATOR_HPP
 
 #include "iterators_traits.hpp"
+#include "enable_if.hpp"
+#include "is_integral.hpp"
 
 namespace ft
-{
+{   
+
+    
     class random_access_iterator_tag;
     
     template <typename T>
@@ -30,20 +34,44 @@ namespace ft
             typedef ft::random_access_iterator_tag iterator_category;
 
             iterator() : ptr(NULL) {}
-
-            iterator(pointer src) : ptr(src) {}
-
+            
+            iterator(pointer src)
+            {
+                this->ptr = src;
+            }
+            
+            template<typename Tr>
+            iterator(Tr *src)
+            {
+                this->ptr = src;
+            }
+            
             iterator(const iterator &src) 
             {
                 *this = src;
             }
 
+            template <typename Tr>
+            iterator(const ft::iterator<Tr> &src)
+            {
+                *this = src;
+            }
+
+            
             iterator &operator=(const iterator &rhs)
             {
                 if (this != &rhs)
                     this->ptr = rhs.ptr;
                 return (*this);
             }
+
+            template<typename Tr>
+            iterator &operator=(const ft::iterator<Tr> rhs)
+            {
+                this->ptr = rhs.getPtr();
+                return (*this);
+            }
+            
             ~iterator() 
             {}
 
@@ -67,6 +95,7 @@ namespace ft
                 this->ptr++;
                 return (tmp);
             }
+            
             iterator &operator--()
             {
                 this->ptr--;
@@ -79,7 +108,7 @@ namespace ft
                 return (tmp);
             }
 
-            bool operator==(const iterator &rhs) const
+            bool operator==(const iterator &rhs)
             {
                 return (this->ptr == rhs.ptr);
             }
@@ -87,6 +116,7 @@ namespace ft
             {
                 return (this->ptr != rhs.ptr);
             }
+            
             bool operator<(const iterator &rhs) const
             {
                 return (this->ptr < rhs.ptr);
@@ -154,7 +184,6 @@ namespace ft
     {
         return (lhs.getPtr() != rhs.getPtr());
     }
-
     
 }
 #endif

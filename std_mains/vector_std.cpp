@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 14:01:28 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/02 19:55:39 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/03 12:20:13 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 void affiche(std::vector<int> test1, std::string name)
 {   
-    const std::vector<int>::iterator ite = test1.end();
+    std::vector<int>::const_iterator ite = test1.end();
     std::cout << std::endl << name << std::endl;
     std::cout << "size : " << test1.size() << std::endl;
     std::cout << "capacity : " << test1.capacity() << std::endl;
@@ -74,8 +74,8 @@ int main()
     }
     std::cout << std::endl;
     std::cout << std::endl << "const iterator" << std::endl;
-    const std::vector<int>::iterator cite = test3.end();
-    for (std::vector<int>::iterator cit = test3.begin(); cit!= cite; cit++)
+    std::vector<int>::const_iterator cite = test3.end();
+    for (std::vector<int>::const_iterator cit = test3.begin(); cit!= cite; cit++)
     {
         std::cout << *cit << " ";
     }
@@ -89,8 +89,8 @@ int main()
     }
     std::cout << std::endl;
     std::cout << std::endl << "const reverse iterator" << std::endl;
-    const std::vector<int>::reverse_iterator crite = test3.rend();
-    for (std::vector<int>::reverse_iterator crit = test3.rbegin(); crit != crite; crit++)
+    std::vector<int>::const_reverse_iterator crite = test3.rend();
+    for (std::vector<int>::const_reverse_iterator crit = test3.rbegin(); crit != crite; crit++)
     {
         std::cout << *crit << " ";
     }
