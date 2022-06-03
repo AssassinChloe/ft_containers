@@ -6,12 +6,15 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 16:11:20 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/02 14:33:58 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/03 13:45:46 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../stack.hpp"
 #include <iostream>
+#include <deque>
+#include <list>
+#include <vector>
 
 int main()
 {
@@ -120,8 +123,137 @@ int main()
         test1.push(i);
     }
     std::cout << "Test1 size : " << test1.size() << std::endl;
-                
-  
+
+    std::cout << std::endl << "Test with STL containers" << std::endl;
+          
+    ft::stack<int, std::vector<int> > testvect;
+    ft::stack<int, std::list<int> > testlist;
+    ft::stack<int, std::deque<int> > testdeq;
+
+    std::cout << "test vector empty : " << std::boolalpha << testvect.empty() << std::endl;
+    std::cout << "test list empty : " << std::boolalpha << testlist.empty() << std::endl;
+    std::cout << "test deque empty : " << std::boolalpha << testdeq.empty() << std::endl;
+    
+    std::cout << std::endl << "Push * 3 (24, 7, 42)" << std::endl;
+
+    testvect.push(24);
+    testlist.push(24);
+    testdeq.push(24);
+
+    testvect.push(7);
+    testlist.push(7);
+    testdeq.push(7);
+
+    testvect.push(42);
+    testlist.push(42);
+    testdeq.push(42);
+    
+    std::cout << "vector size : " << testvect.size() << std::endl;
+    std::cout << "vector top : " << testvect.top() << std::endl;
+    std::cout << "list size : " << testlist.size() << std::endl;
+    std::cout << "list top : " << testlist.top() << std::endl;
+    std::cout << "deque size : " << testdeq.size() << std::endl;
+    std::cout << "deque top : " << testdeq.top() << std::endl;
+
+    std::cout << std::endl << "Pop" << std::endl;
+
+    testvect.pop();
+    testlist.pop();
+    testdeq.pop();
+
+    std::cout << "vector size : " << testvect.size() << std::endl;
+    std::cout << "vector top : " << testvect.top() << std::endl;
+    std::cout << "list size : " << testlist.size() << std::endl;
+    std::cout << "list top : " << testlist.top() << std::endl;
+    std::cout << "deque size : " << testdeq.size() << std::endl;
+    std::cout << "deque top : " << testdeq.top() << std::endl;
+    
+    ft::stack<int, std::vector<int> > testvect2;
+    ft::stack<int, std::list<int> > testlist2;
+    ft::stack<int, std::deque<int> > testdeq2;
+
+    testvect2.push(42);
+    testlist2.push(42);
+    testdeq2.push(42);
+
+    std::cout  << std::endl << "test relational operators vector" << std::endl;
+    if (testvect == testvect2)
+        std::cout << "yes ==" << std::endl;
+    else
+        std::cout << "not ==" << std::endl;
+    if (testvect != testvect2)
+        std::cout << "yes !=" << std::endl;
+    else
+        std::cout << "not !=" << std::endl;
+    if (testvect < testvect2)
+        std::cout << "yes <" << std::endl;
+    else
+        std::cout << "not <" << std::endl;
+    if (testvect > testvect2)
+        std::cout << "yes >" << std::endl;
+    else
+        std::cout << "not >" << std::endl;
+    if (testvect <= testvect2)
+        std::cout << "yes <=" << std::endl;
+    else
+        std::cout << "not <=" << std::endl;       
+    if (testvect >= testvect2)
+        std::cout << "yes >=" << std::endl;
+    else
+        std::cout << "not >=" << std::endl;
+
+    std::cout  << std::endl << "test relational operators list" << std::endl;
+    if (testlist == testlist2)
+        std::cout << "yes ==" << std::endl;
+    else
+        std::cout << "not ==" << std::endl;
+    if (testlist != testlist2)
+        std::cout << "yes !=" << std::endl;
+    else
+        std::cout << "not !=" << std::endl;
+    if (testlist < testlist2)
+        std::cout << "yes <" << std::endl;
+    else
+        std::cout << "not <" << std::endl;
+    if (testlist > testlist2)
+        std::cout << "yes >" << std::endl;
+    else
+        std::cout << "not >" << std::endl;
+    if (testlist <= testlist2)
+        std::cout << "yes <=" << std::endl;
+    else
+        std::cout << "not <=" << std::endl;       
+    if (testlist >= testlist2)
+        std::cout << "yes >=" << std::endl;
+    else
+        std::cout << "not >=" << std::endl;
+
+    std::cout  << std::endl << "test relational operators deque" << std::endl;
+    if (testdeq == testdeq2)
+        std::cout << "yes ==" << std::endl;
+    else
+        std::cout << "not ==" << std::endl;
+    if (testdeq != testdeq2)
+        std::cout << "yes !=" << std::endl;
+    else
+        std::cout << "not !=" << std::endl;
+    if (testdeq < testdeq2)
+        std::cout << "yes <" << std::endl;
+    else
+        std::cout << "not <" << std::endl;
+    if (testdeq > testdeq2)
+        std::cout << "yes >" << std::endl;
+    else
+        std::cout << "not >" << std::endl;
+    if (testdeq <= testdeq2)
+        std::cout << "yes <=" << std::endl;
+    else
+        std::cout << "not <=" << std::endl;       
+    if (testdeq >= testdeq2)
+        std::cout << "yes >=" << std::endl;
+    else
+        std::cout << "not >=" << std::endl;
+        
     end = clock();
     double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
     std::cout << std::endl << "Time taken by program is : " << std::fixed 

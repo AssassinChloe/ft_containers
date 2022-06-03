@@ -6,7 +6,7 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:31:27 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/02 19:12:31 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/03 13:25:17 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void printMap(std::map<const int, char> *map)
 {
     if (map->size() == 0)
         return ;
-    std::map<const int, char>::iterator ite = map->end();
+    std::map<const int, char>::const_iterator ite = map->end();
     std::map<const int, char>::iterator it = map->begin();
     for (;it != ite; it++)
     {
@@ -33,7 +33,7 @@ void printMapstr(std::map<const std::string, std::string> *map)
 {
     if (map->size() == 0)
         return ;
-    std::map<const std::string, std::string>::iterator ite = map->end();
+    std::map<const std::string, std::string>::const_iterator ite = map->end();
     std::map<const std::string, std::string>::iterator it = map->begin();
     for (;it != ite; it++)
     {

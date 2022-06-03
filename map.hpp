@@ -6,14 +6,13 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/02 19:10:40 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/03 14:27:47 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_H
 #define MAP_H
 
-# include <iostream>
 # include <functional>
 # include <memory>
 # include <stdint.h> 

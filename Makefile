@@ -6,7 +6,7 @@
 #    By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/25 15:35:43 by cassassi          #+#    #+#              #
-#    Updated: 2022/05/25 17:18:47 by cassassi         ###   ########.fr        #
+#    Updated: 2022/06/03 14:31:03 by cassassi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -115,8 +115,6 @@ fclean: 	clean
 			rm -f $(VECTOR) $(VECTOR2) $(MAP) $(MAP2) $(STACK) $(STACK2) $(TEST42) $(TEST422)
 
 re: 		fclean all
-
-mapre:		clean map
 
 %.o:%.cpp
 			$(CCXX) $(FLAGS) -o $@ -c $<

@@ -6,17 +6,18 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 12:05:23 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/03 12:36:21 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/03 14:29:47 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_ITERATOR_HPP
 #define MAP_ITERATOR_HPP
 
-#include "iterators_traits.hpp"
-#include "pair.hpp"
-#include "binary_search_tree.hpp"
-#include "map.hpp"
+# include "iterators_traits.hpp"
+# include "pair.hpp"
+# include "binary_search_tree.hpp"
+# include "map.hpp"
+# include <iostream>
 
 namespace ft
 {

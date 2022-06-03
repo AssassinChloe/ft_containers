@@ -6,23 +6,23 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:39 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/03 10:39:06 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/03 14:30:15 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
-#include <memory>
-#include <bits/stdc++.h>
-#include <cstddef>
-#include <algorithm>
-#include <stdint.h> 
-#include <limits.h>
-#include "iterator.hpp"
-#include "reverse_iterator.hpp"
-#include "is_integral.hpp"
-#include "enable_if.hpp"
+# include <memory>
+# include <bits/stdc++.h>
+# include <cstddef>
+# include <algorithm>
+# include <stdint.h> 
+# include <limits.h>
+# include "iterator.hpp"
+# include "reverse_iterator.hpp"
+# include "is_integral.hpp"
+# include "enable_if.hpp"
 
 namespace ft
 {
@@ -557,14 +557,7 @@ namespace ft
     template <class T, class Alloc>
     bool operator<=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
     {
-        if (lhs.capacity() <= rhs.capacity() || lhs.size() <= rhs.size())
-            return (true);
-        for (size_t i = 0; i < lhs.size(); i++)
-        {
-            if (lhs[i] <= rhs[i])
-                return (true);
-        }
-        return (false);
+        return (lhs == rhs || lhs < rhs);
     }
     
     template <class T, class Alloc>
@@ -583,14 +576,7 @@ namespace ft
     template <class T, class Alloc>
     bool operator>=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
    {
-        if (lhs.capacity() >= rhs.capacity() || lhs.size() >= rhs.size())
-            return (true);
-        for (size_t i = 0; i < lhs.size(); i++)
-        {
-            if (lhs[i] >= rhs[i])
-                return (true);
-        }
-        return (false);
+        return (lhs == rhs || lhs > rhs);
     }
     
     // swap

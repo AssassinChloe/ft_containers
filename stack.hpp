@@ -6,14 +6,13 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 11:12:46 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/02 16:57:59 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/03 14:28:01 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STACK_H
 #define STACK_H
 
-# include <iostream>
 # include "vector.hpp"
 
 namespace ft
@@ -116,7 +115,7 @@ namespace ft
         template <class T, class Container>
         bool operator<=(const stack<T,Container>& lhs, const stack<T,Container>& rhs)
         {
-            return(lhs.c >= rhs.c);
+            return(lhs.c <= rhs.c);
         }
 
         template <class T, class Container>

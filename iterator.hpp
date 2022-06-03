@@ -6,16 +6,14 @@
 /*   By: cassassi <cassassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 18:31:42 by cassassi          #+#    #+#             */
-/*   Updated: 2022/06/03 12:14:57 by cassassi         ###   ########.fr       */
+/*   Updated: 2022/06/03 14:29:55 by cassassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ITERATOR_HPP
 #define ITERATOR_HPP
 
-#include "iterators_traits.hpp"
-#include "enable_if.hpp"
-#include "is_integral.hpp"
+# include "iterators_traits.hpp"
 
 namespace ft
 {   
